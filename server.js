@@ -1,5 +1,7 @@
 const http = require('http');
 const url = require('url');
+// Konstante für das Modul express
+const express = require('express');
 
 http.createServer((req, res) => {
     console.log('My http-Server started....');
