@@ -1,0 +1,30 @@
+{
+  "name": "our_http_server",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Unser eigener http_server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oblyvion/Our-Http-Server.git"
+  },
+  "keywords": [
+    "music",
+    "friends",
+    "playlists"
+  ],
+  "author": "Julian Feß, Franz-Johannes Weber",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Oblyvion/Our-Http-Server/issues"
+  },
+  "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0"
+  }
+}
