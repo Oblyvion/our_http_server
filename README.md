@@ -51,7 +51,9 @@ enthaltenen Songs
 
 ### Page Main
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
-Sobald die Root-Page aufgerufen wird, 
+Sobald die Main-Page aufgerufen wird, wird der Header erzeugt mit der App Überschrift
+"MUSIC PLAYLIST". Darin befinden sich in der oberen rechten Ecke die Links "About Us", 
+""
 
 ### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
