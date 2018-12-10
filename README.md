@@ -23,7 +23,7 @@ Reihenfolge verändern.
 - User haben Benutzerkonten, Username und Passwort
 - Registrierung für neue User
 - User können Playlists erstellen
-- User können Playlists Songs hinzufügen
+- User können Songs einer Playlist hinzufügen
 - Eigene Songs der User können der Plattform hinzugefügt werden.
 - 
 
@@ -44,3 +44,20 @@ Reihenfolge verändern.
     - Dazu gehört Registrierungs-Screen, Login-Screen und Benutzerkontenverwaltung als schon 
     vorhandener User
 - 
+
+## Wireframes
+
+### Page Main
+![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
+Sobald die Root-Page aufgerufen wird, 
+
+### Page PlaylistSongs
+![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
+### Page GoToUsers
+![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
+### Page SearchForUsers
+![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers") 
+### Page MyFriends
+![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends") 
+### Page MyAccount
+![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount") 
