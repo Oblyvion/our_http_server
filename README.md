@@ -100,8 +100,19 @@ kann
 
 ### Page Main
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
-Sobald die Root-Page aufgerufen wird, 
-
+Sobald die Main-Page aufgerufen wird, wird der Header mit der App Überschrift
+"MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
+Links zu den Websites "About Us", "Contact" und "Impressum".
+Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgende
+Funktionen ausgestattet sein wird: Titel zurück, Titel vor, Abspielen, Pause, eine Lautstärkeanzeige und
+eine Titellängenanzeige. Grafisch soll der Player in einem schmalen horizontalen Layout designed werden.
+Auf der linken Seite unterhalb vom Musikplayer wird eine Playlist-Liste zu finden sein, wobei ein User eine
+neue Playlist mittels eines Hinzufüge-Buttons erstellen kann.
+Rechts davon befindet sich zunächst nur ein weißes Fenster, worin sich ein Textfeld mit der Hilfestellung für das
+Hinzufügen eines Titels befindet. Diese Funktion ist auch in der Überschrift-Leiste untergebracht. Außerdem ist darin
+ein Button für zum Verwalten des eigenen Kontos und seinen Kontakten, sowie ein Button für die Feature
+etwaige Titel oder sogar gesamte Playlists mit anderen Benutzern zu teilen.
+                           
 ### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
 ### Page GoToUsers
