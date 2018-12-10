@@ -23,10 +23,9 @@ Reihenfolge verändern.
 - User haben Benutzerkonten, Login mit Username und Passwort
 - Registrierung für neue User
 - User können Playlists erstellen
-- User können Playlists Songs hinzufügen
-- Eigene Songs der User können der Plattform hinzugefügt werden
+- User können Songs einer Playlist hinzufügen
+- Eigene Songs der User können der Plattform hinzugefügt werden.
 - User können andere User zu ihren Freunden hinzufügen
-
 
 
 ##Aufgaben des Servers
@@ -49,4 +48,20 @@ Reihenfolge verändern.
     existierende User
 - Desweiteren ermöglicht der Client das Verwalten der von den Usern erstellten Playlists und den darin
 enthaltenen Songs
-- 
+
+## Wireframes
+
+### Page Main
+![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
+Sobald die Root-Page aufgerufen wird, 
+
+### Page PlaylistSongs
+![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
+### Page GoToUsers
+![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
+### Page SearchForUsers
+![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers") 
+### Page MyFriends
+![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends") 
+### Page MyAccount
+![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount") 
