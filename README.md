@@ -1,7 +1,5 @@
 #project FebMusicPlaylist
 
-
-![Bild bla](./Wireframes/bla.png "hallo") 
 ##Team
 Das Team besteht aus Julian Fess (Matr. 672836) und Franz-Johannes Weber 
 (Matr. 672622)

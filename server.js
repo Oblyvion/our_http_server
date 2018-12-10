@@ -15,6 +15,7 @@ let users = [
 
 app.get("/", (req, res) => {
    res.send("Hier soll die MainPage entstehen!");
+
 });
 
 app.get("/Page1", (req, res) => {
