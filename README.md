@@ -22,15 +22,17 @@ Reihenfolge verändern.
 
 - User haben Benutzerkonten, Username und Passwort
 - Registrierung für neue User
+- User können Playlists erstellen
+- User können Playlists Songs hinzufügen
+- Eigene Songs der User können der Plattform hinzugefügt werden.
 - 
-
 
 
 ##Aufgaben des Servers
 
 - Auf dem Server muss eine Datenbank vorhanden sein, die (lizensfreie) Musik beinhaltet 
     - Der Server liefert dem Client abspielbare Musik in Form eines Streams
-    - (Die Datenbank sollte erweiterbar sein, damit neue Songs von den Usern hinzugefügt werden
+    - Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden
     können)
 - Der Server muss die Daten der Benutzer ebenfalls speichern um Sie beim Login abzufragen und auch
 
