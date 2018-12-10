@@ -18,14 +18,15 @@ ermöglicht. Nun können die freigegebenen User Songs der Playlist hinzufügen u
 Reihenfolge verändern.
 
 
-## Grundsätzliche Aufgaben
+## Grundsätzliche Aufgaben (Anforderungen)
 
-- User haben Benutzerkonten, Username und Passwort
+- User haben Benutzerkonten, Login mit Username und Passwort
 - Registrierung für neue User
 - User können Playlists erstellen
 - User können Playlists Songs hinzufügen
-- Eigene Songs der User können der Plattform hinzugefügt werden.
-- 
+- Eigene Songs der User können der Plattform hinzugefügt werden
+- User können andere User zu ihren Freunden hinzufügen
+
 
 
 ##Aufgaben des Servers
@@ -34,13 +35,18 @@ Reihenfolge verändern.
     - Der Server liefert dem Client abspielbare Musik in Form eines Streams
     - Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden
     können)
-- Der Server muss die Daten der Benutzer ebenfalls speichern um Sie beim Login abzufragen und auch
+    - Tabelle Songs 
+    - Attribute: Titel, Artist, Album, Uploader (derjenige der den Titel auf die Plattform hochgeladen hat)
+- Der Server bietet die Möglichkeit die vom User erstellten Playlists zu speichern
+- Die Daten der Benutzer (Benutzername, Passwort) müssen ebenfalls vom Server gespeichert werden um Sie beim Login abzufragen
 
-- 
 
 ## Aufgaben des Clients
 
+- Unten in den Wireframes wird das vorläufige Design des Clients gezeigt
 - Der Client muss den Usern ermöglichen ein Benutzerkonto zu erstellen und zu verwalten
-    - Dazu gehört Registrierungs-Screen, Login-Screen und Benutzerkontenverwaltung als schon 
-    vorhandener User
+    - Dazu gehört Registrierungs-Screen, Login-Screen und Benutzerkontenverwaltung für bereits 
+    existierende User
+- Desweiteren ermöglicht der Client das Verwalten der von den Usern erstellten Playlists und den darin
+enthaltenen Songs
 - 
