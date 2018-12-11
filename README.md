@@ -153,6 +153,6 @@ Blick vermitteln, wie engagiert ein Benutzer an seinen eigenen und auch anderen 
 auf einen Benutzernamen, öffnet sich eine Popup-Box mit den entsprechenden Benutzerprofildaten und den jeweiligen Buttons.
 
 ### Page MyFriends
-![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends")
+![Bild MyPlaylistMates](./Wireframes/Page4_MyPlaylistMates.png "MyPlaylistMates")
 ### Page MyAccount
 ![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
