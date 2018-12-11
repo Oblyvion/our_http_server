@@ -1,14 +1,32 @@
 # project FebMusicPlaylist
 
-#Inhaltsverzeichnis
-1.[Idee](#idee)
+## Inhaltsverzeichnis
+##### Allgemeine Informationen
+1. [Team](#team)
+2. [Idee](#idee)
+3. [Grundsätzliche Aufgaben (Anforderungen)](#grundstzliche-aufgaben-anforderungen)
+4. [Aufgaben des Servers](#aufgaben-des-servers)
+5. [Aufgaben des Clients](#aufgaben-des-clients)
 
-##Team
+##### Aufwandschätzung
+6. [Client (Julian Fess)](#client-julian-fess)
+7. [Server (Franz-Johannes Weber)](#server-franz-johannes-weber)
+
+##### Wireframes
+8. [Page Main](#page-main)
+8. [Page PlaylistSongs](#page-playlistsongs)
+8. [Page GoToUsers](#page-gotousers)
+8. [Page SearchForUsers](#page-searchforusers)
+8. [Page MyPlaylistMates](#page-myplaylistmates)
+8. [Page MyAccount](#page-myaccount)
+
+
+## Team
 Das Team besteht aus Julian Fess (Matr. 672836) und Franz-Johannes Weber 
 (Matr. 672622).
 
 <a name="idee"></a>
-##Idee
+## Idee
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
 zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
 In die Playlists können User Songs hinzufügen, die in der Server-Datenbank verfügbar sind.
@@ -21,7 +39,7 @@ Nun können die Playlist Mates beliebig Songs der Playlist hinzufügen oder lös
 innerhalb der Playlist verändern.
 
 
-##Grundsätzliche Aufgaben (Anforderungen)
+## Grundsätzliche Aufgaben (Anforderungen)
 
 - User haben Benutzerkonten, Login mit Username und Passwort
 - Registrierung für neue User
@@ -33,7 +51,7 @@ innerhalb der Playlist verändern.
 - User können Playlisten mit Playlist-Mates teilen und ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
 
 
-##Aufgaben des Servers
+## Aufgaben des Servers
 
 - Auf dem Server muss eine Datenbank vorhanden sein, die:
     - (lizensfreie) Musik in einer Tabelle Songs beinhaltet 
@@ -57,7 +75,7 @@ können)
 - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
 
 
-##Aufgaben des Clients
+## Aufgaben des Clients
 
 - Unten in den Wireframes wird das vorläufige Design des Clients gezeigt
 - Der Client muss den Usern ermöglichen ein Benutzerkonto zu erstellen und zu verwalten
@@ -81,9 +99,9 @@ beinhaltet
 - Die User können mit Hilfe einer User Suche neue User finden um sie zu Ihren Playlist-Mates hinzuzufügen.
     - Dabei werden einige User random eingeblendet
 
-##Aufwandsschätzung
+## Aufwandsschätzung
 
-###Client (Julian Fess)
+### Client (Julian Fess)
 
 | Teilaufgabe   | Zeit in Stunden |
 |----------|:-------------:|
@@ -97,7 +115,7 @@ beinhaltet
 | Projektdokumentation | 15 |
 | GESAMT | 100 |
 
-###Server (Franz-Johannes Weber)
+### Server (Franz-Johannes Weber)
 
 | Teilaufgabe   | Zeit in Stunden |
 |----------|:-------------:|
@@ -112,9 +130,9 @@ beinhaltet
 | Projektdokumentation | 15 |
 | GESAMT | 100 |
 
-##Wireframes
+## Wireframes
 
-###Page Main
+### Page Main
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
 Sobald die Main-Page aufgerufen wird, wird der Header mit der App Überschrift
 "MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
@@ -129,7 +147,7 @@ Hinzufügen eines Titels befindet. Diese Funktion ist auch in der Überschrift-L
 ein Button zum Verwalten des eigenen Kontos und der eigenen Kontakte, sowie ein Share Button um die jeweilige 
 Playlist mit anderen Benutzern teilen zu können.
                            
-###Page PlaylistSongs
+### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
 Ist mindestens ein Titel einer Playlist hinzugefügt worden, so verschwindet das Textfeld mit der Hilfestellung
 und eine tabellarische Darstellung zeigt Titelnamen, den Künstler, den Albumnamen, von welchem User der jeweilige
@@ -146,7 +164,7 @@ seine Playlist-Mates, wie bei Page MyPlaylistMates dargestellt, angezeigt. Entsc
 für SearchForUsers so wird ihm die Möglichkeit gegeben, wie in Page SearchForUsers beschrieben, neue User zu finden und ihnen eine
 Playlist-Mate Anfrage zu senden. 
 
-###Page SearchForUsers
+### Page SearchForUsers
 ![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
 Auf dieser Seite befindet sich unterhalb der Seitenüberschrift "...NEW USER?" eine Box mit randomisierten Benutzern darin.
 Jeder Benutzernamen innerhalb der Box kann selektiert werden, um im Anschluss dessen Benutzerprofil in einer Popup-Box zu erhalten.
@@ -163,7 +181,7 @@ versehen. Die Platzierung ergibt sich aus dem Punktestand der jeweiligen gefunde
 Blick vermitteln, wie engagiert ein Benutzer an seinen eigenen und auch anderen Playlists arbeitet. Klickt man auch hier wieder
 auf einen Benutzernamen, öffnet sich eine Popup-Box mit den entsprechenden Benutzerprofildaten und den jeweiligen Buttons.
 
-###Page MyPlaylistMates
+### Page MyPlaylistMates
 ![Bild MyPlaylistMates](./Wireframes/Page4_MyPlaylistMates.png "MyPlaylistMates")
 Page MyPlaylistMates liefert dem User eine aplphabetisch sortierte, tabellarische Ansicht seiner bereits hinzugefügten Playlist-Mates. Dargestellt werden
 in der Tabelle die Attribute: Playlist-Mate name, Shared playlists und der Score des einzelnen Playlist-Mates. Attribut Playlist-Mate name zeigt den
@@ -172,7 +190,7 @@ Moment mit dem jeweiligen Playlist-Mate zusammen bearbeitet werden. Bei einem Kl
 auf einen der Playlist-Mates erscheint eine Popup Box, welche dem User ermöglicht diesen Playlist-Mate aus der
 Liste der Playlist-Mates zu entfernen.
 
-###Page MyAccount
+### Page MyAccount
 ![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
 In Page MyAccount findet der User alle wichtigen Informationen die seinen eigenen Account betreffen.
 Dazu gehört die Darstellung seines Scores auf der Plattform, als auch generelle Informationen wie Favourite artists, 
