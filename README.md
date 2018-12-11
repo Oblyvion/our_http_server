@@ -9,13 +9,13 @@ Das Team besteht aus Julian Fess (Matr. 672836) und Franz-Johannes Weber
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
 zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
 In die Playlists können User Songs hinzufügen, die in der Server-Datenbank verfügbar sind.
-User können andere User zu Ihren Freunden hinzufügen indem sie Ihnen eine Freundesanfrage senden.
-Die Playlists sind entweder privat, für Freunde offen oder für alle User öffentlich. Private Playlists können nur vom
-User der sie erstellt hat angesehen und angehört werden. Playlists die für Freunde öffentlich gemacht wurden, können von 
-Freunden angesehen und angehört werden. Öffentliche Playlists sind für alle User offen zugänglich. Zusätzlich dazu 
-können die Playlists mit den Freunden geteilt werden, was diese Freunde zu Playlist 
-Mates macht und Ihnen die Mitarbeit an der Playlist ermöglicht. Nun können die Playlist Mates beliebig Songs der Playlist 
-hinzufügen oder löschen, sowie die Reihenfolge der Songs innerhalb der Playlist verändern.
+User können andere User zu Ihren Playlist Mates hinzufügen indem sie Ihnen eine Anfrage senden.
+Die Playlists sind entweder privat, für Playlist Mates offen oder für alle User öffentlich. Private Playlists können nur vom
+User der sie erstellt hat angesehen und angehört werden. Playlists die für Playlist Mates öffentlich gemacht wurden, können von 
+den Mates angesehen und angehört werden. Öffentliche Playlists sind für alle User offen zugänglich. Zusätzlich dazu 
+können die Playlists mit den Playlist Mates geteilt werden, was den Mates die Mitarbeit an der Playlist ermöglicht. 
+Nun können die Playlist Mates beliebig Songs der Playlist hinzufügen oder löschen, sowie die Reihenfolge der Songs 
+innerhalb der Playlist verändern.
 
 
 ## Grundsätzliche Aufgaben (Anforderungen)
@@ -25,8 +25,8 @@ hinzufügen oder löschen, sowie die Reihenfolge der Songs innerhalb der Playlis
 - User können Playlists erstellen
 - User können Songs einer Playlist hinzufügen
 - Eigene Songs der User können der Plattform hinzugefügt werden.
-- User können andere User zu ihren Freunden hinzufügen
-- User können Freunde zu Playlist Mates machen und Ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
+- User können andere User zu ihren Playlist Mates hinzufügen
+- User können Playlisten mit Playlist Mates teilen und Ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
 
 
 ##Aufgaben des Servers
@@ -45,8 +45,8 @@ hinzufügen oder löschen, sowie die Reihenfolge der Songs innerhalb der Playlis
             - Attribute: PlaylistID (foreign), SongID (foreign)
         - Tabelle PlaylistFrom
             - Attribute: PlaylistID (foreign), username (foreign)
-        - Tabelle Friends (User sind mit anderen Usern befreundet)
-            - Attribute: username (foreign), username_friend (foreign) 
+        - Tabelle PlaylistMate (User sind mit anderen Usern befreundet)
+            - Attribute: username (foreign), username_playlistmate (foreign) 
 - Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden
 können)
 - Der Server liefert dem Client abspielbare Musik in Form eines Streams
@@ -63,8 +63,8 @@ können)
             - Benutzerkonto löschen
             - Passwort ändern
             - Anzeige der eigenen favorisierten Artists 
-            - Anzeige wie viele Songs der User hochgeladen hat
-            - Anzeige wie viele Playlists der User schon erstellt hat
+            - Anzeige wie viele Songs der User bereits hochgeladen hat
+            - Anzeige wie viele Playlists der User bereits erstellt hat
             - ein Score wird angezeigt 
             - die Playlist Mates werden absteigend sortiert nach der Anzahl an geteilten Playlists 
             angezeigt
@@ -72,8 +72,10 @@ können)
 enthaltenen Songs
 - Im Client ist ein Musik Player enthalten, welcher die Songs aus den Playlists abspielen
 kann
-- Die User können mit Hilfe einer User Suche neue User finden um sie als Freunde hinzuzufügen.
-- 
+- Der Client zeigt ebenfalls eine Liste der Playlist Mates an welche zusätzlich die Anzahl der shared Playlists
+beinhaltet
+- Die User können mit Hilfe einer User Suche neue User finden um sie als Playlist Mates hinzuzufügen.
+    - Dabei werden einige User random eingeblendet
 
 ## Aufwandsschätzung
 
@@ -82,10 +84,13 @@ kann
 | Teilaufgabe   | Zeit in Stunden |
 |----------|:-------------:|
 | Projektplanung (Wireframes, README)  | 10 |
-| Benutzerkonto Screen, Login Screen und Registrierungs Screen bauen | 15 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
 | Musikplayer integrieren| 10 |
-| Freunde anzeigen lassen und den Screen für die Anzeige | 10 |
-| Projektdokumentation | 10 |
+| Playlist Share ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
 
 ###Server (Franz-Johannes Weber)
 
@@ -103,20 +108,21 @@ kann
 Sobald die Main-Page aufgerufen wird, wird der Header mit der App Überschrift
 "MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
 Links zu den Websites "About Us", "Contact" und "Impressum".
-Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgende
+Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgenden
 Funktionen ausgestattet sein wird: Titel zurück, Titel vor, Abspielen, Pause, eine Lautstärkeanzeige und
 eine Titellängenanzeige. Grafisch soll der Player in einem schmalen horizontalen Layout designed werden.
-Auf der linken Seite unterhalb vom Musikplayer wird eine Playlist-Liste zu finden sein, wobei ein User eine
+Auf der linken Seite unterhalb vom Musikplayer wird eine Playlist-Liste zu finden sein, in welcher ein User eine
 neue Playlist mittels eines Hinzufüge-Buttons erstellen kann.
 Rechts davon befindet sich zunächst nur ein weißes Fenster, worin sich ein Textfeld mit der Hilfestellung für das
 Hinzufügen eines Titels befindet. Diese Funktion ist auch in der Überschrift-Leiste untergebracht. Außerdem ist darin
-ein Button für zum Verwalten des eigenen Kontos und seinen Kontakten, sowie ein Button für die Feature
-etwaige Titel oder sogar gesamte Playlists mit anderen Benutzern zu teilen.
+ein Button zum Verwalten des eigenen Kontos und der eigenen Kontakte, sowie ein Share Button um die jeweilige 
+Playlist mit anderen Benutzern teilen zu können.
                            
 ### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
 ### Page GoToUsers
 ![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
+In der Page GoToUsers sieht man welche Auswahlmöglichkeiten der User
 ### Page SearchForUsers
 ![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers") 
 ### Page MyFriends
