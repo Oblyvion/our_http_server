@@ -85,16 +85,21 @@ kann
 | Benutzerkonto Screen, Login Screen und Registrierungs Screen bauen | 15 |
 | Musikplayer integrieren| 10 |
 | Freunde anzeigen lassen und den Screen für die Anzeige | 10 |
-| Projektdokumentation | 10 |
+| Projektdokumentation | 15 |
 
 ###Server (Franz-Johannes Weber)
 
 | Teilaufgabe   | Zeit in Stunden |
 |----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Datenbank aufbauen | 10 |
-| | |
-| Projektdokumentation | 10 |
+| Projektplanung (Wireframes, README) | 10 |
+| Datenbank aufbauen und verwalten | 15 |
+| Filestreaming konfigurieren | 10 |
+| My Account Screen entwickeln | 15 |
+| User-Suche und Rankingsystem implementieren | 10 |
+| Zufälliger User Screen erstellen | 10 |
+| About us, Contact und Impressum anfertigen und designen | 5 |
+| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 10 |
+| Projektdokumentation | 15 |
 
 ## Wireframes
 
@@ -115,11 +120,16 @@ etwaige Titel oder sogar gesamte Playlists mit anderen Benutzern zu teilen.
                            
 ### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
+Ist mindestens ein Titel einer Playlist hinzugefügt worden, so verschwindet das Textfeld mit der Hilfestellung
+und eine tabellarische Darstellung zeigt Titelnamen, den Künstler, den Albumnamen, von welchem User der jeweilige
+Titel global geteilt wurde und gegebenenfalls welcher Playlist-Mate den Titel der Playlist hinzugefügt hat.
+Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende Titel abgespielt werden kann.
+
 ### Page GoToUsers
-![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
+![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers")
 ### Page SearchForUsers
-![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers") 
+![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
 ### Page MyFriends
-![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends") 
+![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends")
 ### Page MyAccount
-![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount") 
+![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
