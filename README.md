@@ -114,13 +114,13 @@ beinhaltet
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
 Sobald die Main-Page aufgerufen wird, wird der Header mit der App Überschrift
 "MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
-Links zu den Websites "About Us", "Contact" und "Impressum".
+Hyperlinks zu "About Us", "Contact" und "Impressum".
 Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgenden
 Funktionen ausgestattet sein wird: Titel zurück, Titel vor, Abspielen, Pause, eine Lautstärkeanzeige und
 eine Titellängenanzeige. Grafisch soll der Player in einem schmalen horizontalen Layout designed werden.
 Auf der linken Seite unterhalb vom Musikplayer wird eine Playlist-Liste zu finden sein, in welcher ein User eine
 neue Playlist mittels eines Hinzufüge-Buttons erstellen kann.
-Rechts davon befindet sich zunächst nur ein weißes Fenster, worin sich ein Textfeld mit der Hilfestellung für das
+Rechts davon ist zunächst lediglich ein weißes Fenster zu erkennen, worin sich ein Textfeld mit der Hilfestellung für das
 Hinzufügen eines Titels befindet. Diese Funktion ist auch in der Überschrift-Leiste untergebracht. Außerdem ist darin
 ein Button zum Verwalten des eigenen Kontos und der eigenen Kontakte, sowie ein Share Button um die jeweilige 
 Playlist mit anderen Benutzern teilen zu können.
@@ -137,6 +137,21 @@ Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende T
 In der Page GoToUsers sieht man welche Auswahlmöglichkeiten der User
 ### Page SearchForUsers
 ![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
+Auf dieser Seite befindet sich unterhalb der Seitenüberschrift "...NEW USER?" eine Box mit randomisierten Benutzern darin.
+Jeder Benutzernamen innerhalb der Box kann selektiert werden, um im Anschluss dessen Benutzerprofil in einer Popup-Box zu erhalten.
+Dabei wird je nach Berechtigungsstatus das ausgewählte Benutzerprofil entweder frei einsehbar oder mit nicht sichtbaren, 
+verdeckten Profildaten angezeigt. Im Übrigen ist in jedem fremden Profilfenster ein Button für eine Playlist-Mate-Anfragen
+untergebracht. Dadurch soll es allen Benutzern ermöglicht werden, auch Lieblingsmusik von zufällig ausgewählten Benutzern
+sich anzuhören. Ist der Benutzer bereits als Playlist-Mate im eigenen Profil gelistet, so taucht statt dem Button für eine
+Playlist-Mate-Anfrage ein Button für zum Löschen des Playlist-Mates auf.
+Schaut man auf der Page SearchForUsers nochmals etwas weiter nach unten, so findet man ein Texteingabefeld für die
+Benutzersuche, damit gezielt bestimmte Benutzer gefunden werden können. Sobald der suchende Benutzer mindestens ein Zeichen
+in das Eingabefeld eingibt, wird automatisch nach passenden Benutzernamen gesucht und die Ergebnisse werden in einer Liste direkt
+unter dem Texteingabefeld präsentiert. Dazu ist jeder Benutzer mit einem Punktestand (Score) und einer Platzierung (Rank)
+versehen. Die Platzierung ergibt sich aus dem Punktestand der jeweiligen gefundenen Benutzer. Der Punktestand-Wert soll auf einem
+Blick vermitteln, wie engagiert ein Benutzer an seinen eigenen und auch anderen Playlists arbeitet. Klickt man auch hier wieder
+auf einen Benutzernamen, öffnet sich eine Popup-Box mit den entsprechenden Benutzerprofildaten und den jeweiligen Buttons.
+
 ### Page MyFriends
 ![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends")
 ### Page MyAccount
