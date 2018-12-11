@@ -87,19 +87,26 @@ beinhaltet
 | Login Screen und Registrierungs Screen bauen| 15 |
 | Main Page mit Playlist Auswahl Menü erstellen | 20 | 
 | Musikplayer integrieren| 10 |
-| Playlist Share ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
 | Screen für die Anzeige der Playlist Mates | 10 |
 | SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
 | Projektdokumentation | 15 |
+| GESAMT | 100 |
 
 ###Server (Franz-Johannes Weber)
 
 | Teilaufgabe   | Zeit in Stunden |
 |----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Datenbank aufbauen | 10 |
-| | |
-| Projektdokumentation | 10 |
+| Projektplanung (Wireframes, README) | 10 |
+| Datenbank aufbauen und verwalten | 15 |
+| Filestreaming konfigurieren | 10 |
+| My Account Screen entwickeln | 15 |
+| User-Suche und Rankingsystem implementieren | 10 |
+| Zufälliger User Screen erstellen | 10 |
+| About us, Contact und Impressum anfertigen und designen | 5 |
+| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 10 |
+| Projektdokumentation | 15 |
+| GESAMT | 100 |
 
 ## Wireframes
 
@@ -120,12 +127,17 @@ Playlist mit anderen Benutzern teilen zu können.
                            
 ### Page PlaylistSongs
 ![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
+Ist mindestens ein Titel einer Playlist hinzugefügt worden, so verschwindet das Textfeld mit der Hilfestellung
+und eine tabellarische Darstellung zeigt Titelnamen, den Künstler, den Albumnamen, von welchem User der jeweilige
+Titel global geteilt wurde und gegebenenfalls welcher Playlist-Mate den Titel der Playlist hinzugefügt hat.
+Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende Titel abgespielt werden kann.
+
 ### Page GoToUsers
 ![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
 In der Page GoToUsers sieht man welche Auswahlmöglichkeiten der User
 ### Page SearchForUsers
-![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers") 
+![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
 ### Page MyFriends
-![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends") 
+![Bild MyFriends](./Wireframes/Page4_MyFriends.png "MyFriends")
 ### Page MyAccount
-![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount") 
+![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
