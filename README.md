@@ -25,8 +25,9 @@ innerhalb der Playlist verändern.
 - User können Playlists erstellen
 - User können Songs einer Playlist hinzufügen
 - Eigene Songs der User können der Plattform hinzugefügt werden.
-- User können andere User zu ihren Playlist Mates hinzufügen
-- User können Playlisten mit Playlist Mates teilen und Ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
+- User können andere User zu ihren Playlist-Mates hinzufügen 
+- User können Playlist-Mates auch wieder aus der Liste der Playlist-Mates entfernen
+- User können Playlisten mit Playlist-Mates teilen und ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
 
 
 ##Aufgaben des Servers
@@ -38,7 +39,7 @@ innerhalb der Playlist verändern.
         - Tabelle Songs 
             - Attribute:  SongID (primary), Titel, Artist, Album, Uploader (derjenige der den Titel auf die Plattform hochgeladen hat)
         - Tabelle Playlists
-            - Attribute: PlaylistID (primary), Name 
+            - Attribute: PlaylistID (primary), Name, collaborator_username (foreign) 
         - Tabelle User
             - Attribute: username (primary), password
         - Tabelle PlaylistContains
@@ -72,9 +73,9 @@ können)
 enthaltenen Songs
 - Im Client ist ein Musik Player enthalten, welcher die Songs aus den Playlists abspielen
 kann
-- Der Client zeigt ebenfalls eine Liste der Playlist Mates an welche zusätzlich die Anzahl der shared Playlists
+- Der Client zeigt ebenfalls eine Liste der Playlist-Mates an welche zusätzlich die Anzahl der Shared playlists
 beinhaltet
-- Die User können mit Hilfe einer User Suche neue User finden um sie als Playlist Mates hinzuzufügen.
+- Die User können mit Hilfe einer User Suche neue User finden um sie zu Ihren Playlist-Mates hinzuzufügen.
     - Dabei werden einige User random eingeblendet
 
 ## Aufwandsschätzung
@@ -134,7 +135,14 @@ Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende T
 
 ### Page GoToUsers
 ![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
-In der Page GoToUsers sieht man welche Auswahlmöglichkeiten der User
+In der Page GoToUsers sieht man welche Möglichkeiten dem User nach einem Klick auf das User Symbol
+ermöglicht werden. Insgesamt gibt es drei Auswahlmöglichkeiten: MyAccount, MyPlaylist Mates
+und SearchForUsers. Auswahl MyAccount bietet dem User die Möglichkeit seine Account Informationen aufzurufen, 
+welche in Page MyAccount gezeigt und erläutert werden. Wählt der User die Auswahl MyPlaylist-Mates, so werden ihm
+seine Playlist-Mates, wie bei Page MyPlaylistMates dargestellt, angezeigt. Entscheidet sich der User
+für SearchForUsers so wird ihm die Möglichkeit gegeben, wie in Page SearchForUsers beschrieben, neue User zu finden und ihnen eine
+Playlist-Mate Anfrage zu senden. 
+
 ### Page SearchForUsers
 ![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
 Auf dieser Seite befindet sich unterhalb der Seitenüberschrift "...NEW USER?" eine Box mit randomisierten Benutzern darin.
@@ -152,7 +160,20 @@ versehen. Die Platzierung ergibt sich aus dem Punktestand der jeweiligen gefunde
 Blick vermitteln, wie engagiert ein Benutzer an seinen eigenen und auch anderen Playlists arbeitet. Klickt man auch hier wieder
 auf einen Benutzernamen, öffnet sich eine Popup-Box mit den entsprechenden Benutzerprofildaten und den jeweiligen Buttons.
 
-### Page MyFriends
+### Page MyPlaylistMates
 ![Bild MyPlaylistMates](./Wireframes/Page4_MyPlaylistMates.png "MyPlaylistMates")
+Page MyPlaylistMates liefert dem User eine aplphabetisch sortierte, tabellarische Ansicht seiner bereits hinzugefügten Playlist-Mates. Dargestellt werden
+in der Tabelle die Attribute: Playlist-Mate name, Shared playlists und der Score des einzelnen Playlist-Mates. Attribut Playlist-Mate name zeigt den
+Usernamen des Playlist-Mates an. Score den Score des jeweiligen Mates. Das Attribut Shared playlists gibt beschreibt, wie viele Playlists in diesem 
+Moment mit dem jeweiligen Playlist-Mate zusammen bearbeitet werden. Bei einem Klick
+auf einen der Playlist-Mates erscheint eine Popup Box, welche dem User ermöglicht diesen Playlist-Mate aus der
+Liste der Playlist-Mates zu entfernen.
+
 ### Page MyAccount
 ![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
+In Page MyAccount findet der User alle wichtigen Informationen die seinen eigenen Account betreffen.
+Dazu gehört die Darstellung seines Scores auf der Plattform, als auch generelle Informationen wie Favourite artists, 
+playlists added oder songs added. Ein Fenster rechts liefert dem User eine Ansicht seiner beliebtesten Playlist-Mates.
+Diese werden absteigend nach der Anzahl an zusammen bearbeiteten Playlists sortiert.  
+Auf dieser Seite bekommt der User dadurch auch die Möglichkeit sein Passwort zu ändern oder gar seinen Account zu
+löschen.
