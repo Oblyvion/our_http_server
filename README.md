@@ -28,7 +28,6 @@
 Das Team besteht aus Julian Fess (Matr. 672836) und Franz-Johannes Weber 
 (Matr. 672622).
 
-<a name="idee"></a>
 ## Idee
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
 zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
