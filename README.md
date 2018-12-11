@@ -14,11 +14,14 @@
 
 ##### Wireframes
 8. [Page Main](#page-main)
-8. [Page PlaylistSongs](#page-playlistsongs)
-8. [Page GoToUsers](#page-gotousers)
-8. [Page SearchForUsers](#page-searchforusers)
-8. [Page MyPlaylistMates](#page-myplaylistmates)
-8. [Page MyAccount](#page-myaccount)
+9. [Page PlaylistSongs](#page-playlistsongs)
+10. [Page GoToUsers](#page-gotousers)
+11. [Page SearchForUsers](#page-searchforusers)
+12. [Page MyPlaylistMates](#page-myplaylistmates)
+13. [Page MyAccount](#page-myaccount)
+14. [Page AboutUs](#page-aboutus)
+15. [Page Contact](#page-contact)
+16. [Page Impressum](#page-impressum)
 
 
 ## Team
@@ -198,3 +201,19 @@ playlists added oder songs added. Ein Fenster rechts liefert dem User eine Ansic
 Diese werden absteigend nach der Anzahl an zusammen bearbeiteten Playlists sortiert.  
 Auf dieser Seite bekommt der User dadurch auch die Möglichkeit sein Passwort zu ändern oder gar seinen Account zu
 löschen.
+
+### Page AboutUs
+![Bild AboutUs](./Wireframes/Page6_AboutUs.PNG "AboutUs")
+Hier sind allgemeine Informationen über die Entwickler und über das Projekt "Music Playlist" zu finden.
+
+### Page Contact
+![Bild Contact](./Wireframes/Page7_Contact.PNG "Contact")
+Über den Hyperlink Contact gelangt man in das Kontaktfenster. Jedem angemeldeten Benutzer ist es erlaubt, eine Nachricht
+an die Entwickler via E-Mail zu senden, damit eventuelle Fragen, Wünsche oder etwa Kritik zur Verbesserung der gesamten
+Website angenommen und umgesetzt werden können. Ist ein Text verfasst und möchte abgeschickt werden, so geschieht dies
+mit Hilfe des Buttons "Send it!". Dabei wird eine E-Mail mit dem erstellten Text und dem Benutzernamen inklusive ID an
+die Projekt-E-Mail-Adresse gesendet.
+
+### Page Impressum
+![Bild Impressum](./Wireframes/Page8_Impressum.PNG "Impressum")
+Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-E-Mail-Adresse angegeben.
