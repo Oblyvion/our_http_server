@@ -86,9 +86,16 @@ beinhaltet
 
 ### Desktop
 
-### Page Main
-![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
-Sobald die Main-Page aufgerufen wird, wird der Header mit der App Überschrift
+### Page Login
+![Bild Login](./Wireframes/0_LoginScreen.png "LoginScreen")
+
+### Page Registration
+![Bild Login](./Wireframes/1_RegistrationScreen.png "RegistrationScreen")
+
+
+### Page FirstSteps
+![Bild FirstSteps](./Wireframes/2_FirstSteps.png "FirstSteps")
+Sobald die FirstSteps-Page aufgerufen wird, wird der Header mit der App Überschrift
 "MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
 Hyperlinks zu "About Us", "Contact" und "Impressum".
 Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgenden
@@ -100,16 +107,30 @@ Rechts davon ist zunächst lediglich ein weißes Fenster zu erkennen, worin sich
 Hinzufügen eines Titels befindet. Diese Funktion ist auch in der Überschrift-Leiste untergebracht. Außerdem ist darin
 ein Button zum Verwalten des eigenen Kontos und der eigenen Kontakte, sowie ein Share Button um die jeweilige 
 Playlist mit anderen Benutzern teilen zu können.
+           
+
+
+### Page AddNewSongToPlaylist
+![Bild AddNewSongToPlaylist](./Wireframes/3_AddNewSongToPlaylist.png "AddNewSongToPlaylist")
+           
+### Page SongWasAdded
+![Bild SongWasAdded](./Wireframes/4_SongWasAdded.png "SongWasAdded")
+           
+### Page AddNewPlaylist
+![Bild AddNewPlaylist](./Wireframes/5_AddNewPlaylist.png "AddNewPlaylist")      
+
+### Page NewPlaylistAdded
+![Bild NewPlaylistAdded](./Wireframes/6_NewPlaylistAdded.png "NewPlaylistAdded")  
                            
 ### Page PlaylistSongs
-![Bild PlaylistSongs](./Wireframes/Page1_PlaylistSongs.png "PlaylistSongs") 
+![Bild PlaylistSongs](./Wireframes/7_PlaylistSongs.png "PlaylistSongs") 
 Ist mindestens ein Titel einer Playlist hinzugefügt worden, so verschwindet das Textfeld mit der Hilfestellung
 und eine tabellarische Darstellung zeigt Titelnamen, den Künstler, den Albumnamen, von welchem User der jeweilige
 Titel global geteilt wurde und gegebenenfalls welcher Playlist-Mate den Titel der Playlist hinzugefügt hat.
 Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende Titel abgespielt werden kann.
 
-### Page GoToUsers
-![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
+### Page GoToPlaylistMates
+![Bild GoToMyPlaylistMates](./Wireframes/8_GoToMyPlaylistMates.png "GoToMyPlaylistMates") 
 In der Page GoToUsers sieht man welche Möglichkeiten dem User nach einem Klick auf das User Symbol
 ermöglicht werden. Insgesamt gibt es drei Auswahlmöglichkeiten: MyAccount, MyPlaylist Mates
 und SearchForUsers. Auswahl MyAccount bietet dem User die Möglichkeit seine Account Informationen aufzurufen, 
@@ -118,8 +139,17 @@ seine Playlist-Mates, wie bei Page MyPlaylistMates dargestellt, angezeigt. Entsc
 für SearchForUsers so wird ihm die Möglichkeit gegeben, wie in Page SearchForUsers beschrieben, neue User zu finden und ihnen eine
 Playlist-Mate Anfrage zu senden. 
 
-### Page SearchForUsers
-![Bild SearchForUsers](./Wireframes/Page3_SearchForUsers.png "SearchForUsers")
+### Page MyPlaylistMates
+![Bild MyPlaylistMates](./Wireframes/9_MyPlaylistMates.png "MyPlaylistMates")
+Page MyPlaylistMates liefert dem User eine aplphabetisch sortierte, tabellarische Ansicht seiner bereits hinzugefügten Playlist-Mates. Dargestellt werden
+in der Tabelle die Attribute: Playlist-Mate name, Shared playlists und der Score des einzelnen Playlist-Mates. Attribut Playlist-Mate name zeigt den
+Usernamen des Playlist-Mates an. Score den Score des jeweiligen Mates. Das Attribut Shared playlists gibt beschreibt, wie viele Playlists in diesem 
+Moment mit dem jeweiligen Playlist-Mate zusammen bearbeitet werden. Bei einem Klick
+auf einen der Playlist-Mates erscheint eine Popup Box, welche dem User ermöglicht diesen Playlist-Mate aus der
+Liste der Playlist-Mates zu entfernen.
+
+### Page SearchForNewPlaylistMate
+![Bild SearchForUsers](./Wireframes/10_NewPlaylistMate.png "SearchForPlaylistMates")
 Auf dieser Seite befindet sich unterhalb der Seitenüberschrift "...NEW USER?" eine Box mit randomisierten Benutzern darin.
 Jeder Benutzernamen innerhalb der Box kann selektiert werden, um im Anschluss dessen Benutzerprofil in einer Popup-Box zu erhalten.
 Dabei wird je nach Berechtigungsstatus das ausgewählte Benutzerprofil entweder frei einsehbar oder mit nicht sichtbaren, 
@@ -135,17 +165,8 @@ versehen. Die Platzierung ergibt sich aus dem Punktestand der jeweiligen gefunde
 Blick vermitteln, wie engagiert ein Benutzer an seinen eigenen und auch anderen Playlists arbeitet. Klickt man auch hier wieder
 auf einen Benutzernamen, öffnet sich eine Popup-Box mit den entsprechenden Benutzerprofildaten und den jeweiligen Buttons.
 
-### Page MyPlaylistMates
-![Bild MyPlaylistMates](./Wireframes/Page4_MyPlaylistMates.png "MyPlaylistMates")
-Page MyPlaylistMates liefert dem User eine aplphabetisch sortierte, tabellarische Ansicht seiner bereits hinzugefügten Playlist-Mates. Dargestellt werden
-in der Tabelle die Attribute: Playlist-Mate name, Shared playlists und der Score des einzelnen Playlist-Mates. Attribut Playlist-Mate name zeigt den
-Usernamen des Playlist-Mates an. Score den Score des jeweiligen Mates. Das Attribut Shared playlists gibt beschreibt, wie viele Playlists in diesem 
-Moment mit dem jeweiligen Playlist-Mate zusammen bearbeitet werden. Bei einem Klick
-auf einen der Playlist-Mates erscheint eine Popup Box, welche dem User ermöglicht diesen Playlist-Mate aus der
-Liste der Playlist-Mates zu entfernen.
-
 ### Page MyAccount
-![Bild MyAccount](./Wireframes/Page5_MyAccount.png "MyAccount")
+![Bild MyAccount](./Wireframes/11_MyAccount.png "MyAccount")
 In Page MyAccount findet der User alle wichtigen Informationen die seinen eigenen Account betreffen.
 Dazu gehört die Darstellung seines Scores auf der Plattform, als auch generelle Informationen wie Favourite artists, 
 playlists added oder songs added. Ein Fenster rechts liefert dem User eine Ansicht seiner beliebtesten Playlist-Mates.
@@ -153,12 +174,18 @@ Diese werden absteigend nach der Anzahl an zusammen bearbeiteten Playlists sorti
 Auf dieser Seite bekommt der User dadurch auch die Möglichkeit sein Passwort zu ändern oder gar seinen Account zu
 löschen.
 
+### Page GoToPlaylistMateRequests
+![Bild GoToPlaylistMateRequests](./Wireframes/12_GoToPlaylistMateRequests.png "GoToPlaylistMateRequests")
+
+### Page MyPlaylistMateRequests
+![Bild MyPlaylistMateRequests](./Wireframes/13_MyPlaylistMateRequests.png "MyPlaylistMateRequests")
+
 ### Page AboutUs
-![Bild AboutUs](./Wireframes/Page6_AboutUs.PNG "AboutUs")
+![Bild AboutUs](./Wireframes/14_AboutUs.png "AboutUs")
 Hier sind allgemeine Informationen über die Entwickler und über das Projekt "Music Playlist" zu finden.
 
 ### Page Contact
-![Bild Contact](./Wireframes/Page7_Contact.PNG "Contact")
+![Bild Contact](./Wireframes/15_Contact.png "Contact")
 Über den Hyperlink Contact gelangt man in das Kontaktfenster. Jedem angemeldeten Benutzer ist es erlaubt, eine Nachricht
 an die Entwickler via E-Mail zu senden, damit eventuelle Fragen, Wünsche oder etwa Kritik zur Verbesserung der gesamten
 Website angenommen und umgesetzt werden können. Ist ein Text verfasst und möchte abgeschickt werden, so geschieht dies
@@ -166,7 +193,7 @@ mit Hilfe des Buttons "Send it!". Dabei wird eine E-Mail mit dem erstellten Text
 die Projekt-E-Mail-Adresse gesendet.
 
 ### Page Impressum
-![Bild Impressum](./Wireframes/Page8_Impressum.PNG "Impressum")
+![Bild Impressum](./Wireframes/16_Impressum.png "Impressum")
 Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-E-Mail-Adresse angegeben.
 
 ### Mobil
@@ -225,31 +252,29 @@ Verantwortlicher: Julian Fess
 
 #### Projektvorbereitung
 
-| Aufgabe | Zeit in Stunden |
-|----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Login Screen und Registrierungs Screen bauen| 15 |
-| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
-| Musikplayer integrieren| 10 |
-| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
-| Screen für die Anzeige der Playlist Mates | 10 |
-| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
-| Projektdokumentation | 15 |
-| GESAMT | 25 |
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Anforderungen bestimmen | 1 
+| Idee festlegen und Abstract verfassen | 2
+| Client Abstract | 1
+| Wireframes Desktop  | 5 
+| Wireframes Mobil | 5 
+| Desktop Wireframes beschreiben | 5 
+| Mobile Wireframes beschreiben | 4
+| Projektvorschlag strukturieren | 2 
+| SUMME | 25 
 
 #### Implementierung
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Login Screen und Registrierungs Screen bauen| 15 |
-| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
-| Musikplayer integrieren| 10 |
-| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Login Screen und Registrierungs Screen bauen| 5 |
+| Main Page mit Playlist Auswahl Menü erstellen | 10 | 
+| Musikplayer integrieren| 5 |
+| Playlist Share zwischen Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 5 |
 | Screen für die Anzeige der Playlist Mates | 10 |
 | SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
-| Projektdokumentation | 15 |
-| GESAMT | 50 |
+| SUMME | 50 |
 
 #### Dokumentation und Tests
 
@@ -263,7 +288,7 @@ Verantwortlicher: Julian Fess
 | Screen für die Anzeige der Playlist Mates | 10 |
 | SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
 | Projektdokumentation | 15 |
-| Summe | 25 |
+| SUMME | 25 |
 
 #### Zusammenfassung
 
@@ -272,25 +297,24 @@ Verantwortlicher: Julian Fess
 | Projektvorbereitung | 25 |
 | Implementierung | 50 |
 | Projektdokumentation | 25 |
-| Summe  | 100 |
+| SUMME  | 100 |
 
 ### Backend
 Verantwortlicher: Franz Johannes Weber
 
 #### Projektvorbereitung
 
-| Aufgabe | Zeit in Stunden |
-|----------|:-------------:|
-| Projektplanung (Wireframes, README) | 10 |
-| Datenbank aufbauen und verwalten | 15 |
-| Filestreaming konfigurieren | 10 |
-| My Account Screen entwickeln | 15 |
-| User-Suche und Rankingsystem implementieren | 10 |
-| Zufälliger User Screen erstellen | 10 |
-| About us, Contact und Impressum anfertigen und designen | 5 |
-| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 10 |
-| Projektdokumentation | 15 |
-| GESAMT | 100 |
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Wireframes Desktop  | 5 
+| Wireframes Mobil | 5
+| Desktop Wireframes beschreiben | 2 
+| Mobile Wireframes beschreiben | 2
+| Server Abstract | 1
+| Datenbankschema und ORM entwerfen | 5
+| API Beschreibung | 3
+| Projektvorschlag strukturieren | 2   
+| SUMME | 25 
 
 #### Implementierung
 
@@ -304,7 +328,7 @@ Verantwortlicher: Franz Johannes Weber
 | Screen für die Anzeige der Playlist Mates | 10 |
 | SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
 | Projektdokumentation | 15 |
-| GESAMT | 50 |
+| SUMME | 50 |
 
 #### Dokumentation und Tests
 
@@ -318,7 +342,7 @@ Verantwortlicher: Franz Johannes Weber
 | Screen für die Anzeige der Playlist Mates | 10 |
 | SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
 | Projektdokumentation | 15 |
-| Summe | 25 |
+| SUMME | 25 |
 
 #### Zusammenfassung
 
@@ -327,4 +351,4 @@ Verantwortlicher: Franz Johannes Weber
 | Projektvorbereitung | 25 |
 | Implementierung | 50 |
 | Projektdokumentation | 25 |
-| Summe  | 100 |
+| SUMME  | 100 |
