@@ -32,6 +32,7 @@ Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
 
 
 ## Abstract
+
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
 zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
 In die Playlists können User Songs hinzufügen, die in der Server-Datenbank verfügbar sind.
