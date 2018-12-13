@@ -84,7 +84,7 @@ beinhaltet
 
 ## Wireframes
 
-###Desktop
+### Desktop
 
 ### Page Main
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
@@ -108,7 +108,7 @@ und eine tabellarische Darstellung zeigt Titelnamen, den Künstler, den Albumnam
 Titel global geteilt wurde und gegebenenfalls welcher Playlist-Mate den Titel der Playlist hinzugefügt hat.
 Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende Titel abgespielt werden kann.
 
-###Page GoToUsers
+### Page GoToUsers
 ![Bild GoToUsers](./Wireframes/Page2_GoToUsers.png "GoToUsers") 
 In der Page GoToUsers sieht man welche Möglichkeiten dem User nach einem Klick auf das User Symbol
 ermöglicht werden. Insgesamt gibt es drei Auswahlmöglichkeiten: MyAccount, MyPlaylist Mates
@@ -169,7 +169,7 @@ die Projekt-E-Mail-Adresse gesendet.
 ![Bild Impressum](./Wireframes/Page8_Impressum.PNG "Impressum")
 Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-E-Mail-Adresse angegeben.
 
-###Mobil
+### Mobil
 
 
 ## Abstract Server
@@ -223,7 +223,7 @@ Bla bla blub
 ### Frontend
 Verantwortlicher: Julian Fess
 
-####Projektvorbereitung
+#### Projektvorbereitung
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -237,7 +237,7 @@ Verantwortlicher: Julian Fess
 | Projektdokumentation | 15 |
 | GESAMT | 25 |
 
-####Implementierung
+#### Implementierung
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -251,7 +251,7 @@ Verantwortlicher: Julian Fess
 | Projektdokumentation | 15 |
 | GESAMT | 50 |
 
-####Dokumentation und Tests
+#### Dokumentation und Tests
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -265,7 +265,7 @@ Verantwortlicher: Julian Fess
 | Projektdokumentation | 15 |
 | Summe | 25 |
 
-####Zusammenfassung
+#### Zusammenfassung
 
 | Teil | Zeit in Stunden |
 |----------|:-------------:|
@@ -277,7 +277,7 @@ Verantwortlicher: Julian Fess
 ### Backend
 Verantwortlicher: Franz Johannes Weber
 
-####Projektvorbereitung
+#### Projektvorbereitung
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -292,7 +292,7 @@ Verantwortlicher: Franz Johannes Weber
 | Projektdokumentation | 15 |
 | GESAMT | 100 |
 
-####Implementierung
+#### Implementierung
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -306,7 +306,7 @@ Verantwortlicher: Franz Johannes Weber
 | Projektdokumentation | 15 |
 | GESAMT | 50 |
 
-####Dokumentation und Tests
+#### Dokumentation und Tests
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
@@ -320,7 +320,7 @@ Verantwortlicher: Franz Johannes Weber
 | Projektdokumentation | 15 |
 | Summe | 25 |
 
-####Zusammenfassung
+#### Zusammenfassung
 
 | Teil | Zeit in Stunden |
 |----------|:-------------:|
