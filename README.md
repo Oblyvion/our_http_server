@@ -1,35 +1,37 @@
 # project FebMusicPlaylist
 
+### Hochschule Worms CSA 151 WS 2018/19
+
 ## Inhaltsverzeichnis
 ##### Allgemeine Informationen
 1. [Team](#team)
-2. [Idee](#idee)
+2. [Abstract](#abstract)
 3. [Grundsätzliche Aufgaben (Anforderungen)](#grundstzliche-aufgaben-anforderungen)
 4. [Aufgaben des Servers](#aufgaben-des-servers)
 5. [Aufgaben des Clients](#aufgaben-des-clients)
 
-##### Aufwandschätzung
-6. [Client (Julian Fess)](#client-julian-fess)
-7. [Server (Franz-Johannes Weber)](#server-franz-johannes-weber)
-
 ##### Wireframes
-8. [Page Main](#page-main)
-9. [Page PlaylistSongs](#page-playlistsongs)
-10. [Page GoToUsers](#page-gotousers)
-11. [Page SearchForUsers](#page-searchforusers)
-12. [Page MyPlaylistMates](#page-myplaylistmates)
-13. [Page MyAccount](#page-myaccount)
-14. [Page AboutUs](#page-aboutus)
-15. [Page Contact](#page-contact)
-16. [Page Impressum](#page-impressum)
+6. [Page Main](#page-main)
+7. [Page PlaylistSongs](#page-playlistsongs)
+8. [Page GoToUsers](#page-gotousers)
+9. [Page SearchForUsers](#page-searchforusers)
+10. [Page MyPlaylistMates](#page-myplaylistmates)
+11. [Page MyAccount](#page-myaccount)
+12. [Page AboutUs](#page-aboutus)
+13. [Page Contact](#page-contact)
+14. [Page Impressum](#page-impressum)
+
+##### Aufwandschätzung
+15. [Client (Julian Fess)](#client-julian-fess)
+16. [Server (Franz-Johannes Weber)](#server-franz-johannes-weber)
 
 
 ## Team
-Das Team besteht aus Julian Fess (Matr. 672836) und Franz-Johannes Weber 
-(Matr. 672622).
+Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>          
+Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
 
-<a name="idee"></a>
-## Idee
+
+## Abstract
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
 zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
 In die Playlists können User Songs hinzufügen, die in der Server-Datenbank verfügbar sind.
@@ -54,31 +56,8 @@ innerhalb der Playlist verändern.
 - User können Playlisten mit Playlist-Mates teilen und ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
 
 
-## Aufgaben des Servers
-
-- Auf dem Server muss eine Datenbank vorhanden sein, die:
-    - (lizensfreie) Musik in einer Tabelle Songs beinhaltet 
-    - die Playlists der einzelnen User beinhaltet
-    - die User Daten der User beinhaltet 
-        - Tabelle Songs 
-            - Attribute:  SongID (primary), Titel, Artist, Album, Uploader (derjenige der den Titel auf die Plattform hochgeladen hat)
-        - Tabelle Playlists
-            - Attribute: PlaylistID (primary), Name, collaborator_username (foreign) 
-        - Tabelle User
-            - Attribute: username (primary), password
-        - Tabelle PlaylistContains
-            - Attribute: PlaylistID (foreign), SongID (foreign)
-        - Tabelle PlaylistFrom
-            - Attribute: PlaylistID (foreign), username (foreign)
-        - Tabelle PlaylistMate (User sind mit anderen Usern befreundet)
-            - Attribute: username (foreign), username_playlistmate (foreign) 
-- Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden
-können)
-- Der Server liefert dem Client abspielbare Musik in Form eines Streams
-- Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
-
-
-## Aufgaben des Clients
+## Abstract Client
+Verantwortlicher: Julian Fess
 
 - Unten in den Wireframes wird das vorläufige Design des Clients gezeigt
 - Der Client muss den Usern ermöglichen ein Benutzerkonto zu erstellen und zu verwalten
@@ -102,38 +81,9 @@ beinhaltet
 - Die User können mit Hilfe einer User Suche neue User finden um sie zu Ihren Playlist-Mates hinzuzufügen.
     - Dabei werden einige User random eingeblendet
 
-## Aufwandsschätzung
-
-### Client (Julian Fess)
-
-| Teilaufgabe   | Zeit in Stunden |
-|----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Login Screen und Registrierungs Screen bauen| 15 |
-| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
-| Musikplayer integrieren| 10 |
-| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
-| Screen für die Anzeige der Playlist Mates | 10 |
-| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
-| Projektdokumentation | 15 |
-| GESAMT | 100 |
-
-### Server (Franz-Johannes Weber)
-
-| Teilaufgabe   | Zeit in Stunden |
-|----------|:-------------:|
-| Projektplanung (Wireframes, README) | 10 |
-| Datenbank aufbauen und verwalten | 15 |
-| Filestreaming konfigurieren | 10 |
-| My Account Screen entwickeln | 15 |
-| User-Suche und Rankingsystem implementieren | 10 |
-| Zufälliger User Screen erstellen | 10 |
-| About us, Contact und Impressum anfertigen und designen | 5 |
-| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 10 |
-| Projektdokumentation | 15 |
-| GESAMT | 100 |
-
 ## Wireframes
+
+###Desktop
 
 ### Page Main
 ![Bild MainPage](./Wireframes/Page0_MainPage.png "MainPage")
@@ -217,3 +167,163 @@ die Projekt-E-Mail-Adresse gesendet.
 ### Page Impressum
 ![Bild Impressum](./Wireframes/Page8_Impressum.PNG "Impressum")
 Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-E-Mail-Adresse angegeben.
+
+###Mobil
+
+
+## Abstract Server
+Verantwortlicher: Franz Johannes Weber
+
+   - Auf dem Server muss eine Datenbank vorhanden sein, die:
+      - (lizensfreie) Musik in einer Tabelle Songs beinhaltet
+      - die Playlists der einzelnen User beinhaltet
+      - die User Daten der User beinhaltet
+          - Tabelle Songs
+              - Attribute: SongID (primary), Titel, Artist, Album, Uploader (derjenige der den Titel auf die Plattform hochgeladen hat)
+          - Tabelle Playlists
+              - Attribute: PlaylistID (primary), Name, collaborator_username (foreign)
+          - Tabelle User
+              - Attribute: username (primary), password
+          - Tabelle PlaylistContains
+              - Attribute: PlaylistID (foreign), SongID (foreign)
+          - Tabelle PlaylistFrom
+              - Attribute: PlaylistID (foreign), username (foreign)
+          - Tabelle PlaylistMate (User sind mit anderen Usern befreundet)
+              - Attribute: username (foreign), username_playlistmate (foreign)
+   - Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden können)
+   - Der Server liefert dem Client abspielbare Musik in Form eines Streams
+   - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
+
+### ORM
+
+### API-Beschreibung
+Bla bla blub
+```
+ GET /
+```
+### Template Object
+
+```json5
+{
+  success: false,
+  msg: "error"
+}
+```
+
+```json5
+{
+  success: true,
+  foo: "$bar"
+}
+```
+
+## Aufwandsschätzung
+
+### Frontend
+Verantwortlicher: Julian Fess
+
+####Projektvorbereitung
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README)  | 10 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
+| Musikplayer integrieren| 10 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
+| GESAMT | 25 |
+
+####Implementierung
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README)  | 10 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
+| Musikplayer integrieren| 10 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
+| GESAMT | 50 |
+
+####Dokumentation und Tests
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README)  | 10 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
+| Musikplayer integrieren| 10 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
+| Summe | 25 |
+
+####Zusammenfassung
+
+| Teil | Zeit in Stunden |
+|----------|:-------------:|
+| Projektvorbereitung | 25 |
+| Implementierung | 50 |
+| Projektdokumentation | 25 |
+| Summe  | 100 |
+
+### Backend
+Verantwortlicher: Franz Johannes Weber
+
+####Projektvorbereitung
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README) | 10 |
+| Datenbank aufbauen und verwalten | 15 |
+| Filestreaming konfigurieren | 10 |
+| My Account Screen entwickeln | 15 |
+| User-Suche und Rankingsystem implementieren | 10 |
+| Zufälliger User Screen erstellen | 10 |
+| About us, Contact und Impressum anfertigen und designen | 5 |
+| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 10 |
+| Projektdokumentation | 15 |
+| GESAMT | 100 |
+
+####Implementierung
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README)  | 10 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
+| Musikplayer integrieren| 10 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
+| GESAMT | 50 |
+
+####Dokumentation und Tests
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Projektplanung (Wireframes, README)  | 10 |
+| Login Screen und Registrierungs Screen bauen| 15 |
+| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
+| Musikplayer integrieren| 10 |
+| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
+| Screen für die Anzeige der Playlist Mates | 10 |
+| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
+| Projektdokumentation | 15 |
+| Summe | 25 |
+
+####Zusammenfassung
+
+| Teil | Zeit in Stunden |
+|----------|:-------------:|
+| Projektvorbereitung | 25 |
+| Implementierung | 50 |
+| Projektdokumentation | 25 |
+| Summe  | 100 |
