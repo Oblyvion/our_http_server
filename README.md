@@ -289,30 +289,75 @@ Verantwortlicher: Franz Johannes Weber
 ### ORM
 
 ### API-Beschreibung
-Bei Aufruf von https://www.127.0.0.1:3000/username
+Bei Aufruf von https://www.127.0.0.1:3000/user
+
 ```
- GET /username
+ GET /login/user
 ```
-In dieser Route nimmt der Server einen username entgegen.
-Als Antwort liefert er einen user mit dem Benutzernamen username.
+In dieser Route nimmt der Server einen user entgegen.
+Als Antwort liefert er den user.
 
 ````
- POST /username
+ POST /user
 ````
-In dieser Route nimmt der Server einen username entgegen.
-Als Anweisung legt er einen neuen user mit dem Benutzernamen username an.
+In dieser Route nimmt der Server einen user entgegen.
+Als Anweisung legt er den neuen user an.
 
 ````
- PUT /username
+ DELETE /user
 ````
-In dieser Route nimmt der Server einen username entgegen.
-Als Anweisung legt er einen neuen user mit dem Benutzernamen username an.
+In dieser Route nimmt der Server einen user entgegen.
+Als Anweisung löscht er den user.
+
+Bei Aufruf von https://www.127.0.0.1:3000/song
+```
+ GET /user/pageMain/playlistId
+```
+In dieser Route nimmt der Server eine playlist ID entgegen.
+Als Antwort liefert er die playlist mit allen dazugehörigen songs.
+
+````
+ POST /song
+````
+In dieser Route nimmt der Server einen song entgegen.
+Als Anweisung legt er den neuen song an.
+
+````
+ PUT /song
+````
+In dieser Route nimmt der Server einen song entgegen.
+Als Anweisung verändert er den song.
 
 ````
  DELETE /username
 ````
-In dieser Route nimmt der Server einen username entgegen.
-Als Anweisung löscht er einen user mit dem Benutzernamen username.
+In dieser Route nimmt der Server einen song entgegen.
+Als Anweisung löscht er den song.
+
+Bei Aufruf von https://www.127.0.0.1:3000/playlist
+```
+ GET /playlist/id
+```
+In dieser Route nimmt der Server eine playlistID entgegen.
+Als Antwort liefert er die playlist.
+
+````
+ POST /playlist
+````
+In dieser Route nimmt der Server eine playlist entgegen.
+Als Anweisung legt er eine neue playlist an.
+
+````
+ PUT /playlist/id
+````
+In dieser Route nimmt der Server eine playlistId entgegen.
+Als Anweisung verändert er die playlist mit der gegebenen ID.
+
+````
+ DELETE /username
+````
+In dieser Route nimmt der Server eine playlistId entgegen.
+Als Anweisung löscht er den song.
 
 ### Template Object
 
@@ -320,18 +365,21 @@ Folgendermaßen sieht ein Template Object unserer Datenbank aus:
 
 ```json5
 {
+  success: true,
   username: "fliesentischklaus25",
   passwordHashSha2: "ba9b353684f9ae6badc6e11a2f534d3a0a6cd4d625174b2e6b216ba32498c524",
   playlistsAdded: 5,
   songsAdded: 30,
   score: 100,
-  playlistMates: ["user21", "user55"]
+  playlistMates: ["user21", "user55"],
+  playlistIDs: [1, 53]
 }
 ```
 
 ```json5
 {
-  
+  success: false,
+  msg: "ERROR: Username does not exist"
 }
 ```
 
