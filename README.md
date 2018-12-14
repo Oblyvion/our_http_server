@@ -289,25 +289,49 @@ Verantwortlicher: Franz Johannes Weber
 ### ORM
 
 ### API-Beschreibung
-Bla bla blub
+Bei Aufruf von https://www.127.0.0.1:3000/username
 ```
- GET /
+ GET /username
 ```
+In dieser Route nimmt der Server einen username entgegen.
+Als Antwort liefert er einen user mit dem Benutzernamen username.
+
+````
+ POST /username
+````
+In dieser Route nimmt der Server einen username entgegen.
+Als Anweisung legt er einen neuen user mit dem Benutzernamen username an.
+
+````
+ PUT /username
+````
+In dieser Route nimmt der Server einen username entgegen.
+Als Anweisung legt er einen neuen user mit dem Benutzernamen username an.
+
+````
+ DELETE /username
+````
+In dieser Route nimmt der Server einen username entgegen.
+Als Anweisung löscht er einen user mit dem Benutzernamen username.
+
 ### Template Object
 
 Folgendermaßen sieht ein Template Object unserer Datenbank aus:
 
 ```json5
 {
-  success: false,
-  msg: "error"
+  username: "fliesentischklaus25",
+  passwordHashSha2: "ba9b353684f9ae6badc6e11a2f534d3a0a6cd4d625174b2e6b216ba32498c524",
+  playlistsAdded: 5,
+  songsAdded: 30,
+  score: 100,
+  playlistMates: ["user21", "user55"]
 }
 ```
 
 ```json5
 {
-  success: true,
-  foo: "$bar"
+  
 }
 ```
 
