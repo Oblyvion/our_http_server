@@ -287,6 +287,9 @@ Verantwortlicher: Franz Johannes Weber
    - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
 
 ### ORM
+bliblabub
+
+![Bild ORM](./Database/ORMModellDatenbank.png "ORM")
 
 ### API-Beschreibung
 Bei Aufruf von https://www.127.0.0.1:3000/user
