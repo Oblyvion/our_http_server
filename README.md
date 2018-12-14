@@ -256,30 +256,24 @@ Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-
 ### Mobil
 
 Nachfolgend unsere Wireframes für die mobile Ansicht
+Die grünen Pfeile sollen den Weg eines Users nach dem 
+ersten Login simulieren.
 
-#### Page FirstStepsMobile
-![Bild FirstStepsMobile](./Wireframes/Mobil/0_FirstStepsMobile.png "FirstStepsMobile")
-Hier die Realisierung unserer FirstSteps für mobile Endgeräte
+![Bild MobileWireframes](./Wireframes/Mobil/MobileWireframesWithArrows.png "MobileWireframes")
 
-#### Page AddNewSongMobile
-![Bild AddNewSongMobile](./Wireframes/Mobil/1_AddNewSongMobile.png "AddNewSongMobile")
-Grundlegend funktioniert das Hinzufügen eines Songs genauso wie in der Desktopansicht. 
+Die ersten drei Smartphone Wireframes zeigen die Realisierung unserer FirstSteps für mobile Endgeräte.
+Direkt im Anschluss der First Steps folgt das Hinzufügen eines Songs.
+Grundlegend funktioniert das Hinzufügen eines Songs genauso wie in der Desktopansicht.
 Durch die Verkleinerung des Bildschirms ist es allerdings nicht immer möglich die 
-ganzen Werte der Attribute darzustellen. Deswegen sieht man im mittleren Smartphone, wie
-der Titel abgeschnitten wird.
-
-#### Page CategoryToMatesMobile
-![Bild CategoryToMatesMobile](./Wireframes/Mobil/2_CategoryToMatesMobile.png "CategoryToMatesMobile")
-Aufgrund der kleinen Anzeigefläche rutschen die zwei Buttons vom oberen rechten Bildschirmrand in ein Contextmenü,
+ganzen Werte der Attribute darzustellen. Deswegen sieht man beim zweiten Smartphone Wireframe der zweiten Zeile, dass
+der Titel "Artistio Formante Soundtrack" abgeschnitten wird.
+Zu den Mobile Wireframes muss man sagen, dass aufgrund der kleinen Anzeigefläche die zwei Buttons aus der 
+Desktopansicht, die am oberen rechten Bildschirmrand waren, in ein Contextmenü wandern mussten,
 welches sich durch einen Druck auf den "Burger Menü Button" rechts auf dem "MUSIC PLAYLIST" Header öffnen lässt.
-Dieses Menü wird im linken Smartphone dargestellt und enthält alle Optionen außer Song oder Playlist hinzufügen.
+Dieses Menü wird im ersten Smartphone der dritten Zeile gezeigt und enthält alle Optionen außer das Hinzufügen eines Song oder
+einer Playlist hinzufügen.
 
-#### Page AccountMobile
-![Bild AccountMobile](./Wireframes/Mobil/3_AccountMobile.png "AccountMobile")
-Hier wird die Mobile Account Ansicht gezeigt. 
 
-#### Page PlaylistMateRequestsMobile
-![Bild PlaylistMateRequestsMobile](./Wireframes/Mobil/4_PlaylistMateRequestsMobile.png "PlaylistMateRequestsMobile")
 
 ## Abstract Server
 Verantwortlicher: Franz Johannes Weber
@@ -354,7 +348,8 @@ Verantwortlicher: Julian Fess
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
-| | |
+| Dokumentation | 15 |
+| 
 | SUMME | 20 |
 
 #### Zusammenfassung
