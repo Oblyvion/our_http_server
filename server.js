@@ -19,9 +19,13 @@ let users = [
     }
 ];
 
-app.get("/user/:id", (req, res) => {
-    const id = +req.params.id;
-    return res.send(users.find(user => user.id === id));
+app.get("/users", (req, res) => {
+    res.send(users);
+});
+
+app.get("/user?:name", (req, res) => {
+    const name = req.params.name;
+    return res.send(users.find(user => user.name === name));
 });
 
 app.get("/Page1", (req, res) => {
