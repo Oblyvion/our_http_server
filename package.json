@@ -26,6 +26,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
-    "request": "latest"
+    "request": "latest",
+    "sqlite3": "^4.0.4"
   }
 }

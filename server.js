@@ -9,13 +9,19 @@ const app = express();
 app.use(express.json());
 
 let users = [
-    {id: 1,
-    name: 'Zwenjamin'}
+    {
+        id: 1,
+        name: 'Zwenjamin'
+    },
+    {
+        id: 2,
+        name: 'Lauchfilian'
+    }
 ];
 
-app.get("/", (req, res) => {
-   res.send("Hier soll die MainPage entstehen!");
-
+app.get("/user/:id", (req, res) => {
+    const id = +req.params.id;
+    return res.send(users.find(user => user.id === id));
 });
 
 app.get("/Page1", (req, res) => {
