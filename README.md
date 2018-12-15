@@ -2,15 +2,15 @@
 
 ### Hochschule Worms CSA 151 WS 2018/19
 
-#### Allgemeine Informationen
+### Allgemeine Informationen
   1. [Team](#team)
   2. [Abstract](#abstract)
   3. [Anforderungen](#anforderungen)
-#### Client  
+### Client  
   4. [Abstract Client](#abstract-client)
-##### Wireframes
+#### Wireframes
   5. [Wireframes](#wireframes)
-     6. [Desktop](#desktop)
+      6. [Desktop](#desktop)
       - [Page Login](#page-login)
       - [Page Registration](#page-registration)
       - [Page FirstSteps](#page-firststeps)
@@ -28,21 +28,21 @@
       - [Page AboutUs](#page-aboutus)
       - [Page Contact](#page-contact)
       - [Page Impressum](#page-impressum)
-     7. [Mobil](#mobil)
-#### Server
+      7. [Mobil](#mobil)
+### Server
   8. [Abstract Server](#abstract-server)
-     9. [Datenbankmodell](#datenbankmodell)
-     10. [ORM](#orm)
-     11. [API-Beschreibung](#api-beschreibung)
-     12. [Template Object](#template-object)
-#### Aufwandsschaetzung
+      9. [Datenbankmodell](#datenbankmodell)
+      10. [ORM](#orm)
+      11. [API-Beschreibung](#api-beschreibung)
+      12. [Template Object](#template-object)
+### Aufwandsschaetzung
   13. [Aufwandsschaetzung](#aufwandsschaetzung)
-     14. [Frontend](#frontend)
+      14. [Frontend](#frontend)
       - [Projektvorbereitung](#projektvorbereitung)
       - [Implementierung](#implementierung)
       - [Dokumentation und Tests](#dokumentation-und-tests)
       - [Zusammenfassung](#zusammenfassung)
-     15. [Backend](#backend)
+      15. [Backend](#backend)
       - [Projektvorbereitung](#projektvorbereitung-1)
       - [Implementierung](#implementierung-1)
       - [Dokumentation und Tests](#dokumentation-und-tests-1)
