@@ -2,16 +2,15 @@
 
 ### Hochschule Worms CSA 151 WS 2018/19
 
-  
-## Inhaltsverzeichnis
-##### Allgemeine Informationen
+####Allgemeine Informationen
   1. [Team](#team)
   2. [Abstract](#abstract)
-  3. [Grundsaetzliche Aufgaben (Anforderungen)](#grundsaetzliche-aufgaben--anforderungen-)
+  3. [Anforderungen](#anforderungen)
+####Client  
   4. [Abstract Client](#abstract-client)
-##### Wireframes 
+#####Wireframes
   5. [Wireframes](#wireframes)
-   6. [Desktop](#desktop)
+     6. [Desktop](#desktop)
       - [Page Login](#page-login)
       - [Page Registration](#page-registration)
       - [Page FirstSteps](#page-firststeps)
@@ -29,29 +28,25 @@
       - [Page AboutUs](#page-aboutus)
       - [Page Contact](#page-contact)
       - [Page Impressum](#page-impressum)
-   7. [Mobil](#mobil)
-      - [Page FirstStepsMobile](#page-firststepsmobile)
-      - [Page AddNewSongMobile](#page-addnewsongmobile)
-      - [Page CategoryToMatesMobile](#page-categorytomatesmobile)
-      - [Page AccountMobile](#page-accountmobile)
-      - [Page PlaylistMateRequestsMobile](#page-playlistmaterequestsmobile)
+     7. [Mobil](#mobil)
+####Server
   8. [Abstract Server](#abstract-server)
-     - [ORM](#orm)
-     - [API-Beschreibung](#api-beschreibung)
-     - [Template Object](#template-object)
-##### Aufwandschaetzung
-  9. [Aufwandsschaetzung](#aufwandsschaetzung)
-     + [Frontend](#frontend)
-       - [Projektvorbereitung](#projektvorbereitung)
-       - [Implementierung](#implementierung)
-       - [Dokumentation und Tests](#dokumentation-und-tests)
-       - [Zusammenfassung](#zusammenfassung)
-     + [Backend](#backend)
-       - [Projektvorbereitung](#projektvorbereitung-1)
-       - [Implementierung](#implementierung-1)
-       - [Dokumentation und Tests](#dokumentation-und-tests-1)
-       - [Zusammenfassung](#zusammenfassung-1)
-
+     9. [Datenbankmodell](#datenbankmodell)
+     10. [ORM](#orm)
+     11. [API-Beschreibung](#api-beschreibung)
+     12. [Template Object](#template-object)
+####Aufwandsschaetzung
+  13. [Aufwandsschaetzung](#aufwandsschaetzung)
+     14. [Frontend](#frontend)
+      - [Projektvorbereitung](#projektvorbereitung)
+      - [Implementierung](#implementierung)
+      - [Dokumentation und Tests](#dokumentation-und-tests)
+      - [Zusammenfassung](#zusammenfassung)
+     15. [Backend](#backend)
+      - [Projektvorbereitung](#projektvorbereitung-1)
+      - [Implementierung](#implementierung-1)
+      - [Dokumentation und Tests](#dokumentation-und-tests-1)
+      - [Zusammenfassung](#zusammenfassung-1)
 
 ## Team
 Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>          
@@ -74,7 +69,7 @@ innerhalb der Playlist verändern. Desweiteren können User auch neue Songs der 
 Songs hochladen.
 
 
-## Grundsaetzliche Aufgaben (Anforderungen)
+## Anforderungen
 
 - User haben Benutzerkonten, Login mit Username und Passwort
 - Neue User müssen sich registrieren können.
@@ -406,30 +401,38 @@ Verantwortlicher: Julian Fess
 | Wireframes Desktop  | 8 
 | Wireframes Mobil | 5 
 | Desktop Wireframes beschreiben | 6 
-| Mobile Wireframes beschreiben | 4
+| Mobile Wireframes beschreiben | 2
+| Mobile Wireframes Pfeile und Anordnung | 2 
 | Projektvorschlag strukturieren | 2 
 | Datenbank entwerfen| 1 |
 | SUMME | 30 
 
 #### Implementierung
 
-| Aufgabe | Zeit in Stunden |
-|----------|:-------------:|
-| Login Screen bauen| 2.5 |
-| Registrierungs Screen bauen | 2.5 |
-| Tutorial / FirstSteps integrieren | 2 | 
-| Grundaufbau der Pages HTML und CSS | 8 | 
-| Musikplayer integrieren und Musik abspielbar | 7 |
-| Responsives Design lernen und umsetzen | 5 |
-| Screen für die Anzeige der Playlist Mates | 10 |
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Login Screen bauen| 3 
+| Registrierungs Screen bauen | 3 
+| Tutorial / FirstSteps integrieren | 4  
+| Grundaufbau der Pages HTML | 4 
+| Styling des Grundaufbaues | 5 
+| Playlist Bar erstellen | 3 
+| Musikplayer integrieren und Musik abspielbar machen | 6 
+| Responsives Design lernen und umsetzen | 7
+| MyAccount Page erstellen | 4
+| Page PlaylistMateRequests erstellen | 2
+| Page PlaylistMates erstellen | 2
+| Page AddNewSong mit Funktionalität erstellen | 4
+| Playlist Bar AddPlaylist so wie in Wireframe AddNewPlaylist gezeigt umsetzen | 3 
 | SUMME | 50 |
 
 #### Dokumentation und Tests
 
-| Aufgabe | Zeit in Stunden |
-|----------|:-------------:|
-| Dokumentation | 15 |
-| SUMME | 20 |
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Projektdokumentation | 15 
+| Tests fürs User Interface | 5 
+| SUMME | 20 
 
 #### Zusammenfassung
 
@@ -437,7 +440,7 @@ Verantwortlicher: Julian Fess
 |----------|:-------------:|
 | Projektvorbereitung | 30 |
 | Implementierung | 50 |
-| Projektdokumentation | 20 |
+| Dokumentation und Tests | 20 |
 | SUMME  | 100 |
 
 ### Backend
@@ -450,10 +453,10 @@ Verantwortlicher: Franz Johannes Weber
 | Wireframes Desktop  | 5 
 | Wireframes Mobil | 5
 | Desktop Wireframes beschreiben | 5 
-| Mobile Wireframes beschreiben | 3
+| Datenbank Modell entwerfen | 3
 | Server Abstract | 1
-| Datenbankschema und ORM entwerfen | 5
-| API Beschreibung | 4
+| ORM entwerfen | 4
+| API Beschreibung | 5
 | Projektvorschlag strukturieren | 2   
 | SUMME | 30 
 
@@ -461,35 +464,28 @@ Verantwortlicher: Franz Johannes Weber
 
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Login Screen und Registrierungs Screen bauen| 15 |
-| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
-| Musikplayer integrieren| 10 |
-| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
-| Screen für die Anzeige der Playlist Mates | 10 |
-| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
-| Projektdokumentation | 15 |
-| SUMME | 50 |
+| Datenbank aufbauen und verwalten | 5 
+| API aufbauen | 5 
+| Filestreaming konfigurieren | 10 
+| User-Suche und Rankingsystem implementieren | 10 
+| Zufälliger User Screen erstellen | 10 
+| About us, Contact und Impressum anfertigen und designen | 5 
+| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 5 
+| SUMME | 50 
 
 #### Dokumentation und Tests
 
-| Aufgabe | Zeit in Stunden |
-|----------|:-------------:|
-| Projektplanung (Wireframes, README)  | 10 |
-| Login Screen und Registrierungs Screen bauen| 15 |
-| Main Page mit Playlist Auswahl Menü erstellen | 20 | 
-| Musikplayer integrieren| 10 |
-| Playlist Share zwische Playlist Mates ermöglichen, Share Button möglicherweise mit drag and drop | 15 |
-| Screen für die Anzeige der Playlist Mates | 10 |
-| SearchForUsers erstellen und Random User anzeigen lassen + Möglichkeit bieten User untereinander als Playlist Mates zu connecten (Anfrage etc.)| 15 |
-| Projektdokumentation | 15 |
-| SUMME | 20 |
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Projektdokumentation | 15
+| API Tests | 5 
+| SUMME | 20 
 
 #### Zusammenfassung
 
-| Teil | Zeit in Stunden |
-|----------|:-------------:|
-| Projektvorbereitung | 30 |
-| Implementierung | 50 |
-| Projektdokumentation | 20 |
-| SUMME  | 100 |
+| Teil | Zeit in Stunden 
+|----------|:-------------:
+| Projektvorbereitung | 30 
+| Implementierung | 50 
+| Dokumentation und Tests | 20 
+| SUMME  | 100 
