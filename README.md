@@ -8,7 +8,7 @@
   * [Anforderungen](#anforderungen)
 ### Client  
   * [Abstract Client](#abstract-client)
-####Wireframes
+#### Wireframes
   * [Wireframes](#wireframes)
     + [Desktop](#desktop)
       - [Page Login](#page-login)
@@ -29,13 +29,13 @@
       - [Page Contact](#page-contact)
       - [Page Impressum](#page-impressum)
     + [Mobil](#mobil)
-###Server
+### Server
   * [Abstract Server](#abstract-server)
     + [Datenbankmodell](#datenbankmodell)
     + [ORM](#orm)
     + [API-Beschreibung](#api-beschreibung)
     + [Template Object](#template-object)
-###Aufwandsschaetzung
+### Aufwandsschaetzung
   * [Aufwandsschaetzung](#aufwandsschaetzung)
     + [Frontend](#frontend)
       - [Projektvorbereitung](#projektvorbereitung)
