@@ -61,10 +61,11 @@ Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
 ## Abstract
 
 Grundsätzlich ist die Idee, eine kleine Web Plattform zum Erstellen und Abspielen von Playlists 
-zu entwickeln. Die User der Plattform haben die Möglichkeit Ihre eigenen Playlists zu erstellen.
+zu entwickeln. Um User der Plattform zu werden, muss man sich registrieren. Nach einem Login
+haben User die Wahl, ob sie andere User zu Ihren Playlist Mates hinzufügen möchten, indem sie Ihnen eine Anfrage senden.
+Desweiteren haben die User der Plattform die Möglichkeit Ihre eigenen Playlists zu erstellen.
 In die Playlists können User Songs hinzufügen, die in der Server-Datenbank verfügbar sind.
-User können andere User zu Ihren Playlist Mates hinzufügen indem sie Ihnen eine Anfrage senden.
-Die Playlists sind entweder privat, für Playlist Mates offen oder für alle User öffentlich. Private Playlists können nur vom
+Die Playlists sind entweder privat, für Playlist-Mates offen oder für alle User öffentlich. Private Playlists können nur vom
 User der sie erstellt hat angesehen und angehört werden. Playlists die für Playlist Mates öffentlich gemacht wurden, können von 
 den Mates angesehen und angehört werden. Öffentliche Playlists sind für alle User offen zugänglich. Zusätzlich dazu 
 können die Playlists mit den Playlist Mates geteilt werden, was den Mates die Mitarbeit an der Playlist ermöglicht. 
@@ -119,7 +120,7 @@ Nachfolgend unsere Wireframes für die Desktopansicht
 ![Bild Login](./Wireframes/Desktop/0_LoginScreen.png "LoginScreen")
 Auf diesem Wireframe sieht man unseren Login Screen. Er soll auch im späteren Projekt schlicht designed sein und
 eine einfache Bedienbarkeit ermöglichen. Es gibt ein Eingabefeld für den Benutzernamen und ein Eingabefeld für das Passwort.
-Darunter befinden sich zwei Buttons: "Submit" und "Registration". "Submit" reicht die Daten beim Server ein um sie zu überprüfen.
+Darunter befinden sich zwei Buttons: "Submit" und "Registration". "Submit" reicht die Daten beim Server ein, um sie zu überprüfen.
 Hat der User sich noch nicht auf der Seite registriert und hat keinen Benutzernamen, so wählt er den Knopf Registration und wird zu
 zu unserem Registration Screen weitergeleitet.
 
@@ -134,7 +135,7 @@ an den Server geschickt, überprüft und wenn möglich wird der Account erstellt
 #### Page FirstSteps
 ![Bild FirstSteps](./Wireframes/Desktop/2_FirstSteps.png "FirstSteps")
 Sobald die FirstSteps-Page aufgerufen wird, wird der Header mit der App Überschrift
-"MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen rechten Ecke die einzelnen 
+"MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen linken Ecke die einzelnen 
 Hyperlinks zu "About Us", "Contact" und "Impressum".
 Unmittelbar unter dem Header wird der Musikplayer zu finden sein, welcher mit folgenden
 Funktionen ausgestattet sein wird: Titel zurück, Titel vor, Abspielen, Pause, eine Lautstärkeanzeige und
@@ -143,19 +144,19 @@ Auf der linken Seite wird eine Playlist-Übersicht zu finden sein, in welcher ei
 neue Playlist mittels eines Hinzufüge-Buttons erstellen kann.
 Rechts davon ist zunächst lediglich ein weißes Fenster zu erkennen, worin sich zwei Textfelder mit Hilfestellungen befinden. Textfeld links beschreibt 
 dabei, wie eine neue Playlist hinzugefügt werden kann und Textfeld rechts beschreibt das Hinzufügen eines
-neuen Songs in die vorhandene Playlist. Rechts neben dem Button, der Songs hinzufügt gibt es
+neuen Songs in die vorhandene Playlist. Rechts neben dem Button, der Songs hinzufügt, gibt es
 noch einen Button, dies ist der Share Button, welcher ermöglicht die Playlist mit anderen zu teilen,
-um sie als Mitarbeiter der Playlist freizugeben. Am rechten, oberen Bildschirmrand sind noch zwei weitere Buttons untergebracht.
+um sie als Mitarbeiter an der Playlist freizugeben. Am rechten, oberen Bildschirmrand sind noch zwei weitere Buttons untergebracht.
 Button "User"( bietet dem User die Möglichkeit, seine Account bezogenen Daten abzurufen. Das bedeutet: Übersicht der PlaylistMates, MyAccount (Info zum eigenen Account, Möglichkeit Passwort zu ändern etc.)
 und eine Suchfunktion um neue User hinzufügen zu können. Der Button "Requests" liefert dem User seine PlaylistMateRequests zurück.
-(Nähere Beschreibungen zu den Funktionen dieser Buttons folgen in den folgenden Wireframes)
+(Nähere Beschreibungen zu den Funktionen dieser Buttons folgen in den Wireframes)
            
 #### Page AddNewSongToPlaylist
 ![Bild AddNewSongToPlaylist](./Wireframes/Desktop/3_AddNewSongToPlaylist.png "AddNewSongToPlaylist")
 Auf dieser Seite wird dargestellt, wie es aussieht wenn ein User einen neuen Song zu einer seiner
 vorhandenen Playlists hinzufügt. Dies geschieht, wenn ein User in einer vorhandenen Playlist den "Add Button" 
-am rechten Rand der Playlistanzeige drückt. Dazu gibt es ein Eingabefeld und eine Suchfunktion die mit "autocomplete" arbeiten soll.
-Das Fenster mit dem schwarzen Rand ist nur zum besseren Verständnis, des Wireframes gedacht.
+am rechten Rand der Playlistanzeige drückt. Dazu gibt es ein Eingabefeld und eine Suchfunktion die mit autocomplete arbeiten soll.
+Das Fenster mit dem schwarzen Rand ist nur zum besseren Verständnis des Wireframes gedacht.
            
 #### Page SongWasAdded
 ![Bild SongWasAdded](./Wireframes/Desktop/4_SongWasAdded.png "SongWasAdded")
@@ -260,7 +261,6 @@ Die grünen Pfeile sollen den Weg eines Users nach dem
 ersten Login simulieren.
 
 ![Bild MobileWireframes](./Wireframes/Mobil/MobileWireframesWithArrows.png "MobileWireframes")
-
 Die ersten drei Smartphone Wireframes zeigen die Realisierung unserer FirstSteps für mobile Endgeräte.
 Direkt im Anschluss der First Steps folgt das Hinzufügen eines Songs.
 Grundlegend funktioniert das Hinzufügen eines Songs genauso wie in der Desktopansicht.
@@ -270,8 +270,9 @@ der Titel "Artistio Formante Soundtrack" abgeschnitten wird.
 Zu den Mobile Wireframes muss man sagen, dass aufgrund der kleinen Anzeigefläche die zwei Buttons aus der 
 Desktopansicht, die am oberen rechten Bildschirmrand waren, in ein Contextmenü wandern mussten,
 welches sich durch einen Druck auf den "Burger Menü Button" rechts auf dem "MUSIC PLAYLIST" Header öffnen lässt.
-Dieses Menü wird im ersten Smartphone der dritten Zeile gezeigt und enthält alle Optionen außer das Hinzufügen eines Song oder
-einer Playlist hinzufügen.
+Dieses Menü wird im ersten Smartphone der dritten Zeile gezeigt und enthält alle Optionen außer das Hinzufügen eines Songs oder
+die Option eine Playlist hinzufügen. Das Hinzufügen einer Playlist erfolgt über den "Add Button" in der PlaylistBar, welche
+sich durch einen Druck auf den "Playlist List Button" öffnen lässt, was im Wireframe Zeile 2 Smartphone 2,3 gezeigt wird.
 
 
 
@@ -286,10 +287,14 @@ Verantwortlicher: Franz Johannes Weber
    - Der Server liefert dem Client abspielbare Musik in Form eines Streams
    - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
 
-### ORM
-bliblabub
+### Datenbankmodell
+Im folgenden Bild ist das vorläufige Datenbankmodell zu sehen.
 
-![Bild ORM](./Database/ORMModellDatenbank.png "ORM")
+![Bild DatenbankModell](./Database/DatenbankModell.png "DatenbankModell")
+
+### ORM 
+
+![Bild ORM](./Database/ORM.png "ORM")
 
 ### API-Beschreibung
 Bei Aufruf von https://www.127.0.0.1:3000/user
@@ -424,7 +429,6 @@ Verantwortlicher: Julian Fess
 | Aufgabe | Zeit in Stunden |
 |----------|:-------------:|
 | Dokumentation | 15 |
-| 
 | SUMME | 20 |
 
 #### Zusammenfassung
