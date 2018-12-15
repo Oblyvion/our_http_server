@@ -49,7 +49,7 @@
       - [Zusammenfassung](#zusammenfassung-1)
 
 ## Team
-Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>          
+Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>
 Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
 
 
@@ -78,7 +78,7 @@ Songs hochladen.
 - User können schon auf der Plattform vorhandene Songs einer Playlist hinzufügen
 - User können andere User zu ihren Playlist-Mates hinzufügen 
 - User können Playlist-Mates auch wieder aus der Liste der Playlist-Mates entfernen
-- User können Playlisten mit Playlist-Mates teilen und ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen  
+- User können Playlisten mit Playlist-Mates teilen und ihnen dadurch Mitarbeit an ihrer Playlist ermöglichen
 
 
 ## Abstract Client
@@ -158,10 +158,10 @@ Das Fenster mit dem schwarzen Rand ist nur zum besseren Verständnis des Wirefra
 Seite SongWasAdded zeigt, wie es aussieht wenn ein Song hinzugefügt wurde.
 Im Wireframe davor wurde "Artistio Formante Soundtrack" hinzugefügt und steht jetzt in der Liste.
 Im Attribut "AddedBy" der Liste, steht nun "ME", da der Titel vom User selbst und nicht von einem
-freigebenen Playlist-Mate hinzugefügt wurde.          
+freigebenen Playlist-Mate hinzugefügt wurde.
            
 #### Page AddNewPlaylist
-![Bild AddNewPlaylist](./Wireframes/Desktop/5_AddNewPlaylist.png "AddNewPlaylist")      
+![Bild AddNewPlaylist](./Wireframes/Desktop/5_AddNewPlaylist.png "AddNewPlaylist")
 Ebenso ist es möglich eine neue Playlist hinzuzufügen. Dazu muss der User den 
 "Add Button" am oberen Rand der Playlist Übersicht drücken. Geschieht dies, so wandert der Button
 ein kleines Stück nach rechts und es entsteht ein Eingabefeld dort wo der Button war. Dort kann nun 
@@ -169,7 +169,7 @@ wie in dem Fenster mit dem schwarzen Rahmen gezeigt, eine neue Playlist erstellt
 nicht vorhanden dann wird die Playlist erstellt.
 
 #### Page NewPlaylistAdded
-![Bild NewPlaylistAdded](./Wireframes/Desktop/6_NewPlaylistAdded.png "NewPlaylistAdded")  
+![Bild NewPlaylistAdded](./Wireframes/Desktop/6_NewPlaylistAdded.png "NewPlaylistAdded")
 Hier wurde die Playlist "PLAYLIST STANDARD 2" die im vorherigen Wireframe gezeigt wurde,
 erfolgreich erstellt und hinzugefügt zur Übersicht. Standardmäßig wird die Playlist direkt
 nach dem Erstellen aufgerufen
@@ -220,7 +220,7 @@ untergebracht. Dadurch soll es allen Benutzern ermöglicht werden, auch Liebling
 In Page MyAccount findet der User alle wichtigen Informationen die seinen eigenen Account betreffen.
 Dazu gehört die Darstellung seines Scores auf der Plattform, als auch generelle Informationen wie Favourite artists, 
 playlists added oder songs added. Ein Fenster rechts liefert dem User eine Ansicht seiner beliebtesten Playlist-Mates.
-Diese werden absteigend nach der Anzahl an zusammen bearbeiteten Playlists sortiert.  
+Diese werden absteigend nach der Anzahl an zusammen bearbeiteten Playlists sortiert.
 Auf dieser Seite bekommt der User dadurch auch die Möglichkeit sein Passwort zu ändern oder gar seinen Account zu
 löschen.
 
@@ -413,7 +413,7 @@ Verantwortlicher: Julian Fess
 |----------|:-------------:
 | Login Screen bauen| 3 
 | Registrierungs Screen bauen | 3 
-| Tutorial / FirstSteps integrieren | 4  
+| Tutorial / FirstSteps integrieren | 4
 | Grundaufbau der Pages HTML | 4 
 | Styling des Grundaufbaues | 5 
 | Playlist Bar erstellen | 3 
@@ -457,7 +457,7 @@ Verantwortlicher: Franz Johannes Weber
 | Server Abstract | 1
 | ORM entwerfen | 4
 | API Beschreibung | 5
-| Projektvorschlag strukturieren | 2   
+| Projektvorschlag strukturieren | 2
 | SUMME | 30 
 
 #### Implementierung
