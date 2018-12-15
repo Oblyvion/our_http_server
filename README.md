@@ -2,13 +2,13 @@
 
 ### Hochschule Worms CSA 151 WS 2018/19
 
-####Allgemeine Informationen
+#### Allgemeine Informationen
   1. [Team](#team)
   2. [Abstract](#abstract)
   3. [Anforderungen](#anforderungen)
-####Client  
+#### Client  
   4. [Abstract Client](#abstract-client)
-#####Wireframes
+##### Wireframes
   5. [Wireframes](#wireframes)
      6. [Desktop](#desktop)
       - [Page Login](#page-login)
@@ -29,13 +29,13 @@
       - [Page Contact](#page-contact)
       - [Page Impressum](#page-impressum)
      7. [Mobil](#mobil)
-####Server
+#### Server
   8. [Abstract Server](#abstract-server)
      9. [Datenbankmodell](#datenbankmodell)
      10. [ORM](#orm)
      11. [API-Beschreibung](#api-beschreibung)
      12. [Template Object](#template-object)
-####Aufwandsschaetzung
+#### Aufwandsschaetzung
   13. [Aufwandsschaetzung](#aufwandsschaetzung)
      14. [Frontend](#frontend)
       - [Projektvorbereitung](#projektvorbereitung)
