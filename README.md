@@ -119,15 +119,15 @@ Hat der User sich noch nicht auf der Seite registriert und hat keinen Benutzerna
 zu unserem Registration Screen weitergeleitet.
 
 #### Page Registration
-![Bild Login](./Wireframes/Desktop/1_RegistrationScreen.png "RegistrationScreen")
-Im folgenden Wireframe zu sehen ist der Registration Screen. Dort bekommt ein neuer User der Plattform
+![Bild Login](./Wireframes/Desktop/1_RegistrationScreen.png "RegistrationScreen")</br>
+Im obigen Wireframe zu sehen ist der Registration Screen. Dort bekommt ein neuer User der Plattform
 die Möglichkeit sich einen neuen Account für die Plattform zu erstellen. Es gibt zwei Eingabefelder, die den neuen User 
 dazu auffordern sich einen Benutzernamen und ein Passwort zu überlegen. Durch den Klick auf den Button "Register" werden die Daten
 an den Server geschickt, überprüft und wenn möglich wird der Account erstellt.
 
 
 #### Page FirstSteps
-![Bild FirstSteps](./Wireframes/Desktop/2_FirstSteps.png "FirstSteps")
+![Bild FirstSteps](./Wireframes/Desktop/2_FirstSteps.png "FirstSteps")</br>
 Sobald die FirstSteps-Page aufgerufen wird, wird der Header mit der App Überschrift
 "MUSIC PLAYLIST" erzeugt. Darin befinden sich in der oberen linken Ecke die einzelnen 
 Hyperlinks zu "About Us", "Contact" und "Impressum".
@@ -146,21 +146,21 @@ und eine Suchfunktion um neue User hinzufügen zu können. Der Button "Requests"
 (Nähere Beschreibungen zu den Funktionen dieser Buttons folgen in den Wireframes)
            
 #### Page AddNewSongToPlaylist
-![Bild AddNewSongToPlaylist](./Wireframes/Desktop/3_AddNewSongToPlaylist.png "AddNewSongToPlaylist")
+![Bild AddNewSongToPlaylist](./Wireframes/Desktop/3_AddNewSongToPlaylist.png "AddNewSongToPlaylist")</br>
 Auf dieser Seite wird dargestellt, wie es aussieht wenn ein User einen neuen Song zu einer seiner
 vorhandenen Playlists hinzufügt. Dies geschieht, wenn ein User in einer vorhandenen Playlist den "Add Button" 
 am rechten Rand der Playlistanzeige drückt. Dazu gibt es ein Eingabefeld und eine Suchfunktion die mit autocomplete arbeiten soll.
 Das Fenster mit dem schwarzen Rand ist nur zum besseren Verständnis des Wireframes gedacht.
            
 #### Page SongWasAdded
-![Bild SongWasAdded](./Wireframes/Desktop/4_SongWasAdded.png "SongWasAdded")
+![Bild SongWasAdded](./Wireframes/Desktop/4_SongWasAdded.png "SongWasAdded")</br>
 Seite SongWasAdded zeigt, wie es aussieht wenn ein Song hinzugefügt wurde.
 Im Wireframe davor wurde "Artistio Formante Soundtrack" hinzugefügt und steht jetzt in der Liste.
 Im Attribut "AddedBy" der Liste, steht nun "ME", da der Titel vom User selbst und nicht von einem
 freigebenen Playlist-Mate hinzugefügt wurde.
            
 #### Page AddNewPlaylist
-![Bild AddNewPlaylist](./Wireframes/Desktop/5_AddNewPlaylist.png "AddNewPlaylist")
+![Bild AddNewPlaylist](./Wireframes/Desktop/5_AddNewPlaylist.png "AddNewPlaylist")</br>
 Ebenso ist es möglich eine neue Playlist hinzuzufügen. Dazu muss der User den 
 "Add Button" am oberen Rand der Playlist Übersicht drücken. Geschieht dies, so wandert der Button
 ein kleines Stück nach rechts und es entsteht ein Eingabefeld dort wo der Button war. Dort kann nun 
@@ -168,19 +168,19 @@ wie in dem Fenster mit dem schwarzen Rahmen gezeigt, eine neue Playlist erstellt
 nicht vorhanden dann wird die Playlist erstellt.
 
 #### Page NewPlaylistAdded
-![Bild NewPlaylistAdded](./Wireframes/Desktop/6_NewPlaylistAdded.png "NewPlaylistAdded")
+![Bild NewPlaylistAdded](./Wireframes/Desktop/6_NewPlaylistAdded.png "NewPlaylistAdded")</br>
 Hier wurde die Playlist "PLAYLIST STANDARD 2" die im vorherigen Wireframe gezeigt wurde,
 erfolgreich erstellt und hinzugefügt zur Übersicht. Standardmäßig wird die Playlist direkt
 nach dem Erstellen aufgerufen
                            
 #### Page PlaylistSongs
-![Bild PlaylistSongs](./Wireframes/Desktop/7_PlaylistSongs.png "PlaylistSongs") 
+![Bild PlaylistSongs](./Wireframes/Desktop/7_PlaylistSongs.png "PlaylistSongs")</br>
 Ist mindestens ein Titel einer Playlist hinzugefügt worden, so verschwinden die Textfelder mit den Hilfestellungen
 und eine tabellarische Darstellung zeigt Titelnamen, den Künstler und ob ein Playlist-Mate den Titel der Playlist hinzugefügt hat.
 Jede Zeile wird dabei klickbar sein, sodass nach jedem Klick der entsprechende Titel abgespielt werden kann.
 
 #### Page GoToPlaylistMates
-![Bild GoToMyPlaylistMates](./Wireframes/Desktop/8_GoToMyPlaylistMates.png "GoToMyPlaylistMates") 
+![Bild GoToMyPlaylistMates](./Wireframes/Desktop/8_GoToMyPlaylistMates.png "GoToMyPlaylistMates")</br>
 In der Page GoToPlaylistMates sieht man welche Wege dem User nach einem Klick auf das User Symbol
 offen stehen. Insgesamt gibt es drei Auswahlmöglichkeiten: MyPlaylist Mates, NewPlaylistMate? und MyAccount. Wählt der User die Auswahl MyPlaylist-Mates, so werden ihm
 seine Playlist-Mates, wie bei Page MyPlaylistMates dargestellt, angezeigt. Die Auswahl MyAccount bietet dem User die Möglichkeit seine Account Informationen aufzurufen, 
@@ -189,7 +189,7 @@ für NewPlaylistMate?, so wird ihm die Möglichkeit gegeben, wie in Page NewPlay
 Playlist-Mate Anfrage zu senden. 
 
 #### Page MyPlaylistMates
-![Bild MyPlaylistMates](./Wireframes/Desktop/9_MyPlaylistMates.png "MyPlaylistMates")
+![Bild MyPlaylistMates](./Wireframes/Desktop/9_MyPlaylistMates.png "MyPlaylistMates")</br>
 Page MyPlaylistMates liefert dem User eine alphabetisch sortierte, tabellarische Ansicht seiner bereits hinzugefügten Playlist-Mates. Dargestellt werden
 in der Tabelle die Attribute: Playlist-Mate name, Shared playlists und der Score des einzelnen Playlist-Mates. Attribut Playlist-Mate name zeigt den
 Usernamen des Playlist-Mates an. Score den Score des jeweiligen Mates. Das Attribut Shared playlists beschreibt, wie viele Playlists in diesem 
@@ -198,7 +198,7 @@ auf einen der Playlist-Mates erscheint eine Popup Box, welche dem User ermöglic
 Liste der Playlist-Mates zu entfernen.
 
 #### Page SearchForNewPlaylistMate
-![Bild SearchForPlaylistMates](./Wireframes/Desktop/10_NewPlaylistMate.png "SearchForPlaylistMates")
+![Bild SearchForPlaylistMates](./Wireframes/Desktop/10_NewPlaylistMate.png "SearchForPlaylistMates")</br>
 Auf dieser Seite befindet sich unterhalb der Seitenüberschrift "...NEW PLAYLIST MATE?" ein Texteingabefeld für die
 Benutzersuche, damit gezielt bestimmte Benutzer gefunden werden können. Sobald der suchende Benutzer mindestens ein Zeichen
 in das Eingabefeld eingibt, wird automatisch nach passenden Benutzernamen gesucht und die Ergebnisse werden in einer Liste direkt
@@ -215,7 +215,7 @@ verdeckten Profildaten angezeigt. Im Übrigen ist in jedem fremden Profilfenster
 untergebracht. Dadurch soll es allen Benutzern ermöglicht werden, auch Lieblingsmusik von zufällig ausgewählten Benutzern anzuhören. 
 
 #### Page MyAccount
-![Bild MyAccount](./Wireframes/Desktop/11_MyAccount.png "MyAccount")
+![Bild MyAccount](./Wireframes/Desktop/11_MyAccount.png "MyAccount")</br>
 In Page MyAccount findet der User alle wichtigen Informationen die seinen eigenen Account betreffen.
 Dazu gehört die Darstellung seines Scores auf der Plattform, als auch generelle Informationen wie Favourite artists, 
 playlists added oder songs added. Ein Fenster rechts liefert dem User eine Ansicht seiner beliebtesten Playlist-Mates.
@@ -224,20 +224,20 @@ Auf dieser Seite bekommt der User dadurch auch die Möglichkeit sein Passwort zu
 löschen.
 
 #### Page GoToPlaylistMateRequests
-![Bild GoToPlaylistMateRequests](./Wireframes/Desktop/12_GoToPlaylistMateRequests.png "GoToPlaylistMateRequests")
+![Bild GoToPlaylistMateRequests](./Wireframes/Desktop/12_GoToPlaylistMateRequests.png "GoToPlaylistMateRequests")</br>
 Hier wird gezeigt wie der User auf seine PlaylistMate Requests zugreifen kann. 
 Dies geschieht über einen Klick auf den "Request Button", also den kleinen Button mit dem Letter Icon, link neben 
 dem "User Button" am oberen rechten Bildschirmrand
 
 #### Page MyPlaylistMateRequests
-![Bild MyPlaylistMateRequests](./Wireframes/Desktop/13_MyPlaylistMateRequests.png "MyPlaylistMateRequests")
+![Bild MyPlaylistMateRequests](./Wireframes/Desktop/13_MyPlaylistMateRequests.png "MyPlaylistMateRequests")</br>
 
 #### Page AboutUs
-![Bild AboutUs](./Wireframes/Desktop/14_AboutUs.png "AboutUs")
+![Bild AboutUs](./Wireframes/Desktop/14_AboutUs.png "AboutUs")</br>
 Hier sind allgemeine Informationen über die Entwickler und über das Projekt "Music Playlist" zu finden.
 
 #### Page Contact
-![Bild Contact](./Wireframes/Desktop/15_Contact.png "Contact")
+![Bild Contact](./Wireframes/Desktop/15_Contact.png "Contact")</br>
 Über den Hyperlink Contact gelangt man in das Kontaktfenster. Jedem angemeldeten Benutzer ist es erlaubt, eine Nachricht
 an die Entwickler via E-Mail zu senden, damit eventuelle Fragen, Wünsche oder etwa Kritik zur Verbesserung der gesamten
 Website angenommen und umgesetzt werden können. Ist ein Text verfasst und möchte abgeschickt werden, so geschieht dies
@@ -245,16 +245,15 @@ mit Hilfe des Buttons "Send it!". Dabei wird eine E-Mail mit dem erstellten Text
 die Projekt-E-Mail-Adresse gesendet.
 
 #### Page Impressum
-![Bild Impressum](./Wireframes/Desktop/16_Impressum.png "Impressum")
+![Bild Impressum](./Wireframes/Desktop/16_Impressum.png "Impressum")</br>
 Auf dieser Seite sind die genauen Entwicklerdaten der Homepage und eine Kontakt-E-Mail-Adresse angegeben.
 
 ### Mobil
-
 Nachfolgend unsere Wireframes für die mobile Ansicht
 Die grünen Pfeile sollen den Weg eines Users nach dem 
 ersten Login simulieren.
 
-![Bild MobileWireframes](./Wireframes/Mobil/MobileWireframesWithArrows.png "MobileWireframes")
+![Bild MobileWireframes](./Wireframes/Mobil/MobileWireframesWithArrows.png "MobileWireframes")</br>
 Die ersten drei Smartphone Wireframes zeigen die Realisierung unserer FirstSteps für mobile Endgeräte.
 Direkt im Anschluss der First Steps folgt das Hinzufügen eines Songs.
 Grundlegend funktioniert das Hinzufügen eines Songs genauso wie in der Desktopansicht.
@@ -350,12 +349,12 @@ Bei Aufruf von https://www.127.0.0.1:3000/user/add/song:
 ````
 In dieser Route nimmt der Server einen song entgegen.
 Als Antwort liefert er eine Liste passender songs.
-##### Client kann song seiner playlist hinzufügen
+##### Client kann einen song seiner playlist hinzufügen
 ````
- POST /user/add/song/id     // dabei bin ich mir unsicher, ob nicht die playlist ausgewählt werden soll???
+ POST /user/add/song
 ````
-In dieser Route nimmt der Server eine song id entgegen.
-Als Antwort liefert er einen song mit der entsprechenden id.
+In dieser Route nimmt der Server einen song entgegen.
+Als Anweisung legt er den neuen song an.
 
 #### Page My Playlist Mates
 Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMates:
