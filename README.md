@@ -49,8 +49,7 @@
       - [Zusammenfassung](#zusammenfassung-1)
 
 ## Team
-Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>
-Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
+Julian Fess  | Matr. 672836 | inf2819@hs-worms.de</br>Franz-Johannes Weber | Matr. 672622 | inf2793@hs-worms.de
 
 
 ## Abstract
@@ -112,7 +111,7 @@ die Anzahl der Shared playlists beinhaltet
 Nachfolgend unsere Wireframes für die Desktopansicht
 
 #### Page Login
-![Bild Login](./Wireframes/Desktop/0_LoginScreen.png "LoginScreen")
+![Bild Login](./Wireframes/Desktop/0_LoginScreen.png "LoginScreen")</br>
 Auf diesem Wireframe sieht man unseren Login Screen. Er soll auch im späteren Projekt schlicht designed sein und
 eine einfache Bedienbarkeit ermöglichen. Es gibt ein Eingabefeld für den Benutzernamen und ein Eingabefeld für das Passwort.
 Darunter befinden sich zwei Buttons: "Submit" und "Registration". "Submit" reicht die Daten beim Server ein, um sie zu überprüfen.
