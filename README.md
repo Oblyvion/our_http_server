@@ -1,4 +1,4 @@
-# project FebMusicPlaylist
+# Project MusicPlaylist
 
 ### Hochschule Worms CSA 151 WS 2018/19
 
@@ -295,7 +295,7 @@ Im folgenden Bild ist das vorläufige Datenbankmodell zu sehen.
 ### API-Beschreibung
 #### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
-Client kann sich anmelden, falls user in der Datenbank vorhanden.
+##### Client kann sich anmelden, falls user in der Datenbank vorhanden.
 ```
  GET /login/user
 ```
@@ -387,14 +387,17 @@ Der Server liefert als Antwort alle user.
 
 #### Page My Account
 Bei Aufruf von https://www.127.0.0.1:3000/user/myAccount:
+##### User Account Informationen werden abgerufen.
 ````
  GET /user/myAccount
 ````
 In dieser Route liefert der Server alle Daten des aktuell angemeldeten users.
+##### User Account kann gelöscht werden.
 ````
  DELETE /user/myAccount/deleteAccount
 ````
 In dieser Route löscht der Server den aktuell angemeldeten user.
+##### User Account Passwort kann verändert werden.
 ````
  POST /user/myAccount/changePassword/newPassword
 ````
@@ -403,15 +406,18 @@ Als Anweisung ändert er das Passwort des aktuell angemeldeten users.
 
 #### Page My Playlist Mate Request
 Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMateRequests:
+##### Playlist Mate Requests können abgefragt werden.
 ````
  GET /user/myPlaylistMateRequests/
 ````
 In dieser Route liefert der Server alle offenen playlist mate Anfragen des aktuell angemeldeten users.
+##### Playlist Mates können dem User Acoount hinzugefügt werden.
 ````
  POST /user/myPlaylistMateRequests/user
 ````
 In dieser Route nimmt der Server einen user entgegen.
 Als Anweisung fügt er diesen user den playlist mates vom aktuell angemeldeten user hinzu.
+##### Playlist Mate Requests können gelöscht/abgelehnt werden.
 ````
  DELETE /user/myPlaylistMateRequests/user
 ````
@@ -420,6 +426,7 @@ Als Anweisung löscht er den playlist mate request.
 
 #### Page About us
 Bei Aufruf von https://www.127.0.0.1:3000/aboutUs:
+##### About us Informationen können angefordert werden.
 ````
  GET /aboutUs/
 ````
@@ -427,14 +434,16 @@ In dieser Route liefert der Server die allgemeinen Informationen über die Entwi
 
 #### Page Contact
 Bei Aufruf von https://www.127.0.0.1:3000/contact:
+##### User kann Text an Entwicklern senden.
 ````
- POST /contact/sendIt
+ POST /user/contact/sendIt
 ````
 In dieser Route nimmt der Server eine Zeichenkette entgegen.
 Als Anweisung sendet er diese Zeichenkette an die hinterlegte E-Mail Adresse.
 
 #### Page Impressum
 Bei Aufruf von https://www.127.0.0.1:3000/impressum:
+##### Impressum Informationen können angefordert werden.
 ````
  GET /impressum/
 ````
