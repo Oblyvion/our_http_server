@@ -231,7 +231,10 @@ dem "User Button" am oberen rechten Bildschirmrand
 
 #### Page MyPlaylistMateRequests
 ![Bild MyPlaylistMateRequests](./Wireframes/Desktop/13_MyPlaylistMateRequests.png "MyPlaylistMateRequests")</br>
-
+Im obigen Wireframe ist eine Tabelle für User zu sehen, welche eine Anfrage zum Playlist Mate gesendet haben. Der User,
+der diese Anfrage empfängt, hat nun die Entscheidung, die Playlist Mate Anfrage anzunehmen oder zu verweigern.
+Diese Entscheidung wird über einen Klick auf die Buttons mit den Aufschriften YES und NO kenntlich gemacht und kann
+mit Hilfe des Send-it-Buttons an die anfragenden User zurückgesendet werden.
 #### Page AboutUs
 ![Bild AboutUs](./Wireframes/Desktop/14_AboutUs.png "AboutUs")</br>
 Hier sind allgemeine Informationen über die Entwickler und über das Projekt "Music Playlist" zu finden.
@@ -290,7 +293,7 @@ Im folgenden Bild ist das vorläufige Datenbankmodell zu sehen.
 ![Bild ORM](./Database/ORM.png "ORM")
 
 ### API-Beschreibung
-#### Login
+#### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
 Client kann sich anmelden, falls user in der Datenbank vorhanden.
 ```
@@ -299,7 +302,7 @@ Client kann sich anmelden, falls user in der Datenbank vorhanden.
 In dieser Route nimmt der Server einen user entgegen.
 Als Antwort liefert er den user.
 
-#### Registration
+#### Page Registration
 Bei Aufruf von https://www.127.0.0.1:3000/registration:
 ##### Dem Client muss ermöglicht werden, einen neuen user der Datenbank hinzuzufügen.
 ```
@@ -341,17 +344,15 @@ Als Antwort liefert er den song mit der entsprechenden id.
 In dieser Route nimmt der Server eine song id entgegen.
 Als Anweisung löscht er den song mit der entsprechenden id.
 
-#### Add Song
-Bei Aufruf von https://www.127.0.0.1:3000/user/add/song:
 ##### Client bekommt nach Interaktion mit Eingabefeld, passende songs je nach eingegebener Zeichenkette angezeigt.
 ````
- GET /user/add/song
+ GET /user/pageMain/add/song
 ````
 In dieser Route nimmt der Server einen song entgegen.
 Als Antwort liefert er eine Liste passender songs.
 ##### Client kann einen song seiner playlist hinzufügen
 ````
- POST /user/add/song
+ POST /user/pageMain/add/song
 ````
 In dieser Route nimmt der Server einen song entgegen.
 Als Anweisung legt er den neuen song an.
@@ -362,19 +363,82 @@ Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMates:
 ````
  GET /user/myPlaylistMates/playlistMates
 ````
-In dieser Route nimmt der Server eine song id entgegen.
-Als Antwort liefert er einen song mit der entsprechenden id.
+Der Server liefert als Antwort alle playlist mates des users.
+##### Der Client kann einen playlist mate löschen.
+````
+ DELETE /user/myPlaylistMates/playlistMate
+````
+In dieser Route nimmt der Server einen playlist mate entgegen.
+Als Anweisung löscht er diesen playlist mate aus seiner playlist mate Liste.
 
-#### Add Playlist Mate
+#### Page Search for new playlist mate
+Bei Aufruf von https://www.127.0.0.1:3000/user/newPlaylistMate:
+##### Der Client kann einen neuen playlist mate hinzufügen.
+````
+ POST /user/newPlaylistMate/playlistMate
+````
+In dieser Route nimmt der Server einen playlist mate entgegen.
+Als Anweisung legt er einen neuen playlist mate an.
+##### Der Client bekommt alle user.
+````
+ GET /user/newPlaylistMate/users
+````
+Der Server liefert als Antwort alle user.
 
+#### Page My Account
+Bei Aufruf von https://www.127.0.0.1:3000/user/myAccount:
+````
+ GET /user/myAccount
+````
+In dieser Route liefert der Server alle Daten des aktuell angemeldeten users.
+````
+ DELETE /user/myAccount/deleteAccount
+````
+In dieser Route löscht der Server den aktuell angemeldeten user.
+````
+ POST /user/myAccount/changePassword/newPassword
+````
+In dieser Route nimmt der Server eine Zeichenkette entgegen.
+Als Anweisung ändert er das Passwort des aktuell angemeldeten users.
 
-#### My Account
-```
- DELETE /user/myAccount/deleteUser
-```
+#### Page My Playlist Mate Request
+Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMateRequests:
+````
+ GET /user/myPlaylistMateRequests/
+````
+In dieser Route liefert der Server alle offenen playlist mate Anfragen des aktuell angemeldeten users.
+````
+ POST /user/myPlaylistMateRequests/user
+````
 In dieser Route nimmt der Server einen user entgegen.
-Als Anweisung löscht er den user.
+Als Anweisung fügt er diesen user den playlist mates vom aktuell angemeldeten user hinzu.
+````
+ DELETE /user/myPlaylistMateRequests/user
+````
+In dieser Route nimmt der Server einen user entgegen.
+Als Anweisung löscht er den playlist mate request.
 
+#### Page About us
+Bei Aufruf von https://www.127.0.0.1:3000/aboutUs:
+````
+ GET /aboutUs/
+````
+In dieser Route liefert der Server die allgemeinen Informationen über die Entwickler.
+
+#### Page Contact
+Bei Aufruf von https://www.127.0.0.1:3000/contact:
+````
+ POST /contact/sendIt
+````
+In dieser Route nimmt der Server eine Zeichenkette entgegen.
+Als Anweisung sendet er diese Zeichenkette an die hinterlegte E-Mail Adresse.
+
+#### Page Impressum
+Bei Aufruf von https://www.127.0.0.1:3000/impressum:
+````
+ GET /impressum/
+````
+In dieser Route liefert der Server die genauen Informationen über die Entwickler.
 
 ### Template Object
 
