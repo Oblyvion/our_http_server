@@ -289,75 +289,91 @@ Verantwortlicher: Franz Johannes Weber
 ### ORM
 
 ### API-Beschreibung
-Bei Aufruf von https://www.127.0.0.1:3000/user
-
+#### Login
+Bei Aufruf von https://www.127.0.0.1:3000/login:
+Client kann sich anmelden, falls user in der Datenbank vorhanden.
 ```
  GET /login/user
 ```
 In dieser Route nimmt der Server einen user entgegen.
 Als Antwort liefert er den user.
 
-````
- POST /user
-````
+#### Registration
+Bei Aufruf von https://www.127.0.0.1:3000/registration:
+##### Dem Client muss ermöglicht werden, einen neuen user der Datenbank hinzuzufügen.
+```
+ POST /registration/user
+```
 In dieser Route nimmt der Server einen user entgegen.
 Als Anweisung legt er den neuen user an.
 
+#### Page Main
+Bei Aufruf von https://www.127.0.0.1:3000/user/pageMain:
+##### Der Client kann eine neue playlist erstellen.
 ````
- DELETE /user
+ POST /user/pageMain/playlist
 ````
-In dieser Route nimmt der Server einen user entgegen.
-Als Anweisung löscht er den user.
-
-Bei Aufruf von https://www.127.0.0.1:3000/song
+In dieser Route nimmt der Server eine playlist entgegen.
+Als Anweisung legt er die neue playlist an.
+##### Der Client bekommt alle songs aus der jeweiligen playlist.
 ```
- GET /user/pageMain/playlistId
+ GET /user/pageMain/playlist/id
 ```
-In dieser Route nimmt der Server eine playlist ID entgegen.
-Als Antwort liefert er die playlist mit allen dazugehörigen songs.
-
+In dieser Route nimmt der Server eine playlist id entgegen.
+Als Antwort liefert er die playlist mit der entsprechenden id.
+##### Der Client kann den song ändern.
 ````
- POST /song
-````
-In dieser Route nimmt der Server einen song entgegen.
-Als Anweisung legt er den neuen song an.
-
-````
- PUT /song
+ PUT /user/pageMain/song
 ````
 In dieser Route nimmt der Server einen song entgegen.
 Als Anweisung verändert er den song.
-
+##### Der Client kann einen song anfordern.
 ````
- DELETE /username
+ GET /user/pageMain/song/id
+````
+In dieser Route nimmt der Server eine song id entgegen.
+Als Antwort liefert er den song mit der entsprechenden id.
+##### Client kann song löschen.
+````
+ DELETE /user/pageMain/song/id
+````
+In dieser Route nimmt der Server eine song id entgegen.
+Als Anweisung löscht er den song mit der entsprechenden id.
+
+#### Add Song
+Bei Aufruf von https://www.127.0.0.1:3000/user/add/song:
+##### Client bekommt nach Interaktion mit Eingabefeld, passende songs je nach eingegebener Zeichenkette angezeigt.
+````
+ GET /user/add/song
 ````
 In dieser Route nimmt der Server einen song entgegen.
-Als Anweisung löscht er den song.
+Als Antwort liefert er eine Liste passender songs.
+##### Client kann song seiner playlist hinzufügen
+````
+ POST /user/add/song/id     // dabei bin ich mir unsicher, ob nicht die playlist ausgewählt werden soll???
+````
+In dieser Route nimmt der Server eine song id entgegen.
+Als Antwort liefert er einen song mit der entsprechenden id.
 
-Bei Aufruf von https://www.127.0.0.1:3000/playlist
+#### Page My Playlist Mates
+Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMates:
+##### Der Client kann alle seine playlist mates einsehen.
+````
+ GET /user/myPlaylistMates/playlistMates
+````
+In dieser Route nimmt der Server eine song id entgegen.
+Als Antwort liefert er einen song mit der entsprechenden id.
+
+#### Add Playlist Mate
+
+
+#### My Account
 ```
- GET /playlist/id
+ DELETE /user/myAccount/deleteUser
 ```
-In dieser Route nimmt der Server eine playlistID entgegen.
-Als Antwort liefert er die playlist.
+In dieser Route nimmt der Server einen user entgegen.
+Als Anweisung löscht er den user.
 
-````
- POST /playlist
-````
-In dieser Route nimmt der Server eine playlist entgegen.
-Als Anweisung legt er eine neue playlist an.
-
-````
- PUT /playlist/id
-````
-In dieser Route nimmt der Server eine playlistId entgegen.
-Als Anweisung verändert er die playlist mit der gegebenen ID.
-
-````
- DELETE /username
-````
-In dieser Route nimmt der Server eine playlistId entgegen.
-Als Anweisung löscht er den song.
 
 ### Template Object
 
