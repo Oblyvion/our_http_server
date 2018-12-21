@@ -1,0 +1,99 @@
+* {
+  padding:0;
+  margin:0;
+}
+
+body {
+  background-image: url("./Images/background.jpg");
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+}
+
+.LoginAndRegistrationPage {
+  width: 100%;
+  padding: 10% 0 0;
+}
+
+header {
+  font-family: "SansSerif", sans-serif;
+  background: rgba(7, 40, 195, 0.5);
+  height: 15%;
+}
+
+header h1 {
+  padding: 20px 0 0 0;
+  text-align: center;
+}
+
+header div {
+
+}
+
+header div a {
+  padding-left: 20px;
+  text-align: left;
+  font-size: 50px;
+}
+
+.form {
+  position: relative;
+  z-index: 1;
+  background: rgba(7, 40, 195, 0.5);
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+}
+
+.form h1 {
+  font-family: "SansSerif", sans-serif;
+  padding-bottom: 20px;
+}
+
+.form input {
+  font-family: "SansSerif", sans-serif;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.form button {
+  font-family: "SansSerif", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.form button:hover, .form button:active {
+  background: #43A047;
+}
+
+.message {
+  font-family: "SansSerif", sans-serif;
+  font-size: 14px;
+  margin: 15px 0 0;
+  color: aliceblue;
+  padding: 15px 0 0 20px;
+}
+
+.form .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+.form .RegistrationForm {
+  display: none;
+}
