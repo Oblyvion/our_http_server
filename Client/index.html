@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"  href="style.css">
+</head>
+<body>
+    <header>
+            <h1>MusicPlaylist</h1>
+            <div>
+                <a class="link" href="#">About us</a>
+            </div>
+    </header>
+
+    <div class="LoginAndRegistrationPage">
+    <div id="form" class="form">
+
+        <form class="LoginForm">
+            <h1>Log in here.</h1>
+            <input type="text" placeholder="username"/>
+            <input type="password" placeholder="password"/>
+            <button>Login</button>
+            <p class="message">Not registered? <a href="#" onclick="clickRegister();return false;">Register</a></p>
+        </form>
+
+        <form class="RegistrationForm">
+            <h1>Register here.</h1>
+            <input type="text" placeholder="username"/>
+            <input type="text" placeholder="password"/>
+            <button>Create</button>
+            <p class="message">Already registered? <a href="#" onclick="clickLogin();return false;">Login</a></p>
+        </form>
+
+    </div>
+    </div>
+
+    <script>
+        //console.dir(document);
+
+        function clickRegister() {
+            animate();
+            const RegistrationForm = document.getElementsByClassName("RegistrationForm").item(0);
+            const LoginForm = document.getElementsByClassName("LoginForm").item(0);
+            LoginForm.style.display = "none";
+            RegistrationForm.style.display = "block";
+        }
+
+        function clickLogin() {
+            animate();
+            const RegistrationForm = document.getElementsByClassName("RegistrationForm").item(0);
+            const LoginForm = document.getElementsByClassName("LoginForm").item(0);
+            LoginForm.style.display = "block";
+            RegistrationForm.style.display = "none";
+        }
+
+        function animate() {
+            const elem = document.getElementById("form");
+            let pos = -100;
+            const id = setInterval(frame, 5);
+            function frame() {
+                if (pos === 0) {
+                    clearInterval(id);
+                } else {
+                    pos++;
+                    elem.style.bottom = pos + "px";
+                    elem.style.animation.blink();
+                }
+            }
+        }
+
+
+
+    </script>
+
+</body>
+</html>
