@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "description": "Unser eigener http_server",
-  "main": "server.js",
+  "main": "Backend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node Backend/server.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +24,10 @@
   },
   "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
   "dependencies": {
+    "celebrate": "^9.0.1",
+    "escape-html": "latest",
     "express": "^4.16.4",
-    "express-handlebars": "^3.0.0",
+    "joi": "^14.3.0",
     "request": "latest",
     "sqlite3": "^4.0.4"
   }
