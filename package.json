@@ -6,7 +6,7 @@
   "main": "Server/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Server/server.js"
+    "start": "start Client/index.html && nodemon Server/server.js"
   },
   "repository": {
     "type": "git",
