@@ -7,15 +7,13 @@ class DB {
         this.db.exec('PRAGMA foreign_keys = ON');
     }
 
-    // FIXME WARUM WIRD u.A. TABLE USERS NICHT HIER AUTOMATISCH ERZEUGT ????????????????
-    // nur PLAYLISTS, PLAYLISTS_CONTAINS und SONGS werden erstellt
     create() {
         return new Promise((resolve, reject) => {
                 this.db.serialize(() => {
                     this.db.run(`CREATE TABLE IF NOT EXISTS USERS
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    NAME TEXT NOT NULL,
+                    NAME TEXT NOT NULL UNIQUE,
                     PASSWORD TEXT NOT NULL
                     )`, err => {
                         if (err !== null) reject(err);
@@ -32,7 +30,8 @@ class DB {
                     this.db.run(`CREATE TABLE IF NOT EXISTS SONGS
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    NAME VARCHAR(30) NOT NULL,
+                    TITLE VARCHAR(30) NOT NULL,
+                    ARTIST VARCHAR(30) NOT NULL,
                     ADDED_BY INTEGER,
                     FOREIGN KEY (ADDED_BY) REFERENCES USERS(ID)
                     )`, err => {
@@ -40,19 +39,19 @@ class DB {
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_FROM
                     (
-                    PLAYLIST_ID INTEGER(2) NOT NULL,
+                    PLAYLIST_ID INTEGER NOT NULL,
                     USER_ID INTEGER,
                     FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
-                    ) WITHOUT ROWID`, err => {
+                    )`, err => {
                         if (err !== null) reject(err);
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_MATE
                     (
                     USER_ID INTEGER,
                     USER_ID_MATE INTEGER,
-                    FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
                     FOREIGN KEY (USER_ID_MATE) REFERENCES USERS(ID),
+                    FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
                     )`, err => {
                         if (err !== null) reject(err);
                     });
@@ -131,8 +130,8 @@ class DB {
                 // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("hurensohn", "Elise")');
                 // this.db.run('INSERT INTO USERS (ID, NAME) VALUES (1, "admin")');
-                this.db.run('INSERT INTO SONGS (NAME, ADDED_BY) VALUES ("Beispiel Song 1", 1)');
-                this.db.run('INSERT INTO SONGS (NAME, ADDED_BY) VALUES ("Beispiel Song von Beispiel Aritst 2", 1)');
+                this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 1", "Beispiel Artist 1", 1)');
+                this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 2 du geile Eidechse", "Beispiel Artist 2", 1)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 0", 1)');
                 resolve();
             });

@@ -41,6 +41,7 @@ db.create()
 //     }
 //     return next(err);
 // };
+// TODO ENDE
 
 // // Joi validation schemas for celebrate
 // const schema_group_get = {
@@ -58,6 +59,7 @@ const schema_user_post = Joi.object().keys({
     name: Joi.string().alphanum().min(3).max(30).required()
 });
 
+// ----------------------------GET section----------------------------
 /**
  * get app root
  */
@@ -92,7 +94,7 @@ app.get('/users', (req, res) => {
     db.get_rows('SELECT * FROM USERS')
         .then(rows => {
             if (!rows)
-                throw 'group not found';
+                throw 'users not found';
             res.send({
                 success: true,
                 data: rows
@@ -101,7 +103,28 @@ app.get('/users', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access group failed',
+                msg: 'access users failed',
+                err: err
+            });
+        });
+});
+/**
+ * get user by id
+ */
+app.get('/user/:id', (req, res) => {
+    db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE ID = ?', +req.params.id)
+        .then(row => {
+            if (!row)
+                throw 'user does not exist';
+            res.send({
+                success: true,
+                data: row
+            });
+        })
+        .catch(err => {
+            res.send({
+                success: false,
+                msg: 'access user failed',
                 err: err
             });
         });
@@ -114,7 +137,7 @@ app.get('/songs', (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)
-                throw 'group not found';
+                throw 'song not found';
             res.send({
                 success: true,
                 data: rows
@@ -123,7 +146,28 @@ app.get('/songs', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access group failed',
+                msg: 'access song failed',
+                err: err
+            });
+        });
+});
+/**
+ * get song by id
+ */
+app.get('/song/:id', (req, res) => {
+    db.get_row('SELECT TITLE,ARTIST,ADDED_BY FROM SONGS WHERE ID = ?', +req.params.id)
+        .then(row => {
+            if (!row)
+                throw 'song not found';
+            res.send({
+                success: true,
+                data: row
+            });
+        })
+        .catch(err => {
+            res.send({
+                success: false,
+                msg: 'access song failed',
                 err: err
             });
         });
@@ -136,7 +180,7 @@ app.get('/playlists', (req, res) => {
     db.get_rows('SELECT * FROM PLAYLISTS')
         .then(rows => {
             if (!rows)
-                throw 'group not found';
+                throw 'found no playlists';
             res.send({
                 success: true,
                 data: rows
@@ -145,18 +189,40 @@ app.get('/playlists', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access group failed',
+                msg: 'access playlists failed',
+                err: err
+            });
+        });
+});
+/**
+ * get playlist by id
+ */
+app.get('/playlist/:id', (req, res) => {
+    db.get_row('SELECT NAME,USER_ID FROM PLAYLISTS WHERE ID = ?', +req.params.id)
+        .then(row => {
+            if (!row)
+                throw 'playlist does not exist';
+            res.send({
+                success: true,
+                data: row
+            });
+        })
+        .catch(err => {
+            res.send({
+                success: false,
+                msg: 'access playlist failed',
                 err: err
             });
         });
 });
 
+// ----------------------------POST section----------------------------
 /**
  * create new user
  */
 app.post('/user', async (req, res) => {
     try {
-        const user = await db.cmd('INSERT INTO USERS (NAME) VALUES (?)', req.body.name);
+        const user = await db.cmd('INSERT INTO USERS (NAME,PASSWORD) VALUES (?, ?)', "Test POSTUser", "TestPW");
 
         res.send({
             success: true,
@@ -164,9 +230,57 @@ app.post('/user', async (req, res) => {
         });
 
     } catch (err) {
+        if (err.message.match('SQLITE_CONSTRAINT')) {
+            res.send({
+                success: false,
+                msg: 'user exists already',
+            });
+        } else {
+            res.send({
+                success: false,
+                msg: 'access user failed',
+                err: err
+            });
+        }
+    }
+});
+/**
+ * create new playlist
+ */
+app.post('/playlist', async (req, res) => {
+    try {
+        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', "Test POSTPlaylist", 1);
+
+        res.send({
+            success: true,
+            data: playlist
+        });
+
+    } catch (err) {
         res.send({
             success: false,
-            msg: 'access user failed',
+            msg: 'access playlist failed',
+            err: err
+        });
+    }
+});
+/**
+ * create new song
+ */
+app.post('/song', async (req, res) => {
+    try {
+        const song = await db.cmd('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES (?, ?, ?)',
+            "TestArtist POSTSong", "TestTitle POSTSong", 1);
+
+        res.send({
+            success: true,
+            data: song
+        });
+
+    } catch (err) {
+        res.send({
+            success: false,
+            msg: 'access song failed',
             err: err
         });
     }
