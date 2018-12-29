@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3002';
 import { manager } from "./app.js";
 export class Registration {
     constructor(dom) {
@@ -45,14 +45,15 @@ export class Registration {
     async registerUser() {
         let password = Registration.sha256(this.dom_registerPW.toString());
         try {
-            const response = await fetch(API_URL + '/registration/', {
+            const response = await fetch(API_URL + '/user/', {
                 body: JSON.stringify({
                     username: this.dom_registerID.toString(),
                     password: password
                 }),
                 cache: 'no-cache',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'crossDomain': 'true'
                 },
                 method: 'POST',
                 mode: 'cors',
@@ -66,13 +67,14 @@ export class Registration {
             this.info(`Registration successful!`, '', 'success');
         }
         catch (err) {
+            console.log(err);
             this.info('Registration Error! Please try again.', err, 'warning');
         }
     }
     info(message, headline = '', classname = 'info') {
-        if (this.dom_register_notification !== null) {
-            this.dom_register_notification.remove();
-        }
+        // if(this.dom_register_notification !== null) {
+        //     this.dom_register_notification.remove();
+        // }
         //show if registration was successful or not
         this.dom_register_notification = document.createElement('div');
         this.dom_register_notification.classList.add('notification');

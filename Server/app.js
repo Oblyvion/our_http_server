@@ -4,9 +4,11 @@ const sqLite = require('sqlite3');
 const {celebrate, Joi, isCelebrate} = require('celebrate');
 const EscapeHtml = require('escape-html');
 const DB = require('./db');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // SQLite DB Handler
 const db = new DB();
@@ -222,8 +224,12 @@ app.get('/playlist/:id', (req, res) => {
  */
 app.post('/user', async (req, res) => {
     try {
-        const user = await db.cmd('INSERT INTO USERS (NAME,PASSWORD) VALUES (?, ?)', "Test POSTUser", "TestPW");
-
+        const users = await db.get_row('SELECT MAX(ID) + 1 AS NEXT_ID FROM USERS');
+        console.log(users.NEXT_ID);
+        await db.cmd('INSERT INTO USERS (ID,NAME,PASSWORD) VALUES (?, ?, ?)', [users.NEXT_ID, req.body.username, req.body.password]);
+        const user = await db.get_row('SELECT * FROM USERS WHERE ID = ?', [+ users.NEXT_ID]);
+        console.log(user);
+        res.header('Access-Control-Allow-Origin:', "*");
         res.send({
             success: true,
             data: user
@@ -231,6 +237,7 @@ app.post('/user', async (req, res) => {
 
     } catch (err) {
         if (err.message.match('SQLITE_CONSTRAINT')) {
+            console.log(err);
             res.send({
                 success: false,
                 msg: 'user exists already',
