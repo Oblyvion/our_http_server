@@ -43,16 +43,39 @@ export class Login implements iAppContainer {
         dom_loginButton.classList.add('button');
         dom_login.appendChild(dom_loginButton);
         dom_loginButton.textContent = "Login";
-
-        const dom_registerButton = document.createElement('button');
-        dom_registerButton.classList.add('button');
-        dom_login.appendChild(dom_registerButton);
-        dom_registerButton.textContent = "Not registered? Register";
-        dom_registerButton.addEventListener('click', (event) => {
+        dom_loginButton.addEventListener('click', () => {
             this.close();
-            new manager("register");
+            new manager("page_first_steps");
         });
+
+        const dom_loginLink = document.createElement('div');
+        dom_loginLink.classList.add('LinkContainer');
+        dom_login.appendChild(dom_loginLink);
+            const dom_loginLinkText = document.createElement("p");
+            dom_loginLinkText.classList.add('LinkText');
+            dom_loginLinkText.textContent = "Not registered?";
+            dom_loginLink.appendChild(dom_loginLinkText);
+
+            const newlink = document.createElement('a');
+            newlink.textContent = "Register";
+            newlink.classList.add('Link');
+            newlink.setAttribute('href', '#');
+            newlink.addEventListener('click', () => {
+                this.close();
+                new manager("register");
+            });
+            dom_loginLink.appendChild(newlink);
+
+        // const dom_registerButton = document.createElement('button');
+        // dom_registerButton.classList.add('button');
+        // dom_login.appendChild(dom_registerButton);
+        // dom_registerButton.textContent = "Not registered? Register";
+        // dom_registerButton.addEventListener('click', (event) => {
+        //     this.close();
+        //     new manager("register");
+        // });
     }
+
 
     close() {
         this.dom.remove();
@@ -63,7 +86,7 @@ export class Login implements iAppContainer {
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === 0) {
+            if (pos === -50) {
                 clearInterval(id);
             } else {
                 pos--;

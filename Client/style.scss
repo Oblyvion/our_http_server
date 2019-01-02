@@ -49,7 +49,7 @@ header {
   max-width: 600px;
   min-width: 300px;
   max-height: 600px;
-  min-height: 500px;
+  min-height: 450px;
   display: inline-block;
   text-align: center;
   margin: 0 10px 0 10px;
@@ -73,7 +73,7 @@ header {
 .headline {
   //positioning:
   margin-top: 40px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
   //styling
   font-family: "SansSerif", sans-serif-bold, sans-serif;
@@ -93,7 +93,7 @@ header {
   font-family: "SansSerif", sans-serif;
   background: #f2f2f2;
   border: 0;
-  font-size: 14px;
+  font-size: medium;
   border-radius: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
 
@@ -113,7 +113,7 @@ header {
 
 .button {
   //positioning
-  margin: 20px 0 0 0;
+  margin: 30px 0 0 0;
   padding: 10px 10px 10px 10px;
   width: 450px;
   height: 50px;
@@ -127,7 +127,7 @@ header {
   background: #4CAF50;
   border: 0;
   color: #ffffff;
-  font-size: 14px;
+  font-size: medium;
   cursor: pointer;
   border-radius: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
@@ -145,25 +145,36 @@ header {
     max-width: 350px;
     min-width: 250px;
   }
-
-
 }
 
 button:hover, .form button:active {
   background: #43A047;
 }
 
-.question {
+.LinkContainer {
   padding: 10px 10px 10px 10px;
-  font-family: "SansSerif", sans-serif;
-  font-size: 14px;
   margin: 15px 0 0;
-  color: aliceblue;
 }
 
-.link {
-  font-size: 14px;
+.LinkText {
+  padding: 10px 10px 10px 10px;
+
+  //styling
+  font-family: "SansSerif", sans-serif;
+  font-size: medium;
+  color: black;
+}
+
+.Link {
+
+  //Styling
+  font-family: "SansSerif", sans-serif;
+  font-size: medium;
   color: #0728c3;
+}
+
+#InformationContainer {
+  content: "poooornoo";
 }
 
 
@@ -255,3 +266,5 @@ button:hover, .form button:active {
 //.form .RegistrationForm {
 //  display: none;
 //}
+
+

@@ -2,6 +2,7 @@
 import {Header} from "./Header.js";
 import {Login} from "./Login.js";
 import {Registration} from "./Registration.js";
+import {FirstSteps} from "./FirstSteps.js";
 
 const dom_body = document.getElementById('app');
 const header = new Header(dom_body);
@@ -26,6 +27,10 @@ export const manager = function (app) {
         case 'register':
             header.set('Registration');
             active_app = new Registration(dom_content);
+            break;
+        case 'page_first_steps':
+            header.set('First Steps');
+            active_app = new FirstSteps(dom_content);
             break;
         case 'default':
             throw `Undefined manager app ${app}`

@@ -25,7 +25,7 @@ export class Registration {
         this.dom_registerPW.classList.add('input');
         this.dom_register.appendChild(this.dom_registerPW);
         this.dom_registerPW.placeholder = "password";
-        this.dom_registerPW.type = "password";
+        this.dom_registerPW.type = "text";
         const dom_registerButton = document.createElement('button');
         dom_registerButton.classList.add('button');
         this.dom_register.appendChild(dom_registerButton);
@@ -33,21 +33,37 @@ export class Registration {
         dom_registerButton.addEventListener('click', () => {
             this.registerUser();
         });
-        const dom_toLoginButton = document.createElement('button');
-        dom_toLoginButton.classList.add('button');
-        this.dom_register.appendChild(dom_toLoginButton);
-        dom_toLoginButton.textContent = "Already registered? Login!";
-        dom_toLoginButton.addEventListener('click', () => {
+        const dom_registerLink = document.createElement('div');
+        dom_registerLink.classList.add('LinkContainer');
+        this.dom_register.appendChild(dom_registerLink);
+        const dom_registerLinkText = document.createElement("p");
+        dom_registerLinkText.classList.add('LinkText');
+        dom_registerLinkText.textContent = "Already registered?";
+        dom_registerLink.appendChild(dom_registerLinkText);
+        const newlink = document.createElement('a');
+        newlink.textContent = "Login";
+        newlink.classList.add('Link');
+        newlink.setAttribute('href', '#');
+        newlink.addEventListener('click', () => {
             this.close();
             new manager("login");
         });
+        dom_registerLink.appendChild(newlink);
+        // const dom_toLoginButton = document.createElement('button');
+        // dom_toLoginButton.classList.add('button');
+        // this.dom_register.appendChild(dom_toLoginButton);
+        // dom_toLoginButton.textContent = "Already registered? Login!";
+        // dom_toLoginButton.addEventListener('click', () => {
+        //     this.close();
+        //     new manager("login");
+        // });
     }
     async registerUser() {
         let password = Registration.sha256(this.dom_registerPW.toString());
         try {
             const response = await fetch(API_URL + '/user/', {
                 body: JSON.stringify({
-                    username: this.dom_registerID.toString(),
+                    name: this.dom_registerID.toString(),
                     password: password
                 }),
                 cache: 'no-cache',
@@ -72,9 +88,9 @@ export class Registration {
         }
     }
     info(message, headline = '', classname = 'info') {
-        // if(this.dom_register_notification !== null) {
-        //     this.dom_register_notification.remove();
-        // }
+        if (this.dom_register_notification) {
+            this.dom_register_notification.remove();
+        }
         //show if registration was successful or not
         this.dom_register_notification = document.createElement('div');
         this.dom_register_notification.classList.add('notification');
@@ -105,7 +121,7 @@ export class Registration {
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === 0) {
+            if (pos === -50) {
                 clearInterval(id);
             }
             else {
