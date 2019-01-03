@@ -131,6 +131,27 @@ app.get('/user/:id', (req, res) => {
             });
         });
 });
+/**
+ * get user by name
+ */
+app.get('/user/:name', (req, res) => {
+    db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE NAME = ?', +req.params.name)
+        .then(row => {
+            if (!row)
+                throw 'user does not exist';
+            res.send({
+                success: true,
+                data: row
+            });
+        })
+        .catch(err => {
+            res.send({
+                success: false,
+                msg: 'access user failed',
+                err: err
+            });
+        });
+});
 
 /**
  * get all songs
@@ -253,7 +274,7 @@ app.post('/user', async (req, res) => {
  */
 app.post('/playlist', async (req, res) => {
     try {
-        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', "Test POSTPlaylist", 1);
+        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', req.body.name, req.body.user_id);
 
         res.send({
             success: true,
@@ -261,11 +282,20 @@ app.post('/playlist', async (req, res) => {
         });
 
     } catch (err) {
-        res.send({
-            success: false,
-            msg: 'access playlist failed',
-            err: err
-        });
+        if (err.message.match('SQLITE_CONSTRAINT')) {
+            console.log(err);
+            res.send({
+                success: false,
+                msg: 'playlist exists already',
+            });
+        } else {
+            console.log(err);
+            res.send({
+                success: false,
+                msg: 'access playlist failed',
+                err: err
+            });
+        }
     }
 });
 /**
@@ -274,7 +304,7 @@ app.post('/playlist', async (req, res) => {
 app.post('/song', async (req, res) => {
     try {
         const song = await db.cmd('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES (?, ?, ?)',
-            "TestArtist POSTSong", "TestTitle POSTSong", 1);
+            req.body.title, req.body.artist, req.body.added_by);
 
         res.send({
             success: true,
@@ -282,11 +312,20 @@ app.post('/song', async (req, res) => {
         });
 
     } catch (err) {
-        res.send({
-            success: false,
-            msg: 'access song failed',
-            err: err
-        });
+        if (err.message.match('SQLITE_CONSTRAINT')) {
+            console.log(err);
+            res.send({
+                success: false,
+                msg: 'song exists already',
+            });
+        } else {
+            console.log(err);
+            res.send({
+                success: false,
+                msg: 'access song failed',
+                err: err
+            });
+        }
     }
 });
 
