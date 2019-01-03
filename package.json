@@ -6,7 +6,7 @@
   "main": "Server/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "start Client/index.html && nodemon Server/server.js"
+    "start": "nodemon Server/server.js && opener Client/index.html"
   },
   "repository": {
     "type": "git",
@@ -25,10 +25,12 @@
   "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
   "dependencies": {
     "celebrate": "^9.0.1",
+    "cors": "^2.8.5",
     "escape-html": "latest",
     "express": "^4.16.4",
     "joi": "^14.3.0",
     "nodemon": "^1.18.9",
+    "opener": "^1.5.1",
     "request": "latest",
     "sqlite3": "^4.0.4"
   }
