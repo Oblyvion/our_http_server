@@ -1,3 +1,5 @@
+import {errors} from "celebrate";
+
 const API_URL = 'http://localhost:3002';
 
 import {manager} from "./app.js";
@@ -86,42 +88,42 @@ export class Registration implements iAppContainer {
     async registerUser() {
         let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
         try {
-            const response = await fetch(API_URL + '/user/', {
-                body: JSON.stringify({
-                    name: this.dom_registerID.value,
-                    password: password
-                }),
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/json',
-                    'crossDomain': 'true'
-                },
-                method: 'POST',
-                mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
-            });
+            if (this.dom_registerPW.value.length > 3) {
+                console.log("PW too short = ", this.dom_registerPW.value.length);
 
-            const result: UserResult = await response.json();
-            if (!result.success) {
-                console.error(result);
-                throw result.msg;
-            }
-
+                const response = await fetch(API_URL + '/user/', {
+                    body: JSON.stringify({
+                        name: this.dom_registerID.value,
+                        password: password
+                    }),
+                    cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/json',
+                        'crossDomain': 'true'
+                    },
+                    method: 'POST',
+                    mode: 'cors',
+                    // todo REST POST redirect
+                    // redirect: 'follow',
+                    // credentials: 'include',
+                });
+                const result: UserResult = await response.json();
+                if (!result.success) {
+                    console.error(result);
+                    throw result.msg;
+                }
                 //new User(this.dom_register, result.data);
-                this.info( `Registration successful!`, '', 'success');
-
-            } catch (err) {
-                console.log(err);
-                this.info('Registration Error! Please try again.', err, 'warning');
-            }
-
+                this.info(`Registration successful!`, '', 'success');
+            } else throw new Error("Short PW, Mate");
+        } catch (err) {
+            console.log(err);
+            this.info('Registration Error! Please try again.', err, 'warning');
+        }
     }
 
 
     info(message: string, headline: string = '', classname: string = 'info') {
-        if(this.dom_register_notification) {
+        if (this.dom_register_notification) {
             this.dom_register_notification.remove();
         }
         //show if registration was successful or not
@@ -131,8 +133,7 @@ export class Registration implements iAppContainer {
         this.dom_register_notification.textContent = message;
         if (classname === "warning") {
             this.dom_register_notification.style.backgroundColor = "Red";
-        }
-        else {
+        } else {
             this.dom_register_notification.style.backgroundColor = "Green";
         }
     }
@@ -149,7 +150,6 @@ export class Registration implements iAppContainer {
     }
 
 
-
     close() {
         this.dom.remove();
     }
@@ -159,6 +159,7 @@ export class Registration implements iAppContainer {
         const elem = document.getElementById("Registration");
         let pos = 150;
         const id = setInterval(frame, 5);
+
         function frame() {
             if (pos === -50) {
                 clearInterval(id);

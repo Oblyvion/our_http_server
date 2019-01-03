@@ -61,26 +61,31 @@ export class Registration {
     async registerUser() {
         let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
         try {
-            const response = await fetch(API_URL + '/user/', {
-                body: JSON.stringify({
-                    name: this.dom_registerID.value,
-                    password: password
-                }),
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/json',
-                    'crossDomain': 'true'
-                },
-                method: 'POST',
-                mode: 'cors',
-            });
-            const result = await response.json();
-            if (!result.success) {
-                console.error(result);
-                throw result.msg;
+            if (this.dom_registerPW.value.length > 3) {
+                console.log("PW too short = ", this.dom_registerPW.value.length);
+                const response = await fetch(API_URL + '/user/', {
+                    body: JSON.stringify({
+                        name: this.dom_registerID.value,
+                        password: password
+                    }),
+                    cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/json',
+                        'crossDomain': 'true'
+                    },
+                    method: 'POST',
+                    mode: 'cors',
+                });
+                const result = await response.json();
+                if (!result.success) {
+                    console.error(result);
+                    throw result.msg;
+                }
+                //new User(this.dom_register, result.data);
+                this.info(`Registration successful!`, '', 'success');
             }
-            //new User(this.dom_register, result.data);
-            this.info(`Registration successful!`, '', 'success');
+            else
+                throw new Error("Short PW, Mate");
         }
         catch (err) {
             console.log(err);
