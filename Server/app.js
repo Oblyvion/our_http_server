@@ -134,8 +134,9 @@ app.get('/user/:id', (req, res) => {
 /**
  * get user by name
  */
-app.get('/user/:name', (req, res) => {
-    db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE NAME = ?', +req.params.name)
+app.get('/user/', (req, res) => {
+    console.log("name = ", req.query.name);
+    db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE NAME = ?', req.query.name)
         .then(row => {
             if (!row)
                 throw 'user does not exist';
