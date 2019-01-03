@@ -59,32 +59,39 @@ export class Registration {
         // });
     }
     async registerUser() {
-        let password = Registration.sha256(this.dom_registerPW.toString());
-        try {
-            const response = await fetch(API_URL + '/user/', {
-                body: JSON.stringify({
-                    name: this.dom_registerID.toString(),
-                    password: password
-                }),
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/json',
-                    'crossDomain': 'true'
-                },
-                method: 'POST',
-                mode: 'cors',
-            });
-            const result = await response.json();
-            if (!result.success) {
-                console.error(result);
-                throw result.msg;
+        if (this.dom_registerID.value !== "" && this.dom_registerPW.value !== "") {
+            let password = this.dom_registerPW.value; //= Registration.sha256(this.dom_registerPW.value);
+            try {
+                console.log(`das ist body name: ${this.dom_registerID.value}`);
+                console.log(`das ist body pw: ${password.toString()}`);
+                const response = await fetch(API_URL + '/user/', {
+                    body: JSON.stringify({
+                        name: this.dom_registerID.value,
+                        password: password
+                    }),
+                    cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/json',
+                        'crossDomain': 'true'
+                    },
+                    method: 'POST',
+                    mode: 'cors',
+                });
+                const result = await response.json();
+                if (!result.success) {
+                    console.error(result);
+                    throw result.msg;
+                }
+                //new User(this.dom_register, result.data);
+                this.info(`Registration successful!`, '', 'success');
             }
-            //new User(this.dom_register, result.data);
-            this.info(`Registration successful!`, '', 'success');
+            catch (err) {
+                console.log(err);
+                this.info('Registration Error! Please try again.', err, 'warning');
+            }
         }
-        catch (err) {
-            console.log(err);
-            this.info('Registration Error! Please try again.', err, 'warning');
+        else {
+            console.log("Etwas eingeben!");
         }
     }
     info(message, headline = '', classname = 'info') {
@@ -103,16 +110,16 @@ export class Registration {
             this.dom_register_notification.style.backgroundColor = "Green";
         }
     }
-    static async sha256(message) {
-        // encode as UTF-8
-        const msgBuffer = new TextEncoder().encode(message);
-        // hash the message
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        // convert ArrayBuffer to Array
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        // convert bytes to hex string
-        return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-    }
+    // static async sha256(message: string) {
+    //     // encode as UTF-8
+    //     const msgBuffer = new TextEncoder().encode(message);
+    //     // hash the message
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    //     // convert ArrayBuffer to Array
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     // convert bytes to hex string
+    //     return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    // }
     close() {
         this.dom.remove();
     }
