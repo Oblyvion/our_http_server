@@ -84,11 +84,11 @@ export class Registration implements iAppContainer {
     }
 
     async registerUser() {
-        let password = Registration.sha256(this.dom_registerPW.toString());
+        let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
         try {
             const response = await fetch(API_URL + '/user/', {
                 body: JSON.stringify({
-                    name: this.dom_registerID.toString(),
+                    name: this.dom_registerID.value,
                     password: password
                 }),
                 cache: 'no-cache',

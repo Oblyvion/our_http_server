@@ -224,12 +224,8 @@ app.get('/playlist/:id', (req, res) => {
  */
 app.post('/user', async (req, res) => {
     try {
-        const users = await db.get_row('SELECT MAX(ID) + 1 AS NEXT_ID FROM USERS');
-        console.log(`created ${users.NEXT_ID}`);
-        await db.cmd('INSERT INTO USERS (ID, NAME, PASSWORD) VALUES (?, ?, ?)', [users.NEXT_ID, req.body.username, req.body.password]);
-        const user = await db.get_row('SELECT * FROM USERS WHERE ID = ?', [+ users.NEXT_ID]);
-        console.log(user);
-        res.header('Access-Control-Allow-Origin:', "*");
+        const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD) VALUES (?, ?)', req.body.name, req.body.password);
+        // res.header('Access-Control-Allow-Origin:', "*");
         res.send({
             success: true,
             data: user
@@ -243,6 +239,7 @@ app.post('/user', async (req, res) => {
                 msg: 'user exists already',
             });
         } else {
+            console.log(err);
             res.send({
                 success: false,
                 msg: 'access user failed',

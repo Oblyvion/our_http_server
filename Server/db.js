@@ -14,14 +14,14 @@ class DB {
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     NAME TEXT NOT NULL UNIQUE,
-                    PASSWORD TEXT NOT NULL
+                    PASSWORD TEXT
                     )`, err => {
                         if (err !== null) reject(err);
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLISTS
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    NAME VARCHAR(30) NOT NULL,
+                    NAME VARCHAR(30),
                     USER_ID INTEGER,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
                     )`, err => {
@@ -30,8 +30,8 @@ class DB {
                     this.db.run(`CREATE TABLE IF NOT EXISTS SONGS
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    TITLE VARCHAR(30) NOT NULL,
-                    ARTIST VARCHAR(30) NOT NULL,
+                    TITLE VARCHAR(30),
+                    ARTIST VARCHAR(30),
                     ADDED_BY INTEGER,
                     FOREIGN KEY (ADDED_BY) REFERENCES USERS(ID)
                     )`, err => {
@@ -39,7 +39,7 @@ class DB {
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_FROM
                     (
-                    PLAYLIST_ID INTEGER NOT NULL,
+                    PLAYLIST_ID INTEGER,
                     USER_ID INTEGER,
                     FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
@@ -57,8 +57,8 @@ class DB {
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_CONTAINS
                     (
-                    SONG_ID INTEGER(2) NOT NULL,
-                    PLAYLIST_ID INTEGER(2) NOT NULL,
+                    SONG_ID INTEGER(2),
+                    PLAYLIST_ID INTEGER(2),
                     ADDED_BY INTEGER,
                     FOREIGN KEY (SONG_ID) REFERENCES SONGS(ID),
                     FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),
