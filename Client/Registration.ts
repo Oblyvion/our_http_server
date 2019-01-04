@@ -1,3 +1,4 @@
+//import {export_port} from "../Server/server.js"
 const API_URL = 'http://localhost:3002';
 
 import {manager} from "./app.js";
@@ -18,7 +19,7 @@ export class Registration implements iAppContainer {
         this.dom.classList.add('container');
         this.dom_root.appendChild(this.dom);
 
-        //Create Login Div
+        //Create Registration Div
         this.dom_register = document.createElement('div');
         this.dom_register.setAttribute("id", "Registration");
         this.dom_register.classList.add('LoginAndRegisterContainer');
@@ -96,7 +97,7 @@ export class Registration implements iAppContainer {
                     }),
                     cache: 'no-cache',
                     headers: {
-                        'content-type': 'application/json',
+                        'content-type': 'application/javascript',
                         'crossDomain': 'true'
                     },
                     method: 'POST',
@@ -166,7 +167,7 @@ export class Registration implements iAppContainer {
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === -50) {
+            if (pos === 0) {
                 clearInterval(id);
             } else {
                 pos--;

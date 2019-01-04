@@ -124,6 +124,11 @@ button:hover, .form button:active {
   color: #0728c3; }
 
 #InformationContainer {
-  content: "poooornoo"; }
+  background-color: yellow;
+  width: 200px;
+  height: 30px;
+  position: absolute;
+  float: top;
+  margin: 15px 0 0 10px; }
 
 /*# sourceMappingURL=style.css.map */
