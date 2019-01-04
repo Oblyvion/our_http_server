@@ -3,9 +3,9 @@ import { Login } from "./Login.js";
 import { Registration } from "./Registration.js";
 import { FirstSteps } from "./FirstSteps.js";
 const dom_body = document.getElementById('app');
-const header = new Header(dom_body);
 const dom_content = document.createElement('div');
 dom_content.classList.add('content');
+const header = new Header(dom_body, dom_content);
 dom_body.appendChild(dom_content);
 let active_app = null;
 export const manager = function (app) {
@@ -25,6 +25,18 @@ export const manager = function (app) {
         case 'page_first_steps':
             header.set('First Steps');
             active_app = new FirstSteps(dom_content);
+            break;
+        case 'about':
+            header.set('About');
+            //active_app = new About(dom_content);
+            break;
+        case 'contact':
+            header.set('Contact');
+            //active_app = new Contact(dom_content);
+            break;
+        case 'impressum':
+            header.set('Impressum');
+            //active_app = new Impressum(dom_content);
             break;
         case 'default':
             throw `Undefined manager app ${app}`;
