@@ -60,11 +60,18 @@ export class Registration {
         // });
     }
     async registerUser() {
+<<<<<<< HEAD
         if (this.dom_registerID.value !== "" && this.dom_registerPW.value !== "") {
             let password = this.dom_registerPW.value; //= Registration.sha256(this.dom_registerPW.value);
             try {
                 console.log(`das ist body name: ${this.dom_registerID.value}`);
                 console.log(`das ist body pw: ${password.toString()}`);
+=======
+        let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
+        try {
+            if (this.dom_registerPW.value.length > 3) {
+                console.log("PW too short = ", this.dom_registerPW.value.length);
+>>>>>>> cf762d12db16ec4f179d78c4f14457ac37ef2184
                 const response = await fetch(API_URL + '/user/', {
                     body: JSON.stringify({
                         name: this.dom_registerID.value,
@@ -72,7 +79,11 @@ export class Registration {
                     }),
                     cache: 'no-cache',
                     headers: {
+<<<<<<< HEAD
                         'content-type': 'application/javascript',
+=======
+                        'content-type': 'application/json',
+>>>>>>> cf762d12db16ec4f179d78c4f14457ac37ef2184
                         'crossDomain': 'true'
                     },
                     method: 'POST',
@@ -85,11 +96,17 @@ export class Registration {
                 }
                 //new User(this.dom_register, result.data);
                 this.info(`Registration successful!`, '', 'success');
+<<<<<<< HEAD
             }
             catch (err) {
                 console.log(err);
                 this.info('Registration Error! Please try again.', err, 'warning');
             }
+=======
+            }
+            else
+                throw new Error("Short PW, Mate");
+>>>>>>> cf762d12db16ec4f179d78c4f14457ac37ef2184
         }
         else {
             console.log("Etwas eingeben!");

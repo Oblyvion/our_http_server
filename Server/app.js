@@ -247,7 +247,7 @@ app.get('/playlist/:id', (req, res) => {
 app.post('/user', async (req, res) => {
     try {
         const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD) VALUES (?, ?)', req.body.name, req.body.password);
-        // res.header('Access-Control-Allow-Origin:', "*");
+        // res.header(`Access-Control-Allow-Origin:`, `*`);
         res.send({
             success: true,
             data: user
