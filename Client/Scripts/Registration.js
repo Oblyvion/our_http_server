@@ -6,7 +6,7 @@ export class Registration {
         this.dom = document.createElement('div');
         this.dom.classList.add('container');
         this.dom_root.appendChild(this.dom);
-        //Create Login Div
+        //Create Registration Div
         this.dom_register = document.createElement('div');
         this.dom_register.setAttribute("id", "Registration");
         this.dom_register.classList.add('LoginAndRegisterContainer');
@@ -97,7 +97,7 @@ export class Registration {
         }
         else {
             let err = new Error("Username has to be at least 2 characters!");
-            this.info("Registration Error! Please try again.", err.message);
+            this.info("Registration Error! Please try again.", err.message, 'warning');
         }
     }
     info(message, headline = '', classname = 'info') {
@@ -116,16 +116,16 @@ export class Registration {
             this.dom_register_notification.style.backgroundColor = "Green";
         }
     }
-    static async sha256(message) {
-        // encode as UTF-8
-        const msgBuffer = new TextEncoder().encode(message);
-        // hash the message
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        // convert ArrayBuffer to Array
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        // convert bytes to hex string
-        return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-    }
+    // static async sha256(message: string) {
+    //     // encode as UTF-8
+    //     const msgBuffer = new TextEncoder().encode(message);
+    //     // hash the message
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    //     // convert ArrayBuffer to Array
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     // convert bytes to hex string
+    //     return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    // }
     close() {
         this.dom.remove();
     }

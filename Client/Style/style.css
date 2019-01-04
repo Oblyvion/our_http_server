@@ -32,13 +32,15 @@ header {
   margin: 15px 0 0 15px;
   float: top;
   position: absolute;
-  line-height: 30px; }
+  line-height: 30px;
+  font-family: "SansSerif", sans-serif; }
 
 .LinkHeader {
   float: left;
   margin-left: 10px;
   font-size: small;
-  color: lightblue; }
+  color: lightblue;
+  text-decoration: none; }
 
 .container {
   position: relative;
@@ -135,7 +137,8 @@ button:hover, .form button:active {
 .Link {
   font-family: "SansSerif", sans-serif;
   font-size: medium;
-  color: #0728c3; }
+  color: #0728c3;
+  text-decoration: none; }
 
 .AudioPlayerLogo {
   background-image: url("../Images/audio_player_logo.png"); }

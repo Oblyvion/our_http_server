@@ -41,6 +41,7 @@ header {
   float: top;
   position: absolute;
   line-height: 30px;
+  font-family: "SansSerif", sans-serif;
 }
 
 .LinkHeader {
@@ -51,6 +52,7 @@ header {
   //styling
   font-size: small;
   color: lightblue;
+  text-decoration: none;
 }
 
 
@@ -192,9 +194,13 @@ button:hover, .form button:active {
   font-family: "SansSerif", sans-serif;
   font-size: medium;
   color: #0728c3;
+  text-decoration: none;
 }
+
 
 .AudioPlayerLogo {
   background-image: url("../Images/audio_player_logo.png");
 }
+
+
 

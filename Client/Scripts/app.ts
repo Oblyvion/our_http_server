@@ -50,8 +50,3 @@ export const manager = function (app) {
 };
 
 manager("login");
-
-
-
-
-

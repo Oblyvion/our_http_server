@@ -1,3 +1,4 @@
+const API_URL = 'http://localhost:3002';
 
 import {manager} from "./app.js";
 
@@ -5,6 +6,10 @@ export class Login implements iAppContainer {
 
     private dom_root: HTMLElement;
     private dom: HTMLElement;
+    private dom_login: HTMLElement;
+    private dom_loginInputID;
+    private dom_loginInputPW;
+    private dom_login_notification;
 
     constructor(dom: HTMLElement) {
         this.dom_root = dom;
@@ -14,43 +19,42 @@ export class Login implements iAppContainer {
         this.dom_root.appendChild(this.dom);
 
         //Create Login Div
-        const dom_login = document.createElement('div');
-        dom_login.setAttribute("id", "Login");
-        dom_login.classList.add('LoginAndRegisterContainer');
-        this.dom.appendChild(dom_login);
+        this.dom_login = document.createElement('div');
+        this.dom_login.setAttribute("id", "Login");
+        this.dom_login.classList.add('LoginAndRegisterContainer');
+        this.dom.appendChild(this.dom_login);
 
         this.animate();
 
         const dom_loginText = document.createElement('div');
         dom_loginText.classList.add('headline');
-        dom_login.appendChild(dom_loginText);
+        this.dom_login.appendChild(dom_loginText);
         dom_loginText.textContent = "Log in here.";
 
-        const dom_loginInputID = document.createElement('input');
-        dom_loginInputID.classList.add('input');
-        dom_login.appendChild(dom_loginInputID);
-        dom_loginInputID.placeholder = "username";
-        dom_loginInputID.type = "text";
+        this.dom_loginInputID = document.createElement('input');
+        this.dom_loginInputID.classList.add('input');
+        this.dom_login.appendChild(this.dom_loginInputID);
+        this.dom_loginInputID.placeholder = "username";
+        this.dom_loginInputID.type = "text";
 
-        const dom_loginInputPW = document.createElement('input');
-        dom_loginInputPW.classList.add('input');
-        dom_login.appendChild(dom_loginInputPW);
-        dom_loginInputPW.placeholder = "password";
-        dom_loginInputPW.type = "password";
+        this.dom_loginInputPW = document.createElement('input');
+        this.dom_loginInputPW.classList.add('input');
+        this.dom_login.appendChild(this.dom_loginInputPW);
+        this.dom_loginInputPW.placeholder = "password";
+        this.dom_loginInputPW.type = "password";
 
 
         const dom_loginButton = document.createElement('button');
         dom_loginButton.classList.add('button');
-        dom_login.appendChild(dom_loginButton);
+        this.dom_login.appendChild(dom_loginButton);
         dom_loginButton.textContent = "Login";
         dom_loginButton.addEventListener('click', () => {
-            this.close();
-            new manager("page_first_steps");
+            this.loginUser();
         });
 
         const dom_loginLink = document.createElement('div');
         dom_loginLink.classList.add('LinkContainer');
-        dom_login.appendChild(dom_loginLink);
+        this.dom_login.appendChild(dom_loginLink);
             const dom_loginLinkText = document.createElement("p");
             dom_loginLinkText.classList.add('LinkText');
             dom_loginLinkText.textContent = "Not registered?";
@@ -76,6 +80,62 @@ export class Login implements iAppContainer {
         // });
     }
 
+    private async loginUser() {
+        if (this.dom_loginInputID.value !== "" && this.dom_loginInputPW.value !== "") {
+            let password = this.dom_loginInputPW.value; //= Registration.sha256(this.dom_registerPW.value);
+            try {
+                console.log(`das ist body name: ${this.dom_loginInputID.value}`);
+                console.log(`das ist body pw: ${password.toString()}`);
+                const response = await fetch(API_URL + '/user?name=' + this.dom_loginInputID.value, {
+                    cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/javascript',
+                        'crossDomain': 'true'
+                    },
+                    method: 'GET',
+                    mode: 'cors',
+                    // todo REST POST redirect
+                    // redirect: 'follow',
+                    // credentials: 'include',
+                });
+
+
+                const result: UserResult = await response.json();
+                if (!result.success) {
+                    console.error(result);
+                    throw result.msg;
+                }
+
+                this.info(`Login successful!`, '', 'success');
+                this.close()
+                manager("page_first_steps");
+
+            } catch (err) {
+                console.log(err);
+                this.info('Login Error! Please make sure you\'re registered!', err, 'warning');
+            }
+        }
+        else {
+            console.log("Etwas eingeben!");
+        }
+    }
+
+    info(message: string, headline: string = '', classname: string = 'info') {
+        if(this.dom_login_notification) {
+            this.dom_login_notification.remove();
+        }
+        //show if registration was successful or not
+        this.dom_login_notification = document.createElement('div');
+        this.dom_login_notification.classList.add('notification');
+        this.dom_login.insertBefore(this.dom_login_notification, this.dom_login.childNodes[0]);
+        this.dom_login_notification.textContent = message;
+        if (classname === "warning") {
+            this.dom_login_notification.style.backgroundColor = "Red";
+        }
+        else {
+            this.dom_login_notification.style.backgroundColor = "Green";
+        }
+    }
 
     close() {
         this.dom.remove();
@@ -95,6 +155,5 @@ export class Login implements iAppContainer {
             }
         }
     }
-
 }
 
