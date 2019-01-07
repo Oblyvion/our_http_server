@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3002';
+const API_URL = 'http://localhost:3000';
 import { manager } from "./app.js";
 export class Login {
     constructor(dom) {
@@ -88,7 +88,7 @@ export class Login {
             }
         }
         else {
-            console.log("Etwas eingeben!");
+            this.info("Please type in username and password.", "", 'warning');
         }
     }
     info(message, headline = '', classname = 'info') {
@@ -115,7 +115,7 @@ export class Login {
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === 0) {
+            if (pos === 50) {
                 clearInterval(id);
             }
             else {

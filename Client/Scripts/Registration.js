@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3002';
+const API_URL = 'http://localhost:3000';
 import { manager } from "./app.js";
 export class Registration {
     constructor(dom) {
@@ -85,7 +85,7 @@ export class Registration {
                         throw result.msg;
                     }
                     //new User(this.dom_register, result.data);
-                    this.info(`Registration successful!`, '', 'success');
+                    this.info(`Registration successful!`, `created Account: ${this.dom_registerID.value}`, 'success');
                 }
                 else
                     throw new Error("Short PW, Mate");
@@ -108,7 +108,7 @@ export class Registration {
         this.dom_register_notification = document.createElement('div');
         this.dom_register_notification.classList.add('notification');
         this.dom_register.insertBefore(this.dom_register_notification, this.dom_register.childNodes[0]);
-        this.dom_register_notification.textContent = message + headline;
+        this.dom_register_notification.textContent = message + "\n" + headline;
         if (classname === "warning") {
             this.dom_register_notification.style.backgroundColor = "Red";
         }
@@ -134,7 +134,7 @@ export class Registration {
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === 0) {
+            if (pos === 50) {
                 clearInterval(id);
             }
             else {

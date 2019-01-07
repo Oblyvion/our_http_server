@@ -1,7 +1,7 @@
 import { manager } from "./app.js";
 export class Header {
-    constructor(dom, dom_content) {
-        this.dom_root = dom;
+    constructor(dom_body, dom_content) {
+        this.dom_root = dom_body;
         this.dom_content = dom_content;
         this.dom_header = document.createElement('header');
         this.dom_root.appendChild(this.dom_header);

@@ -2,10 +2,12 @@ import { Header } from "./Header.js";
 import { Login } from "./Login.js";
 import { Registration } from "./Registration.js";
 import { FirstSteps } from "./FirstSteps.js";
+import { About_us } from "./About_us.js";
 const dom_body = document.getElementById('app');
 const dom_content = document.createElement('div');
 dom_content.classList.add('content');
 const header = new Header(dom_body, dom_content);
+//const audioPlayer = new AudioPlayer(dom_content);
 dom_body.appendChild(dom_content);
 let active_app = null;
 export const manager = function (app) {
@@ -28,7 +30,7 @@ export const manager = function (app) {
             break;
         case 'about':
             header.set('About');
-            //active_app = new About(dom_content);
+            active_app = new About_us(dom_content);
             break;
         case 'contact':
             header.set('Contact');

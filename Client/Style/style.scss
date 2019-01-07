@@ -1,36 +1,42 @@
 * {
   padding:0;
   margin:0;
+  font-family: "SansSerif", sans-serif;
 }
 
 body {
   width: 100%;
   height: 100%;
-  background-image: url("../Images/background.jpg");
+  //background-image: url("../Images/background.jpg");
+  background: linear-gradient(to top, rgb(16, 63, 94),
+          rgba(192, 184, 255, 0.5)) fixed;
   background-size: cover;
-  background-position: center;
   overflow: hidden;
 }
 
 .wrapper {
-  height: 100vh;
-  display: grid;
-  grid-gap: 50px;
-  grid-template-areas:
-          "header"
-          "content";
-  grid-template-rows: auto  auto 1fr auto;
+  //height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  //grid-gap: 50px;
+  //grid-template-areas:
+  //        "header"
+  //        "content";
+  //grid-template-rows: auto  auto 1fr auto;
 }
 
 header {
   font-family: "SansSerif", sans-serif;
   font-size: 30px;
-  background: linear-gradient(to right, rgba(7, 40, 195, 1.0),
-          rgba(123,146,255,.5));
-  min-height: 60px;
-  max-height: 60px;
+  background: linear-gradient(to right, rgba(7, 40, 100, 1.0),
+          rgba(7,40,100,.5));
+  min-height: 70px;
+  max-height: 70px;
   line-height: 60px;
   text-align: center;
+  position: relative;
+  grid-area: header;
 }
 
 #InformationContainer {
@@ -38,8 +44,9 @@ header {
   width: 200px;
   height: 30px;
   margin: 15px 0 0 15px;
-  float: top;
   position: absolute;
+  top: 0;
+  left: 0;
   line-height: 30px;
   font-family: "SansSerif", sans-serif;
 }
@@ -75,7 +82,8 @@ header {
   min-height: 450px;
   display: inline-block;
   text-align: center;
-  margin: 0 10px 0 10px;
+  margin: 100px 10px 0 10px;
+
 
   //styling
   background-color: #ccc;
@@ -88,9 +96,9 @@ header {
   //positioning
   max-width: 600px;
   min-width: 200px;
-  max-height: 60px;
-  min-height: 60px;
-  line-height: 60px;
+  max-height: content-box;
+  min-height: content-box;
+  padding: 20px 0 20px 0;
 }
 
 .headline {
@@ -189,7 +197,6 @@ button:hover, .form button:active {
 }
 
 .Link {
-
   //Styling
   font-family: "SansSerif", sans-serif;
   font-size: medium;
@@ -198,9 +205,145 @@ button:hover, .form button:active {
 }
 
 
-.AudioPlayerLogo {
-  background-image: url("../Images/audio_player_logo.png");
+.ContentAboutUs {
+  width: 100%;
+  height: 100%;
+  //display: grid;
+  //grid-template-areas:
+  //        'header header header'
+  //        'menu player player'
+  //        'menu content content'
+  //        'menu content content';
+  //grid-gap: 10px;
 }
 
 
+//Audio Player Style
+.AudioPlayer_Container {
+  //styling
+  width: 1000px;
+  height: 135px;
+  background: #f3ebdc;
+  color: #003ba9;
+  box-shadow: 0 0 6px 2px #c7a8a8;
+  font-family: sans-serif;
+  font-size: 12px;
+  float: right;
+  border-radius: 5px;
+}
 
+.AudioPlayer_LogoDiv {
+  float: left;
+}
+
+.AudioPlayer_LogoImage {
+  width: 135px;
+  height: 135px;
+}
+
+.AudioPlayer_Player {
+  float: right;
+  margin: 7px;
+}
+
+.AudioPlayer_SongTitle {
+  width: 850px;
+  padding: 5px 0 5px 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.AudioPlayer_Slider {
+  width: 850px;
+}
+
+.AudioPlayer_Current {
+  float: left;
+  font-size: 10px;
+}
+
+.AudioPlayer_Duration {
+  float: right;
+  font-size: 10px;
+}
+
+.AudioPlayer_ControllersContainer {
+  clear: both;
+  display: table;
+}
+
+.AudioPlayer_ControllersContainer * {
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+.AudioPlayer_VolumeSlider {
+  width: 180px;
+  margin-left: 5px;
+}
+
+.AudioPlayer_Volume_Down {
+  margin-left: 100px;
+}
+
+.AudioPlayer_Previous {
+  margin-left: 100px;
+}
+
+.AudioPlayer_NextSong {
+  margin-left: 100px;
+}
+
+//NavBar
+
+.NavBarDiv {
+  position: fixed;
+  width: 200px;
+  height: 100%;
+  background: #151719;
+  left: -200px;
+  transition: all 500ms linear;
+}
+
+.NavBarDiv.active {
+  left: 0;
+}
+
+.NavBarDivToggle {
+  position: absolute;
+  left: 230px;
+  top: 7px;
+  transition: all 500ms linear;
+}
+
+.NavBarDivToggle.active {
+  position: absolute;
+  left: 150px;
+  top: 7px;
+  color: white;
+}
+
+.NavBarSpan {
+  display: block;
+  width: 30px;
+  height: 5px;
+  background: white;
+  margin: 5px 0;
+  border-radius: 3px;
+}
+
+.NavBarSpan.active {
+  display: block;
+  width: 30px;
+  height: 5px;
+  background: white;
+  margin: 5px 0;
+}
+
+.NavBarListElement {
+  color: rgba(230,230,230,0.9);
+  list-style: none;
+  padding: 15px 10px;
+  border-bottom: 1px solid rgba(100,100,100,0.3);
+}

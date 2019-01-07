@@ -9,8 +9,8 @@ export class Header {
     private dom_contact: HTMLElement;
     private dom_imp: HTMLElement;
 
-    constructor(dom: HTMLElement, dom_content: HTMLElement) {
-        this.dom_root = dom;
+    constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
+        this.dom_root = dom_body;
         this.dom_content = dom_content;
         this.dom_header = document.createElement('header');
         this.dom_root.appendChild(this.dom_header);
