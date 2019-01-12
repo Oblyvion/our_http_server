@@ -25,7 +25,7 @@ export class AudioPlayer {
     private dom_volume_up;
     private dom_nextSong: HTMLElement;
 
-    private Songs = [
+    public Songs = [
         "Bad_Habit_Terrasound.mp3",
         "Dark_Blue_Echoes.mp3",
     ];
@@ -88,13 +88,13 @@ export class AudioPlayer {
 
                 this.dom_player_controllers = document.createElement('div');
                 this.dom_player_controllers .classList.add('AudioPlayer_ControllersContainer');
-                this.dom_player.appendChild(this.dom_player_controllers );
+                this.dom_player.appendChild(this.dom_player_controllers);
 
                     this.dom_previous = document.createElement("img");
                     this.dom_previous.classList.add("AudioPlayer_Previous");
                     this.dom_previous.src = "./Images/previous.png";
                     this.dom_player_controllers.appendChild(this.dom_previous);
-                    this.dom_previous.style.width = "40px";
+                    this.dom_previous.style.width = "30px";
                     this.dom_previous.addEventListener('click', () => {
                         this.previous();
                     });
@@ -103,7 +103,7 @@ export class AudioPlayer {
                     this.dom_backward.classList.add("AudioPlayer_Backward");
                     this.dom_backward.src = "./Images/backward.png";
                     this.dom_player_controllers.appendChild(this.dom_backward);
-                    this.dom_backward.style.width = "40px";
+                    this.dom_backward.style.width = "30px";
                     this.dom_backward.addEventListener('click', () => {
                         this.backward();
                     });
@@ -112,7 +112,7 @@ export class AudioPlayer {
                     this.dom_play.classList.add("AudioPlayer_Play");
                     this.dom_play.src = "./Images/play.png";
                     this.dom_player_controllers.appendChild(this.dom_play);
-                    this.dom_play.style.width = "50px";
+                    this.dom_play.style.width = "60px";
                     this.dom_play.addEventListener('click', () => {
                         this.playorpauseSong();
                     });
@@ -121,7 +121,7 @@ export class AudioPlayer {
                     this.dom_forward.classList.add("AudioPlayer_Forward");
                     this.dom_forward.src = "./Images/forward.png";
                     this.dom_player_controllers.appendChild(this.dom_forward);
-                    this.dom_forward.style.width = "40px";
+                    this.dom_forward.style.width = "30px";
                     this.dom_forward.addEventListener('click', () => {
                         this.forward();
                     });
@@ -130,7 +130,7 @@ export class AudioPlayer {
                     this.dom_next.classList.add("AudioPlayer_Next");
                     this.dom_next.src = "./Images/next.png";
                     this.dom_player_controllers.appendChild(this.dom_next);
-                    this.dom_next.style.width = "40px";
+                    this.dom_next.style.width = "30px";
                     this.dom_next.addEventListener('click', () => {
                         this.next();
                     });
@@ -139,7 +139,7 @@ export class AudioPlayer {
                     this.dom_volume_down.classList.add("AudioPlayer_Volume_Down");
                     this.dom_volume_down.src = "./Images/volume_down.png";
                     this.dom_player_controllers.appendChild(this.dom_volume_down);
-                    this.dom_volume_down.style.width = "15px";
+                    this.dom_volume_down.style.width = "17px";
                     this.dom_volume_down.addEventListener('click', () => {
 
                     });
@@ -161,20 +161,20 @@ export class AudioPlayer {
                     this.dom_volume_up.classList.add("AudioPlayer_Volume_Up");
                     this.dom_volume_up.src = "./Images/volume_up.png";
                     this.dom_player_controllers.appendChild(this.dom_volume_up);
-                    this.dom_volume_up.style.width = "15px";
+                    this.dom_volume_up.style.width = "20px";
                     this.dom_volume_up.addEventListener('click', () => {
 
                     });
 
                 this.dom_nextSong = document.createElement('div');
                 this.dom_nextSong .classList.add('AudioPlayer_NextSong');
-                this.dom_player.appendChild(this.dom_nextSong);
+                this.dom_player_controllers.appendChild(this.dom_nextSong);
                 this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
 
         this.loadSong(0);
     }
 
-    loadSong(playSongNumber) {
+    public loadSong(playSongNumber) {
         currentSong = playSongNumber;
         song.src = "./Songs/"+this.Songs[currentSong];
         this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
@@ -247,5 +247,13 @@ export class AudioPlayer {
 
     adjustVolume() {
         song.volume = dom_volume_slider.value;
+        if(song.volume === 0) {
+            this.dom_volume_down.src = "./Images/volume_silent.png"
+        }
+        else this.dom_volume_down.src = "./Images/volume_down.png";
+    }
+
+    close() {
+        this.dom_root.remove();
     }
 }

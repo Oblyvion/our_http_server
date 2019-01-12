@@ -3,7 +3,11 @@
   margin: 0;
   font-family: "SansSerif", sans-serif; }
 
+html {
+  height: 100%; }
+
 body {
+  min-height: 100%;
   width: 100%;
   height: 100%;
   background: linear-gradient(to top, #103f5e, rgba(192, 184, 255, 0.5)) fixed;
@@ -12,22 +16,19 @@ body {
 
 .wrapper {
   width: 100%;
-  height: 100%;
-  display: inline-block; }
+  height: 100%; }
 
 header {
-  font-family: "SansSerif", sans-serif;
   font-size: 30px;
   background: linear-gradient(to right, #072864, rgba(7, 40, 100, 0.5));
   min-height: 70px;
   max-height: 70px;
-  line-height: 60px;
+  line-height: 70px;
   text-align: center;
-  position: relative;
-  grid-area: header; }
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5); }
 
 #InformationContainer {
-  width: 200px;
+  width: 250px;
   height: 30px;
   margin: 15px 0 0 15px;
   position: absolute;
@@ -42,6 +43,49 @@ header {
   font-size: small;
   color: lightblue;
   text-decoration: none; }
+
+.HeaderButtonContainer {
+  width: 250px;
+  height: 30px;
+  margin: 20px 0 0 15px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 30px;
+  font-family: "SansSerif", sans-serif; }
+
+.HeaderButtonImage {
+  float: right;
+  margin-right: 20px; }
+
+#MessageSymbol {
+  margin-top: 2px; }
+
+#AccountSymbol:hover .HeaderDropdownMenuContent {
+  display: block; }
+
+.HeaderDropdownMenu {
+  position: absolute;
+  margin-top: 70px;
+  right: 0;
+  top: 0;
+  height: 100px;
+  width: 200px; }
+
+.HeaderDropdownMenuContent {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-width: 160px;
+  z-index: 1;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); }
+
+.HeaderDropdownMenuData {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block; }
 
 .container {
   position: relative;
@@ -141,34 +185,29 @@ button:hover, .form button:active {
   color: #0728c3;
   text-decoration: none; }
 
-.ContentAboutUs {
-  width: 100%;
-  height: 100%; }
-
 .AudioPlayer_Container {
-  width: 1000px;
   height: 135px;
   background: #f3ebdc;
   color: #003ba9;
   box-shadow: 0 0 6px 2px #c7a8a8;
   font-family: sans-serif;
   font-size: 12px;
-  float: right;
-  border-radius: 5px; }
+  border-radius: 5px;
+  grid-area: player; }
 
 .AudioPlayer_LogoDiv {
-  float: left; }
+  float: left;
+  margin-right: 15px; }
 
 .AudioPlayer_LogoImage {
   width: 135px;
   height: 135px; }
 
 .AudioPlayer_Player {
-  float: right;
-  margin: 7px; }
+  margin: 7px;
+  height: 135px; }
 
 .AudioPlayer_SongTitle {
-  width: 850px;
   padding: 5px 0 5px 0;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -183,71 +222,182 @@ button:hover, .form button:active {
 
 .AudioPlayer_Duration {
   float: right;
+  margin-right: 25px;
   font-size: 10px; }
 
 .AudioPlayer_ControllersContainer {
-  clear: both;
-  display: table; }
+  display: table;
+  float: left;
+  margin-left: 100px; }
 
 .AudioPlayer_ControllersContainer * {
   vertical-align: middle;
-  margin-right: 2px; }
+  margin-right: 10px; }
 
 .AudioPlayer_VolumeSlider {
-  width: 180px;
   margin-left: 5px; }
 
 .AudioPlayer_Volume_Down {
   margin-left: 100px; }
 
-.AudioPlayer_Previous {
-  margin-left: 100px; }
-
-.AudioPlayer_NextSong {
-  margin-left: 100px; }
-
 .NavBarDiv {
-  position: fixed;
-  width: 200px;
   height: 100%;
-  background: #151719;
-  left: -200px;
-  transition: all 500ms linear; }
+  background: rgba(0, 0, 0, 0.7);
+  transition: all 500ms linear;
+  grid-area: navbar;
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5); }
 
 .NavBarDiv.active {
-  left: 0; }
+  height: 100%;
+  grid-area: navbar; }
 
 .NavBarDivToggle {
-  position: absolute;
-  left: 230px;
-  top: 7px;
-  transition: all 500ms linear; }
+  transition: all 500ms linear;
+  width: 50px; }
 
 .NavBarDivToggle.active {
-  position: absolute;
-  left: 150px;
-  top: 7px;
-  color: white; }
+  width: 50px;
+  float: right; }
 
 .NavBarSpan {
   display: block;
   width: 30px;
   height: 5px;
-  background: white;
-  margin: 5px 0;
-  border-radius: 3px; }
+  background: #464646;
+  margin: 5px 0 0 20px;
+  border-radius: 3px;
+  transition: all 500ms linear; }
 
 .NavBarSpan.active {
   display: block;
   width: 30px;
   height: 5px;
   background: white;
-  margin: 5px 0; }
+  margin: 5px 0 0 40px; }
 
 .NavBarListElement {
   color: rgba(230, 230, 230, 0.9);
   list-style: none;
   padding: 15px 10px;
   border-bottom: 1px solid rgba(100, 100, 100, 0.3); }
+
+.NavBarAddButtonImage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px; }
+
+.PlaylistTableDiv {
+  width: 100vw;
+  height: 100vh;
+  grid-area: content; }
+
+.PlaylistTablePlaylistHeader {
+  height: 40px;
+  background-color: rgba(70, 70, 70, 0.6);
+  text-align: left;
+  line-height: 40px;
+  border: 1px black solid;
+  padding-left: 10px;
+  font-size: 15px;
+  font-weight: bold; }
+
+.PlaylistTable {
+  width: 100vw;
+  background-color: rgba(204, 204, 204, 0.29); }
+
+.TableHeader, .TableData {
+  border: 1px solid #000000;
+  text-align: left;
+  padding: 8px; }
+
+.TableDataRow:hover {
+  background-color: darkblue; }
+
+.FirstSteps {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: auto;
+  grid-template-areas: "navbar player" "navbar content"; }
+
+.ContentAboutUs {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-areas: '. . .' '. content .' '. content .' '. content .' '. . .';
+  grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
+  grid-template-rows: minmax(20%, 20%) minmax(15%, 15%) minmax(15%, 15%) minmax(15%, 15%) minmax(35%, 35%); }
+
+.AboutUsInformation {
+  grid-area: content;
+  background-color: #ccc;
+  border-radius: 3px;
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5);
+  word-wrap: break-word;
+  text-align: center; }
+
+.AboutUsInformationHeader {
+  padding-top: 20px;
+  height: 10%;
+  font-size: larger; }
+
+.AboutUsInformationText {
+  padding: 20px 0 0 10px;
+  height: 90%;
+  white-space: pre-wrap;
+  word-wrap: break-word; }
+
+.ContentContact {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-areas: '. . .' '. content .' '. content .' '. content .' '. . .';
+  grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
+  grid-template-rows: minmax(20%, 20%) minmax(15%, 15%) minmax(15%, 15%) minmax(15%, 15%) minmax(35%, 35%); }
+
+.ContactInformationContainer {
+  grid-area: content;
+  background-color: #ccc;
+  border-radius: 3px;
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5);
+  word-wrap: break-word;
+  text-align: left; }
+
+.ContactInformationHeader {
+  padding: 20px 10px 0 10px;
+  height: 10%;
+  font-size: large; }
+
+.ContactInformation {
+  padding: 50px 0 0 10px;
+  height: 90%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: large;
+  text-align: center; }
+
+.ContentImpressum {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-areas: '. . .' '. content .' '. content .' '. content .' '. . .';
+  grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
+  grid-template-rows: minmax(20%, 20%) minmax(15%, 15%) minmax(15%, 15%) minmax(15%, 15%) minmax(35%, 35%); }
+
+.ImpressumInformationContainer {
+  grid-area: content;
+  background-color: #ccc;
+  border-radius: 3px;
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5);
+  word-wrap: break-word;
+  text-align: center; }
+
+.ImpressumInformation {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: large;
+  text-align: center;
+  border: 1px darkgray solid; }
 
 /*# sourceMappingURL=style.css.map */

@@ -3,12 +3,14 @@ import { Login } from "./Login.js";
 import { Registration } from "./Registration.js";
 import { FirstSteps } from "./FirstSteps.js";
 import { About_us } from "./About_us.js";
-const dom_body = document.getElementById('app');
+import { Contact } from "./Contact.js";
+import { Impressum } from "./Impressum.js";
+const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');
 dom_content.classList.add('content');
-const header = new Header(dom_body, dom_content);
+const header = new Header(dom_root, dom_content);
 //const audioPlayer = new AudioPlayer(dom_content);
-dom_body.appendChild(dom_content);
+dom_root.appendChild(dom_content);
 let active_app = null;
 export const manager = function (app) {
     if (active_app != null) {
@@ -29,16 +31,16 @@ export const manager = function (app) {
             active_app = new FirstSteps(dom_content);
             break;
         case 'about':
-            header.set('About');
+            header.set('About Us');
             active_app = new About_us(dom_content);
             break;
         case 'contact':
             header.set('Contact');
-            //active_app = new Contact(dom_content);
+            active_app = new Contact(dom_content);
             break;
         case 'impressum':
             header.set('Impressum');
-            //active_app = new Impressum(dom_content);
+            active_app = new Impressum(dom_content);
             break;
         case 'default':
             throw `Undefined manager app ${app}`;

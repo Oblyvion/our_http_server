@@ -4,6 +4,8 @@ export class NavBar {
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divNavBar: HTMLElement;
+    private dom_addButton:HTMLDivElement;
+    private dom_addButtonImg:HTMLImageElement;
     private dom_UList: HTMLUListElement;
     private dom_ListElement: HTMLLIElement;
     private dom_divNavBarToggle: HTMLElement;
@@ -21,22 +23,34 @@ export class NavBar {
 
         this.dom_divNavBar = document.createElement('div');
         this.dom_divNavBar.classList.add("NavBarDiv");
-        this.dom_root.appendChild(this.dom_divNavBar);
+        this.dom_content.appendChild(this.dom_divNavBar);
 
-            this.dom_divNavBarToggle = document.createElement('div');
-            this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
-            this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
-            this.dom_divNavBarToggle.addEventListener('click', () => {
-                this.toggleNavBar();
-                this.moveBurgerButton();
-                this.changeColorOfSpan();
-            });
+            this.dom_addButton = document.createElement('div');
+            this.dom_addButton.classList.add("NavBarAddButtonDiv");
+            this.dom_divNavBar.appendChild(this.dom_addButton);
 
-                for(let i = 0; i<3; i++) {
-                    this.dom_span_array[i] = document.createElement('span');
-                    this.dom_span_array[i].classList.add("NavBarSpan");
-                    this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
-                }
+                this.dom_addButtonImg = document.createElement('img');
+                this.dom_addButtonImg.classList.add("NavBarAddButtonImage");
+                this.dom_addButton.appendChild(this.dom_addButtonImg);
+                this.dom_addButtonImg.src = "./Images/add_button.png";
+                this.dom_addButtonImg.style.width = "40px";
+
+
+
+            // this.dom_divNavBarToggle = document.createElement('div');
+            // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
+            // this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
+            // this.dom_divNavBarToggle.addEventListener('click', () => {
+            //     this.toggleNavBar();
+            //     this.moveBurgerButton();
+            //     this.changeColorOfSpan();
+            // });
+            //
+            //     for(let i = 0; i<3; i++) {
+            //         this.dom_span_array[i] = document.createElement('span');
+            //         this.dom_span_array[i].classList.add("NavBarSpan");
+            //         this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
+            //     }
 
             this.dom_UList = document.createElement('ul');
             this.dom_UList.classList.add("NavBarUL");
