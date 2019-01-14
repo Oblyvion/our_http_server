@@ -10,7 +10,7 @@ export class PlaylistTable {
             Artist: "Terrasound",
             AddedBy: "fliesentischbesitzerklaus25",
         };
-        this.Playlist = [this.SongObject, this.SongObject1];
+        this.Playlist = Playlists;
         this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.audioPlayer = audioPlayer;
@@ -20,7 +20,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeader = document.createElement('div');
         this.dom_divPlaylistHeader.classList.add('PlaylistTablePlaylistHeader');
         this.dom_divTable.appendChild(this.dom_divPlaylistHeader);
-        this.dom_divPlaylistHeader.textContent = "Playlist1";
+        this.dom_divPlaylistHeader.textContent = "Hallo!";
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
         this.dom_divTable.appendChild(this.dom_Table);
@@ -72,7 +72,7 @@ export class PlaylistTable {
         }
     }
     close() {
-        this.dom_content.remove();
+        this.dom_divTable.remove();
     }
 }
 //# sourceMappingURL=PlaylistTable.js.map

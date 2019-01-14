@@ -60,7 +60,7 @@ export class Registration {
     }
     async registerUser() {
         let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
-        if (this.dom_registerID.value.length >= 2) {
+        if (this.dom_registerID.value.length > 1) {
             try {
                 if (this.dom_registerPW.value.length > 3) {
                     console.log("PW too short = ", this.dom_registerPW.value.length);

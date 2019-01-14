@@ -14,6 +14,8 @@ export class Login implements iAppContainer {
     constructor(dom: HTMLElement) {
         this.dom_root = dom;
 
+        console.log(this.dom_root);
+
         this.dom = document.createElement('div');
         this.dom.classList.add('container');
         this.dom_root.appendChild(this.dom);
@@ -84,8 +86,8 @@ export class Login implements iAppContainer {
         if (this.dom_loginInputID.value !== "" && this.dom_loginInputPW.value !== "") {
             let password = this.dom_loginInputPW.value; //= Registration.sha256(this.dom_registerPW.value);
             try {
-                console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-                console.log(`das ist body pw: ${password.toString()}`);
+                // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
+                // console.log(`das ist body pw: ${password.toString()}`);
                 const response = await fetch(API_URL + '/user?name=' + this.dom_loginInputID.value, {
                     cache: 'no-cache',
                     headers: {
@@ -99,11 +101,22 @@ export class Login implements iAppContainer {
                     // credentials: 'include',
                 });
 
-
                 const result: UserResult = await response.json();
+                
+                //console.log(result.data.toString());
+
+
+                //console.log("server: "+result.data.PASSWORD);
+                //console.log("client: "+password);
+                
                 if (!result.success) {
                     console.error(result);
-                    throw result.msg;
+                    throw "wrong data";
+                }
+                else {
+                    if(result.data.PASSWORD !== password) {
+                        throw "Error wrong password";
+                    }
                 }
 
                 this.info(`Login successful!`, '', 'success');
@@ -112,7 +125,7 @@ export class Login implements iAppContainer {
 
             } catch (err) {
                 console.log(err);
-                this.info('Login Error! Please make sure you\'re registered!', err, 'warning');
+                this.info("Login Error! Wrong username or password.", err, 'warning');
             }
         }
         else {
@@ -142,7 +155,8 @@ export class Login implements iAppContainer {
     }
 
     animate() {
-        const elem = document.getElementById("Login");
+        const elem = this.dom_login;
+        console.log("das ist elem: "+elem);
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {

@@ -3,8 +3,13 @@ interface iAppContainer {
 }
 
 interface User {
-    id: number,
-    name: string
+    NAME: string,
+    PASSWORD: string
+}
+
+interface Playlist {
+    ID: number,
+    NAME: string,
 }
 
 interface UserResult {
@@ -12,4 +17,11 @@ interface UserResult {
     msg?: string,
     err?: string,
     data?: User
+}
+
+interface PlaylistResult {
+    success: boolean,
+    msg?: string,
+    err?: string,
+    data?: Playlist
 }

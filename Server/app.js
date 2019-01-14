@@ -5,6 +5,7 @@ const {celebrate, Joi, isCelebrate} = require('celebrate');
 const EscapeHtml = require('escape-html');
 const DB = require('./db');
 const cors = require('cors');
+const basic_auth = require("basic-auth");
 
 const app = express();
 app.use(express.json());
@@ -60,6 +61,30 @@ db.create()
 const schema_user_post = Joi.object().keys({
     name: Joi.string().alphanum().min(3).max(30).required()
 });
+
+
+const auth = async (req, res, next) => {
+    try {
+        const user = basic_auth(req);
+        console.log(user);
+        if (!user || !user.name || !user.pass) {
+            throw "Invalid Basic Auth";
+        }
+
+        const auth = await db.get_row('SELECT PASSWORD FROM USERS WHERE NAME = ?', user.name);
+
+        console.log("user pass: "+user.pass);
+        console.log("auth password: "+auth.PASSWORD);
+        if(auth.PASSWORD !== user.pass) {
+            throw "Invalid Password!";
+        }
+        next();
+    } catch(err) {
+        console.log(err.toString());
+        res.set("WWW-Authenticate", "Basic real-Authorization Required");
+        //error_handler(res, 'Authorization Required', err);
+    }
+};
 
 // ----------------------------GET section----------------------------
 /**
@@ -157,7 +182,7 @@ app.get('/user/', (req, res) => {
 /**
  * get all songs
  */
-app.get('/songs', (req, res) => {
+app.get('/songs', auth, (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)

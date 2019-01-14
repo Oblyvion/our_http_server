@@ -80,7 +80,7 @@ header {
   margin-top: 2px;
 }
 
-#AccountSymbol:hover .HeaderDropdownMenuContent {display: block};
+//#AccountSymbol:hover .HeaderDropdownMenuContent {display: block};
 
 .HeaderDropdownMenu {
   position: absolute;
@@ -98,6 +98,7 @@ header {
   top: 0;
   min-width: 160px;
   z-index: 1;
+  background-color: darkgray;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
@@ -301,10 +302,11 @@ button:hover, .form button:active {
 }
 
 .AudioPlayer_ControllersContainer {
-  display: table;
+  //display: table;
   //margin-top: 10px;
-  float: left;
-  margin-left: 100px;
+  height: 200px;
+  float: right;
+  margin-right: 100px;
 }
 
 .AudioPlayer_ControllersContainer * {
@@ -384,8 +386,14 @@ button:hover, .form button:active {
 
 .NavBarAddButtonImage {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  float: right;
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.NavBarInputNewSong {
+  width: 60%;
+  float: left;
   margin-top: 15px;
 }
 
@@ -412,6 +420,7 @@ button:hover, .form button:active {
   width: 100vw;
   //height: ;
   background-color: rgba(204, 204, 204, 0.29);
+  cursor: pointer;
 }
 
 .TableHeader,.TableData {

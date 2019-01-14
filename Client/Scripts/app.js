@@ -28,6 +28,7 @@ export const manager = function (app) {
             break;
         case 'page_first_steps':
             header.set('First Steps');
+            header.setRightButtons();
             active_app = new FirstSteps(dom_content);
             break;
         case 'about':

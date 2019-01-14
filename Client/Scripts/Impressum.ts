@@ -21,7 +21,7 @@ export class Impressum {
         const dom_ImpressumInformation2 = document.createElement('div');
         dom_ImpressumInformation2.classList.add('ImpressumInformation');
         dom_ImpressumInformationContainer.appendChild(dom_ImpressumInformation2);
-        dom_ImpressumInformation2.textContent = "Franz-Johannes Weber\r\nFriedrich 72\r\nWörrstadt";
+        dom_ImpressumInformation2.textContent = "Franz-Johannes Weber\r\nFriedrich-Ebert-Str. 72\r\nWörrstadt";
 
     }
 

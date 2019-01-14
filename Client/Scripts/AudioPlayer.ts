@@ -116,6 +116,13 @@ export class AudioPlayer {
                     this.dom_play.addEventListener('click', () => {
                         this.playorpauseSong();
                     });
+                    // this.dom_play.addEventListener('mouseover', () => {
+                    //     this.dom_play.style.width = "65px";
+                    // });
+                    // this.dom_play.addEventListener('mouseleave', () => {
+                    //     this.dom_play.style.width = "60px";
+                    // });
+
 
                     this.dom_forward = document.createElement("img");
                     this.dom_forward.classList.add("AudioPlayer_Forward");

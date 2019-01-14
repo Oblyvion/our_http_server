@@ -1,5 +1,7 @@
 import {manager} from "./app.js";
 
+const API_URL = 'http://localhost:3000';
+
 export class NavBar {
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
@@ -10,14 +12,16 @@ export class NavBar {
     private dom_ListElement: HTMLLIElement;
     private dom_divNavBarToggle: HTMLElement;
     private dom_span_array = [];
+    private dom_newplaylist: HTMLInputElement;
 
-    private list = [
-       "playlist 1",
-       "playlist 2",
-       "playlist 3"
-    ];
+    private listofPlaylists = [];
+    // private listofPlaylists = [
+    //     "Standard Playlist1"
+    // ];
 
-    constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
+    constructor(dom_body: HTMLElement, dom_content: HTMLElement, Playlists) {
+
+        this.listofPlaylists = Playlists;
         this.dom_root = dom_body;
         this.dom_content = dom_content;
 
@@ -34,8 +38,19 @@ export class NavBar {
                 this.dom_addButton.appendChild(this.dom_addButtonImg);
                 this.dom_addButtonImg.src = "./Images/add_button.png";
                 this.dom_addButtonImg.style.width = "40px";
+                this.dom_addButtonImg.addEventListener('click', () => {
+                    if(this.dom_newplaylist.style.display === "none") {
+                        this.dom_newplaylist.style.display = "block";
+                    }
+                    else {
+                        this.insertNewPlaylist(this.dom_newplaylist.value);
+                        this.dom_newplaylist.style.display = "none";
+                    }
+                });
 
-
+                this.dom_newplaylist = document.createElement("input");
+                this.dom_newplaylist.classList.add("NavBarInputNewSong");
+                this.dom_addButton.appendChild(this.dom_newplaylist);
 
             // this.dom_divNavBarToggle = document.createElement('div');
             // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
@@ -56,7 +71,7 @@ export class NavBar {
             this.dom_UList.classList.add("NavBarUL");
             this.dom_divNavBar.appendChild(this.dom_UList);
 
-                for(let i = 0; i<this.list.length; i++) {
+                for(let i = 0; i<this.listofPlaylists.length; i++) {
                     this.dom_ListElement = document.createElement('li');
                     this.dom_ListElement.classList.add("NavBarListElement");
                     this.dom_UList.appendChild(this.dom_ListElement);
@@ -68,9 +83,44 @@ export class NavBar {
     setNamesofPlaylists() {
         let n = this.dom_UList.childNodes.length;
         for (let i = 0; i < n; i++) {
-                this.dom_UList.childNodes.item(i).textContent = this.list[i];
+                this.dom_UList.childNodes.item(i).textContent = this.listofPlaylists[i];
         }
     }
+
+    async insertNewPlaylist(playlist_name:String) {
+        try {
+            const response = await fetch(API_URL + '/playlist/', {
+                body: JSON.stringify({
+                    name: playlist_name
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true'
+                },
+                method: 'POST',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            const result: PlaylistResult = await response.json();
+            if (!result.success) {
+                console.error(result);
+                throw result.msg;
+            }
+
+            if (result.success) {
+                this.listofPlaylists.push(result.data.NAME)
+            }
+            return result;
+
+        } catch(err)  {
+            console.log(err);
+        }
+    }
+
 
     toggleNavBar() {
         this.dom_divNavBar.classList.toggle('active');

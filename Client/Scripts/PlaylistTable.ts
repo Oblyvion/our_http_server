@@ -1,4 +1,5 @@
 import {AudioPlayer} from "./AudioPlayer";
+import {NavBar} from "./NavBar.js"
 
 export class PlaylistTable {
     private dom_root:HTMLElement;
@@ -23,9 +24,10 @@ export class PlaylistTable {
         AddedBy: "fliesentischbesitzerklaus25",
     };
 
-    private Playlist = [this.SongObject, this.SongObject1];
+    private Playlist;//= [this.SongObject, this.SongObject1];
 
     constructor(dom_root, dom_content, audioPlayer) {
+        this.Playlist = Playlists;
         this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.audioPlayer = audioPlayer;
@@ -37,7 +39,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeader = document.createElement('div');
         this.dom_divPlaylistHeader.classList.add('PlaylistTablePlaylistHeader');
         this.dom_divTable.appendChild(this.dom_divPlaylistHeader);
-        this.dom_divPlaylistHeader.textContent = "Playlist1";
+        this.dom_divPlaylistHeader.textContent = "Hallo!";
 
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
@@ -99,6 +101,6 @@ export class PlaylistTable {
     }
 
     close() {
-        this.dom_content.remove();
+        this.dom_divTable.remove();
     }
 }

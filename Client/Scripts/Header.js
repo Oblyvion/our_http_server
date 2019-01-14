@@ -34,6 +34,11 @@ export class Header {
             new manager("impressum");
         });
         this.dom_about_contact_imp_container.appendChild(this.dom_imp);
+    }
+    set(text) {
+        this.dom_header.textContent = `Music Playlist ${text}`;
+    }
+    setRightButtons() {
         //Header Right
         this.dom_ButtonContainer = document.createElement('div');
         this.dom_root.appendChild(this.dom_ButtonContainer);
@@ -44,12 +49,27 @@ export class Header {
         this.dom_HeaderAccountBttn.src = "./Images/account.png";
         this.dom_ButtonContainer.appendChild(this.dom_HeaderAccountBttn);
         this.dom_HeaderAccountBttn.style.width = "25px";
+        this.dom_HeaderAccountBttn.addEventListener('mouseover', () => {
+            this.dom_DropdownMenuContent.style.display = "block";
+        });
+        this.dom_HeaderAccountBttn.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                this.dom_DropdownMenuContent.style.display = "none";
+            }, 7000);
+        });
         this.dom_DropdownMenu = document.createElement('div');
         this.dom_root.appendChild(this.dom_DropdownMenu);
         this.dom_DropdownMenu.classList.add('HeaderDropdownMenu');
         this.dom_DropdownMenuContent = document.createElement('div');
         this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
         this.dom_DropdownMenuContent.classList.add("HeaderDropdownMenuContent");
+        this.dom_DropdownMenuData0 = document.createElement('a');
+        this.dom_DropdownMenuData0.textContent = "Your Playlist Mates";
+        this.dom_DropdownMenuData0.classList.add('HeaderDropdownMenuData');
+        this.dom_DropdownMenuData0.setAttribute('href', '#');
+        this.dom_DropdownMenuData0.addEventListener('click', () => {
+        });
+        this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData0);
         this.dom_DropdownMenuData1 = document.createElement('a');
         this.dom_DropdownMenuData1.textContent = "New Playlist-Mate?";
         this.dom_DropdownMenuData1.classList.add('HeaderDropdownMenuData');
@@ -64,15 +84,20 @@ export class Header {
         this.dom_DropdownMenuData2.addEventListener('click', () => {
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData2);
+        this.dom_DropdownMenuData3 = document.createElement('a');
+        this.dom_DropdownMenuData3.textContent = "Logout";
+        this.dom_DropdownMenuData3.classList.add('HeaderDropdownMenuData');
+        this.dom_DropdownMenuData3.setAttribute('href', '#');
+        this.dom_DropdownMenuData3.addEventListener('click', () => {
+            new manager('login');
+        });
+        this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData3);
         this.dom_HeaderMessageBttn = document.createElement("img");
         this.dom_HeaderMessageBttn.setAttribute('id', "MessageSymbol");
         this.dom_HeaderMessageBttn.classList.add("HeaderButtonImage");
         this.dom_HeaderMessageBttn.src = "./Images/letter.png";
         this.dom_ButtonContainer.appendChild(this.dom_HeaderMessageBttn);
         this.dom_HeaderMessageBttn.style.width = "30px";
-    }
-    set(text) {
-        this.dom_header.textContent = `Music Playlist ${text}`;
     }
 }
 //# sourceMappingURL=Header.js.map
