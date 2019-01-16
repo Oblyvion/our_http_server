@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:3000';
 export class FirstSteps {
     constructor(dom) {
         this.Playlists = this.getPlaylists();
-        console.log("das ist playlists: " + this.Playlists.length);
+        console.log("das ist playlists: " + this.Playlists);
         this.dom_root = document.getElementById('app');
         this.dom_content = dom;
         this.dom_content.classList.add('FirstSteps');
@@ -18,7 +18,7 @@ export class FirstSteps {
         try {
             // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
             // console.log(`das ist body pw: ${password.toString()}`);
-            console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
+            // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
             const playlists = await fetch(API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
@@ -30,10 +30,11 @@ export class FirstSteps {
                 mode: 'cors',
             });
             const result = await playlists.json();
-            return result;
+            console.log("DAS IST RESULT: ", result.data);
+            return result.data;
         }
         catch (err) {
-            console.log("Error is passiert!");
+            console.log("Error fetching Playlists!");
         }
     }
     close() {

@@ -244,9 +244,11 @@ app.get('/song/:id', (req, res) => {
 app.get('/playlists', async (req, res) => {
     const token = jwt.decode(req.get("Authorization")).username;
     console.log("das ist username generiert aus token:" ,token);
-    const id = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', token);
-    console.log("das ist die id des users: ", id);
-    db.get_rows('SELECT NAME FROM PLAYLISTS, USERS, PLAYLIST_FROM WHERE PLAYLISTS.ID == PLAYLISTS_FROM.ID AND WHERE USERS.ID == PLAYLIST_FROM.USER_ID AND WHERE USER.ID = ?', id)
+    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
+    console.log("das ist die id des users: ", USER.ID);
+    const PLAYLIST = await db.get_row('SELECT * FROM PLAYLIST_FROM WHERE PLAYLIST_FROM.USER_ID = ?', USER.ID);
+    console.log("das ist die id der Playlist: ", PLAYLIST.PLAYLIST_ID);
+    db.get_rows('SELECT NAME FROM PLAYLISTS WHERE ID = ?', PLAYLIST.PLAYLIST_ID)
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)

@@ -15,7 +15,7 @@ interface UserResult {
     success: boolean,
     msg?: string,
     err?: string,
-    data?: Token
+    data?: string,
 }
 
 interface PlaylistResult {
