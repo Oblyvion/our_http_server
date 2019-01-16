@@ -32,7 +32,7 @@ header {
   max-height: 70px;
   line-height: 70px;
   text-align: center;
-  //position: relative;
+  position: relative;
   box-shadow: 2px 2px 10px rgba(7, 40, 195, .5);
 
 }
@@ -395,6 +395,7 @@ button:hover, .form button:active {
   width: 60%;
   float: left;
   margin-top: 15px;
+  display: none;
 }
 
 //Playlist Table
@@ -421,6 +422,17 @@ button:hover, .form button:active {
   //height: ;
   background-color: rgba(204, 204, 204, 0.29);
   cursor: pointer;
+}
+
+.PlaylistTablePlaylistHeaderButtons {
+  float: right;
+  width: 40px;
+  height: 40px;
+  background: yellow;
+  z-index: 1;
+}
+
+.PlaylistTablePlaylistHeaderAddBtn {
 }
 
 .TableHeader,.TableData {

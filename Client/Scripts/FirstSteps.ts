@@ -2,6 +2,7 @@ import {AudioPlayer} from "./AudioPlayer.js"
 import {manager} from "./app.js";
 import {NavBar} from "./NavBar.js";
 import {PlaylistTable} from "./PlaylistTable.js";
+import {Login} from "./Login";
 
 const API_URL = 'http://localhost:3000';
 
@@ -15,6 +16,7 @@ export class FirstSteps {
 
     constructor(dom: HTMLElement) {
         this.Playlists = this.getPlaylists();
+        console.log("das ist playlists: "+this.Playlists.length);
 
         this.dom_root = document.getElementById('app');
 
@@ -32,11 +34,13 @@ export class FirstSteps {
         try {
             // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
             // console.log(`das ist body pw: ${password.toString()}`);
+            console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
             const playlists = await fetch(API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
-                    'crossDomain': 'true'
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
                 },
                 method: 'GET',
                 mode: 'cors',

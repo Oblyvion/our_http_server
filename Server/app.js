@@ -6,6 +6,9 @@ const EscapeHtml = require('escape-html');
 const DB = require('./db');
 const cors = require('cors');
 const basic_auth = require("basic-auth");
+const jwt = require('jsonwebtoken');
+
+let UserData = null;
 
 const app = express();
 app.use(express.json());
@@ -66,15 +69,15 @@ const schema_user_post = Joi.object().keys({
 const auth = async (req, res, next) => {
     try {
         const user = basic_auth(req);
-        console.log(user);
+        console.log("User: "+user);
         if (!user || !user.name || !user.pass) {
             throw "Invalid Basic Auth";
         }
 
         const auth = await db.get_row('SELECT PASSWORD FROM USERS WHERE NAME = ?', user.name);
 
-        console.log("user pass: "+user.pass);
-        console.log("auth password: "+auth.PASSWORD);
+        //console.log("user pass: "+user.pass);
+        //console.log("auth password: "+auth.PASSWORD);
         if(auth.PASSWORD !== user.pass) {
             throw "Invalid Password!";
         }
@@ -159,15 +162,28 @@ app.get('/user/:id', (req, res) => {
 /**
  * get user by name
  */
-app.get('/user/', (req, res) => {
-    console.log("name = ", req.query.name);
-    db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE NAME = ?', req.query.name)
-        .then(row => {
-            if (!row)
+app.post('/login', (req, res) => {
+    // console.log("name = ", req.body.name);
+    // console.log("password = ", req.body.password);
+    const result =  db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
+        .then(user => {
+            if (!user)
                 throw 'user does not exist';
+
+            // console.log("eingabe password = ", req.body.password);
+            // console.log("database password = ", user.PASSWORD);
+            if(user.PASSWORD !== req.body.password) {
+                throw 'wrong password'
+            }
+
+            //token generator
+            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "3600"});
+
+            console.log("das ist tooooooken!!!: ", token);
+
             res.send({
                 success: true,
-                data: row
+                data: token
             });
         })
         .catch(err => {
@@ -182,7 +198,7 @@ app.get('/user/', (req, res) => {
 /**
  * get all songs
  */
-app.get('/songs', auth, (req, res) => {
+app.get('/songs', (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)
@@ -225,9 +241,14 @@ app.get('/song/:id', (req, res) => {
 /**
  * get all playlists
  */
-app.get('/playlists', (req, res) => {
-    db.get_rows('SELECT * FROM PLAYLISTS')
+app.get('/playlists', async (req, res) => {
+    const token = jwt.decode(req.get("Authorization")).username;
+    console.log("das ist username generiert aus token:" ,token);
+    const id = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', token);
+    console.log("das ist die id des users: ", id);
+    db.get_rows('SELECT NAME FROM PLAYLISTS, USERS, PLAYLIST_FROM WHERE PLAYLISTS.ID == PLAYLISTS_FROM.ID AND WHERE USERS.ID == PLAYLIST_FROM.USER_ID AND WHERE USER.ID = ?', id)
         .then(rows => {
+            console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
                 throw 'found no playlists';
             res.send({

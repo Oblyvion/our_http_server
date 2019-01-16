@@ -208,7 +208,7 @@ export class AudioPlayer {
 
     showDuration() {
         let d = Math.floor(song.duration);
-        console.log(d);
+        //console.log(d);
         dom_player_slider.setAttribute("max", d.toString());
         dom_player_duration.textContent = AudioPlayer.convertTime(d);
     }

@@ -2,6 +2,11 @@ import {manager} from "./app.js";
 
 const API_URL = 'http://localhost:3000';
 
+const test = {
+    "name": "playlist1",
+    "from": "hans"
+};
+
 export class NavBar {
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
@@ -15,9 +20,7 @@ export class NavBar {
     private dom_newplaylist: HTMLInputElement;
 
     private listofPlaylists = [];
-    // private listofPlaylists = [
-    //     "Standard Playlist1"
-    // ];
+
 
     constructor(dom_body: HTMLElement, dom_content: HTMLElement, Playlists) {
 
@@ -88,37 +91,39 @@ export class NavBar {
     }
 
     async insertNewPlaylist(playlist_name:String) {
-        try {
-            const response = await fetch(API_URL + '/playlist/', {
-                body: JSON.stringify({
-                    name: playlist_name
-                }),
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/json',
-                    'crossDomain': 'true'
-                },
-                method: 'POST',
-                mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
-            });
+        // try {
+        //     const response = await fetch(API_URL + '/playlist/', {
+        //         body: JSON.stringify({
+        //             name: playlist_name
+        //         }),
+        //         cache: 'no-cache',
+        //         headers: {
+        //             'content-type': 'application/json',
+        //             'crossDomain': 'true'
+        //         },
+        //         method: 'POST',
+        //         mode: 'cors',
+        //         // todo REST POST redirect
+        //         // redirect: 'follow',
+        //         // credentials: 'include',
+        //     });
+        //
+        //     const result: PlaylistResult = await response.json();
+        //     if (!result.success) {
+        //         console.error(result);
+        //         throw result.msg;
+        //     }
+        //
+        //     if (result.success) {
+        //         this.listofPlaylists.push(result.data.NAME)
+        //     }
+        //     return result;
+        //
+        // } catch(err)  {
+        //     console.log(err);
+        // }
 
-            const result: PlaylistResult = await response.json();
-            if (!result.success) {
-                console.error(result);
-                throw result.msg;
-            }
 
-            if (result.success) {
-                this.listofPlaylists.push(result.data.NAME)
-            }
-            return result;
-
-        } catch(err)  {
-            console.log(err);
-        }
     }
 
 

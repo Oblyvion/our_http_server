@@ -2,9 +2,8 @@ interface iAppContainer {
     close(): void;
 }
 
-interface User {
-    NAME: string,
-    PASSWORD: string
+interface Token {
+    token: string,
 }
 
 interface Playlist {
@@ -16,7 +15,7 @@ interface UserResult {
     success: boolean,
     msg?: string,
     err?: string,
-    data?: User
+    data?: Token
 }
 
 interface PlaylistResult {

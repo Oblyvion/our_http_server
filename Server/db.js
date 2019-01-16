@@ -128,11 +128,12 @@ class DB {
             this.db.serialize(() => {
                 console.log('AAAAALLLLLLESSSSSSSSSS CREATE STANDARD DATABASE');
                 // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("hurensohn", "Elise")');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("test", "test")');
                 // this.db.run('INSERT INTO USERS (ID, NAME) VALUES (1, "admin")');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 1", "Beispiel Artist 1", 1)');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 2 du geile Eidechse", "Beispiel Artist 2", 1)');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 0", 1)');
+                this.db.run('INSERT INTO PLAYLISTS (ID, NAME, USER_ID) VALUES (1, "Playlist 0", 1)');
+                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 1)');
                 resolve();
             });
         }).catch(err => reject(err));

@@ -88,13 +88,17 @@ export class Login implements iAppContainer {
             try {
                 // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
                 // console.log(`das ist body pw: ${password.toString()}`);
-                const response = await fetch(API_URL + '/user?name=' + this.dom_loginInputID.value, {
+                const response = await fetch(API_URL + '/login', {
+                    body: JSON.stringify({
+                        name: this.dom_loginInputID.value,
+                        password: password
+                    }),
                     cache: 'no-cache',
                     headers: {
-                        'content-type': 'application/javascript',
+                        'content-type': 'application/json',
                         'crossDomain': 'true'
                     },
-                    method: 'GET',
+                    method: 'POST',
                     mode: 'cors',
                     // todo REST POST redirect
                     // redirect: 'follow',
@@ -114,14 +118,14 @@ export class Login implements iAppContainer {
                     throw "wrong data";
                 }
                 else {
-                    if(result.data.PASSWORD !== password) {
-                        throw "Error wrong password";
-                    }
-                }
+                    console.log("das ist result data", result.data);
 
-                this.info(`Login successful!`, '', 'success');
-                this.close()
-                manager("page_first_steps");
+                    localStorage.setItem("token", result.data);
+
+                    this.info(`Login successful!`, '', 'success');
+                    this.close()
+                    manager("page_first_steps");
+                }
 
             } catch (err) {
                 console.log(err);

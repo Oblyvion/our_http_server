@@ -1,8 +1,9 @@
 const API_URL = 'http://localhost:3000';
+const test = {
+    "name": "playlist1",
+    "from": "hans"
+};
 export class NavBar {
-    // private listofPlaylists = [
-    //     "Standard Playlist1"
-    // ];
     constructor(dom_body, dom_content, Playlists) {
         this.dom_span_array = [];
         this.listofPlaylists = [];
@@ -63,32 +64,37 @@ export class NavBar {
         }
     }
     async insertNewPlaylist(playlist_name) {
-        try {
-            const response = await fetch(API_URL + '/playlist/', {
-                body: JSON.stringify({
-                    name: playlist_name
-                }),
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/json',
-                    'crossDomain': 'true'
-                },
-                method: 'POST',
-                mode: 'cors',
-            });
-            const result = await response.json();
-            if (!result.success) {
-                console.error(result);
-                throw result.msg;
-            }
-            if (result.success) {
-                this.listofPlaylists.push(result.data.NAME);
-            }
-            return result;
-        }
-        catch (err) {
-            console.log(err);
-        }
+        // try {
+        //     const response = await fetch(API_URL + '/playlist/', {
+        //         body: JSON.stringify({
+        //             name: playlist_name
+        //         }),
+        //         cache: 'no-cache',
+        //         headers: {
+        //             'content-type': 'application/json',
+        //             'crossDomain': 'true'
+        //         },
+        //         method: 'POST',
+        //         mode: 'cors',
+        //         // todo REST POST redirect
+        //         // redirect: 'follow',
+        //         // credentials: 'include',
+        //     });
+        //
+        //     const result: PlaylistResult = await response.json();
+        //     if (!result.success) {
+        //         console.error(result);
+        //         throw result.msg;
+        //     }
+        //
+        //     if (result.success) {
+        //         this.listofPlaylists.push(result.data.NAME)
+        //     }
+        //     return result;
+        //
+        // } catch(err)  {
+        //     console.log(err);
+        // }
     }
     toggleNavBar() {
         this.dom_divNavBar.classList.toggle('active');

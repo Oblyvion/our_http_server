@@ -12,6 +12,8 @@ export class PlaylistTable {
     private dom_TableHeaderName2:HTMLTableCaptionElement;
     private dom_TableHeaderName3:HTMLTableCaptionElement;
     private audioPlayer: AudioPlayer;
+    private dom_divPlaylistHeaderButtons:HTMLElement;
+    private dom_divPlaylistHeaderAddBtn:HTMLImageElement;
 
     private SongObject = {
         Title: "Bad_Habit_Terrasound.mp3",
@@ -24,10 +26,9 @@ export class PlaylistTable {
         AddedBy: "fliesentischbesitzerklaus25",
     };
 
-    private Playlist;//= [this.SongObject, this.SongObject1];
+    private Playlist = [this.SongObject, this.SongObject1];
 
     constructor(dom_root, dom_content, audioPlayer) {
-        this.Playlist = Playlists;
         this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.audioPlayer = audioPlayer;
@@ -40,6 +41,17 @@ export class PlaylistTable {
         this.dom_divPlaylistHeader.classList.add('PlaylistTablePlaylistHeader');
         this.dom_divTable.appendChild(this.dom_divPlaylistHeader);
         this.dom_divPlaylistHeader.textContent = "Hallo!";
+
+        this.dom_divPlaylistHeaderButtons = document.createElement('div');
+        this.dom_divPlaylistHeaderButtons.classList.add('PlaylistTablePlaylistHeaderButtons');
+        this.dom_divPlaylistHeader.appendChild(this.dom_divPlaylistHeaderButtons);
+
+        this.dom_divPlaylistHeaderAddBtn = document.createElement('img');
+        this.dom_divPlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
+        this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
+        this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
+        this.dom_divPlaylistHeaderAddBtn.style.width = "15px";
+
 
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
