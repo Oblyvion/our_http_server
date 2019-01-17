@@ -5,6 +5,7 @@ import { FirstSteps } from "./FirstSteps.js";
 import { About_us } from "./About_us.js";
 import { Contact } from "./Contact.js";
 import { Impressum } from "./Impressum.js";
+import { MyAccount } from "./MyAccount.js";
 const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');
 dom_content.classList.add('content');
@@ -30,6 +31,10 @@ export const manager = function (app) {
             header.set('First Steps');
             header.setRightButtons();
             active_app = new FirstSteps(dom_content);
+            break;
+        case 'myacc':
+            header.set('My Account');
+            active_app = new MyAccount(dom_content);
             break;
         case 'about':
             header.set('About Us');

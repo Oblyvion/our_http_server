@@ -12,10 +12,10 @@ export class Registration implements iAppContainer {
     private dom_register_notification;
 
     constructor(dom: HTMLElement) {
-        this.dom_root = dom;
+        this.dom_root = document.getElementById("app");
 
         this.dom = document.createElement('div');
-        this.dom.classList.add('container');
+        this.dom.classList.add('ContentLoginRegistration');
         this.dom_root.appendChild(this.dom);
 
         //Create Registration Div
@@ -166,12 +166,12 @@ export class Registration implements iAppContainer {
 
 
     animate() {
-        const elem = document.getElementById("Registration");
+        const elem = this.dom_register;
         let pos = 150;
         const id = setInterval(frame, 5);
 
         function frame() {
-            if (pos === 50) {
+            if (pos === -50) {
                 clearInterval(id);
             } else {
                 pos--;

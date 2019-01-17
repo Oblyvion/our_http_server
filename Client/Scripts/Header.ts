@@ -116,7 +116,7 @@ export class Header {
         this.dom_DropdownMenuData2.classList.add('HeaderDropdownMenuData');
         this.dom_DropdownMenuData2.setAttribute('href', '#');
         this.dom_DropdownMenuData2.addEventListener('click', () => {
-
+            new manager('myacc');
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData2);
 

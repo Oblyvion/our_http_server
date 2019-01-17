@@ -2,9 +2,9 @@ const API_URL = 'http://localhost:3000';
 import { manager } from "./app.js";
 export class Registration {
     constructor(dom) {
-        this.dom_root = dom;
+        this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
-        this.dom.classList.add('container');
+        this.dom.classList.add('ContentLoginRegistration');
         this.dom_root.appendChild(this.dom);
         //Create Registration Div
         this.dom_register = document.createElement('div');
@@ -130,11 +130,11 @@ export class Registration {
         this.dom.remove();
     }
     animate() {
-        const elem = document.getElementById("Registration");
+        const elem = this.dom_register;
         let pos = 150;
         const id = setInterval(frame, 5);
         function frame() {
-            if (pos === 50) {
+            if (pos === -50) {
                 clearInterval(id);
             }
             else {

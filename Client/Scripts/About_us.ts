@@ -1,4 +1,3 @@
-import {Header} from "./Header.js";
 
 export class About_us {
     private dom_root: HTMLElement;

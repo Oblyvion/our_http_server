@@ -1,4 +1,5 @@
 import {manager} from "./app.js";
+import {PlaylistTable} from "./PlaylistTable.js";
 
 const API_URL = 'http://localhost:3000';
 
@@ -18,13 +19,20 @@ export class NavBar {
     private dom_divNavBarToggle: HTMLElement;
     private dom_span_array = [];
     private dom_newplaylist: HTMLInputElement;
+    private playlistTable: PlaylistTable;
 
-    private listofPlaylists = [];
+    private listofPlaylists;
 
 
-    constructor(dom_body: HTMLElement, dom_content: HTMLElement, Playlists) {
+    constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
 
-        this.listofPlaylists = Playlists;
+        this.fetchPlaylists().then((result) => {
+            this.listofPlaylists = result.data;
+            console.log("das ist list of playlists: ", this.listofPlaylists);
+            this.addPlaylistNames();
+        });
+
+
         this.dom_root = dom_body;
         this.dom_content = dom_content;
 
@@ -70,23 +78,53 @@ export class NavBar {
             //         this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
             //     }
 
-            this.dom_UList = document.createElement('ul');
-            this.dom_UList.classList.add("NavBarUL");
-            this.dom_divNavBar.appendChild(this.dom_UList);
 
-                for(let i = 0; i<this.listofPlaylists.length; i++) {
-                    this.dom_ListElement = document.createElement('li');
-                    this.dom_ListElement.classList.add("NavBarListElement");
-                    this.dom_UList.appendChild(this.dom_ListElement);
-                }
-                this.setNamesofPlaylists();
+    }
 
+    async fetchPlaylists() {
+        //try {
+        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
+        // console.log(`das ist body pw: ${password.toString()}`);
+        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
+        let response = await fetch(API_URL + "/playlists/", {
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/javascript',
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'GET',
+            mode: 'cors',
+            // todo REST POST redirect
+            // redirect: 'follow',
+            // credentials: 'include',
+        });
+
+
+        return await response.json();
+
+    }
+
+    addPlaylistNames() {
+        this.dom_UList = document.createElement('ul');
+        this.dom_UList.classList.add("NavBarUL");
+        this.dom_divNavBar.appendChild(this.dom_UList);
+
+        for (let i = 0; i < this.listofPlaylists.length; i++) {
+            this.dom_ListElement = document.createElement('li');
+            this.dom_ListElement.classList.add("NavBarListElement");
+            this.dom_UList.appendChild(this.dom_ListElement);
+            this.dom_ListElement.addEventListener('click', () => {
+                this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i].NAME);
+            });
+        }
+        this.setNamesofPlaylists();
     }
 
     setNamesofPlaylists() {
         let n = this.dom_UList.childNodes.length;
         for (let i = 0; i < n; i++) {
-                this.dom_UList.childNodes.item(i).textContent = this.listofPlaylists[i];
+                this.dom_UList.childNodes.item(i).textContent = this.listofPlaylists[i].NAME;
         }
     }
 
@@ -143,5 +181,6 @@ export class NavBar {
 
     close() {
         this.dom_content.remove();
+        this.playlistTable.close();
     }
 }
