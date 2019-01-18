@@ -109,9 +109,6 @@ export class NavBar {
         console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
 
         return data;
-
-
-
     }
 
     addPlaylistNames() {
@@ -138,38 +135,38 @@ export class NavBar {
     }
 
     async insertNewPlaylist(playlist_name: String) {
-        // try {
-        //     const response = await fetch(API_URL + '/playlist/', {
-        //         body: JSON.stringify({
-        //             name: playlist_name
-        //         }),
-        //         cache: 'no-cache',
-        //         headers: {
-        //             'content-type': 'application/json',
-        //             'crossDomain': 'true'
-        //         },
-        //         method: 'POST',
-        //         mode: 'cors',
-        //         // todo REST POST redirect
-        //         // redirect: 'follow',
-        //         // credentials: 'include',
-        //     });
-        //
-        //     const result: PlaylistResult = await response.json();
-        //     if (!result.success) {
-        //         console.error(result);
-        //         throw result.msg;
-        //     }
-        //
-        //     if (result.success) {
-        //         this.listofPlaylists.push(result.data.NAME)
-        //     }
-        //     return result;
-        //
-        // } catch(err)  {
-        //     console.log(err);
-        // }
+        try {
+            const response = await fetch(API_URL + '/playlist/', {
+                body: JSON.stringify({
+                    name: playlist_name
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'POST',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
 
+            const result: PlaylistResult = await response.json();
+            if (!result.success) {
+                console.error(result);
+                throw result.msg;
+            }
+
+            if (result.success) {
+                this.listofPlaylists.push(result.data.NAME)
+            }
+            return result;
+
+        } catch(err)  {
+            console.log(err);
+        }
 
     }
 

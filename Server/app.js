@@ -246,7 +246,7 @@ app.get('/song/:id', (req, res) => {
  */
 app.get('/playlists', async (req, res) => {
     const token = jwt.decode(req.get("Authorization")).username;
-    //console.log("das ist username generiert aus token:" ,token);
+    console.log("das ist username generiert aus token:" ,token);
     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
     console.log("das ist die id des users: ", USER.ID);
     await db.get_rows('SELECT * FROM PLAYLISTS WHERE USER_ID = ?', USER.ID)

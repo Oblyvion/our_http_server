@@ -114,10 +114,7 @@ class DB {
     get_rows(sql = '', ...params) {
         return new Promise((resolve, reject) => {
             this.db.all(sql, params, (err, rows) => {
-                console.log("db.js, get_rows: ROW = ", rows)
-                rows.forEach(function (row) {
-                    console.log(row.col1, row.col2);    // and other columns, if desired
-                })
+                console.log("db.js, get_rows: ROW = ", rows);
                 if (err !== null) {
                     reject(err);
                 } else {
@@ -127,7 +124,7 @@ class DB {
         });
     }
 
-    
+
     skeleton() {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
