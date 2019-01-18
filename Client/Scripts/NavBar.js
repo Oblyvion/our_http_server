@@ -78,7 +78,7 @@ export class NavBar {
             this.dom_ListElement.classList.add("NavBarListElement");
             this.dom_UList.appendChild(this.dom_ListElement);
             this.dom_ListElement.addEventListener('click', () => {
-                this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i].NAME);
+                this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }
         this.setNamesofPlaylists();

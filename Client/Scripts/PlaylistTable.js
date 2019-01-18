@@ -1,5 +1,6 @@
+const API_URL = 'http://localhost:3000';
 export class PlaylistTable {
-    constructor(dom_root, dom_content, PlaylistName) {
+    constructor(dom_root, dom_content, PlaylistData) {
         this.SongObject = {
             Title: "Bad_Habit_Terrasound.mp3",
             Artist: "Terrasound",
@@ -10,9 +11,21 @@ export class PlaylistTable {
             Artist: "Terrasound",
             AddedBy: "fliesentischbesitzerklaus25",
         };
-        this.Playlist = [this.SongObject, this.SongObject1];
+        this.Playlist = {
+            name: "",
+            songs: [this.SongObject, this.SongObject1],
+        };
         this.dom_root = dom_root;
         this.dom_content = dom_content;
+        this.PlaylistID = PlaylistData.ID;
+        this.Playlist.name = PlaylistData.NAME;
+        this.fetchPlaylistSongs().then((result) => {
+            this.Playlist.songs = result.data;
+            console.log("das SIND DIE SONGS: ", this.Playlist.songs);
+            this.addPlaylistSongs();
+        }).catch(err => {
+            console.log(err);
+        });
         this.dom_divTable = document.createElement('div');
         this.dom_divTable.classList.add('PlaylistTableDiv');
         this.dom_content.appendChild(this.dom_divTable);
@@ -22,7 +35,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderPlaylistName = document.createElement('div');
         this.dom_divPlaylistHeaderPlaylistName.classList.add('PlaylistTablePlaylistHeaderPlaylistName');
         this.dom_divPlaylistHeader.appendChild(this.dom_divPlaylistHeaderPlaylistName);
-        this.dom_divPlaylistHeaderPlaylistName.textContent = PlaylistName;
+        this.dom_divPlaylistHeaderPlaylistName.textContent = this.Playlist.name;
         this.dom_divPlaylistHeaderButtons = document.createElement('div');
         this.dom_divPlaylistHeaderButtons.classList.add('PlaylistTablePlaylistHeaderButtons');
         this.dom_divPlaylistHeader.appendChild(this.dom_divPlaylistHeaderButtons);
@@ -51,7 +64,29 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.classList.add('TableHeader');
         this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
         this.dom_TableHeaderName3.textContent = "Added By";
-        for (let i = 0; i < this.Playlist.length; i++) {
+    }
+    async fetchPlaylistSongs() {
+        //try {
+        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
+        // console.log(`das ist body pw: ${password.toString()}`);
+        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
+        let response = await fetch(API_URL + "/playlist/" + this.PlaylistID, {
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/javascript',
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'GET',
+            mode: 'cors',
+        });
+        console.log("Was is heir los heyß?: ", response);
+        const data = await response.json();
+        console.log("Hier komm ich hin DATA!!: ", data);
+        return data;
+    }
+    addPlaylistSongs() {
+        for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
             dom_TableData.classList.add('TableDataRow');
             this.dom_Table.appendChild(dom_TableData);

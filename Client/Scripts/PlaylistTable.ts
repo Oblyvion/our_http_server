@@ -1,5 +1,8 @@
 import {AudioPlayer} from "./AudioPlayer";
-import {NavBar} from "./NavBar.js"
+import {NavBar} from "./NavBar.js";
+
+const API_URL = 'http://localhost:3000';
+
 
 export class PlaylistTable {
     private dom_root:HTMLElement;
@@ -15,6 +18,7 @@ export class PlaylistTable {
     private dom_divPlaylistHeaderButtons:HTMLElement;
     private dom_divPlaylistHeaderAddBtn:HTMLImageElement;
     private dom_divPlaylistHeaderPlaylistName:HTMLDivElement;
+    private PlaylistID;
 
     private SongObject = {
         Title: "Bad_Habit_Terrasound.mp3",
@@ -27,11 +31,25 @@ export class PlaylistTable {
         AddedBy: "fliesentischbesitzerklaus25",
     };
 
-    private Playlist = [this.SongObject, this.SongObject1];
+    private Playlist = {
 
-    constructor(dom_root, dom_content, PlaylistName) {
+        name: "",
+        songs: [this.SongObject, this.SongObject1],
+
+    };
+
+    constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
         this.dom_content = dom_content;
+        this.PlaylistID = PlaylistData.ID;
+        this.Playlist.name = PlaylistData.NAME;
+        this.fetchPlaylistSongs().then((result) => {
+            this.Playlist.songs = result.data;
+            console.log("das SIND DIE SONGS: ", this.Playlist.songs);
+            this.addPlaylistSongs();
+        }).catch(err => {
+            console.log(err);
+        });
 
         this.dom_divTable = document.createElement('div');
         this.dom_divTable.classList.add('PlaylistTableDiv');
@@ -44,7 +62,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderPlaylistName = document.createElement('div');
         this.dom_divPlaylistHeaderPlaylistName.classList.add('PlaylistTablePlaylistHeaderPlaylistName');
         this.dom_divPlaylistHeader.appendChild(this.dom_divPlaylistHeaderPlaylistName);
-        this.dom_divPlaylistHeaderPlaylistName.textContent = PlaylistName;
+        this.dom_divPlaylistHeaderPlaylistName.textContent = this.Playlist.name;
 
         this.dom_divPlaylistHeaderButtons = document.createElement('div');
         this.dom_divPlaylistHeaderButtons.classList.add('PlaylistTablePlaylistHeaderButtons');
@@ -81,39 +99,69 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.classList.add('TableHeader');
         this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
         this.dom_TableHeaderName3.textContent = "Added By";
+    }
 
-         for (let i = 0; i<this.Playlist.length; i++) {
-             const dom_TableData = document.createElement('tr');
-             dom_TableData.classList.add('TableDataRow');
-             this.dom_Table.appendChild(dom_TableData);
-             dom_TableData.addEventListener('click', () => {
-                 let clicked = dom_TableData.rowIndex-1;
-                 console.log(clicked);
-                 for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
-                     console.log(this.audioPlayer.Songs[i]);
-                     console.log(this.Playlist[clicked].Title);
-                     if(this.audioPlayer.Songs[i] === this.Playlist[clicked].Title) {
-                         this.audioPlayer.loadSong(clicked);
-                         this.audioPlayer.playorpauseSong();
-                     }
-                 }
-             });
+    async fetchPlaylistSongs() {
+        //try {
+        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
+        // console.log(`das ist body pw: ${password.toString()}`);
+        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
+        let response = await fetch(API_URL + "/playlist/"+this.PlaylistID, {
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/javascript',
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'GET',
+            mode: 'cors',
+            // todo REST POST redirect
+            // redirect: 'follow',
+            // credentials: 'include',
+        });
 
-             const dom_TableDataTitle = document.createElement('td');
-             dom_TableDataTitle.classList.add('TableData');
-             dom_TableData.appendChild(dom_TableDataTitle);
-             dom_TableDataTitle.textContent = this.Playlist[i].Title;
+        console.log("Was is heir los heyß?: ", response);
 
-             const dom_TableDataArtist = document.createElement('td');
-             dom_TableDataArtist.classList.add('TableData');
-             dom_TableData.appendChild(dom_TableDataArtist);
-             dom_TableDataArtist.textContent = this.Playlist[i].Artist;
+        const data = await response.json();
 
-             const dom_TableDataAddedBy = document.createElement('td');
-             dom_TableDataAddedBy.classList.add('TableData');
-             dom_TableData.appendChild(dom_TableDataAddedBy);
-             dom_TableDataAddedBy.textContent = this.Playlist[i].AddedBy;
-         }
+        console.log("Hier komm ich hin DATA!!: ", data);
+
+        return data;
+    }
+
+    addPlaylistSongs() {
+        for (let i = 0; i<this.Playlist.songs.length; i++) {
+            const dom_TableData = document.createElement('tr');
+            dom_TableData.classList.add('TableDataRow');
+            this.dom_Table.appendChild(dom_TableData);
+            dom_TableData.addEventListener('click', () => {
+                let clicked = dom_TableData.rowIndex-1;
+                console.log(clicked);
+                for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
+                    console.log(this.audioPlayer.Songs[i]);
+                    console.log(this.Playlist[clicked].Title);
+                    if(this.audioPlayer.Songs[i] === this.Playlist[clicked].Title) {
+                        this.audioPlayer.loadSong(clicked);
+                        this.audioPlayer.playorpauseSong();
+                    }
+                }
+            });
+
+            const dom_TableDataTitle = document.createElement('td');
+            dom_TableDataTitle.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataTitle);
+            dom_TableDataTitle.textContent = this.Playlist[i].Title;
+
+            const dom_TableDataArtist = document.createElement('td');
+            dom_TableDataArtist.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataArtist);
+            dom_TableDataArtist.textContent = this.Playlist[i].Artist;
+
+            const dom_TableDataAddedBy = document.createElement('td');
+            dom_TableDataAddedBy.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataAddedBy);
+            dom_TableDataAddedBy.textContent = this.Playlist[i].AddedBy;
+        }
     }
 
     close() {

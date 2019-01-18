@@ -198,7 +198,7 @@ app.post('/login', (req, res) => {
 /**
  * get all songs
  */
-app.get('/songs', (req, res) => {
+app.get('/songs', async (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)
@@ -239,7 +239,7 @@ app.get('/song/:id', (req, res) => {
 });
 
 /**
- * get all playlists
+ * get all playlists from authorized user
  */
 app.get('/playlists', async (req, res) => {
     const token = jwt.decode(req.get("Authorization")).username;
@@ -248,7 +248,7 @@ app.get('/playlists', async (req, res) => {
     //console.log("das ist die id des users: ", USER.ID);
     const PLAYLIST = await db.get_row('SELECT * FROM PLAYLIST_FROM WHERE PLAYLIST_FROM.USER_ID = ?', USER.ID);
     //console.log("das ist die id der Playlist: ", PLAYLIST.PLAYLIST_ID);
-    db.get_rows('SELECT NAME FROM PLAYLISTS WHERE ID = ?', PLAYLIST.PLAYLIST_ID)
+    db.get_rows('SELECT * FROM PLAYLISTS WHERE ID = ?', PLAYLIST.PLAYLIST_ID)
         .then(rows => {
             //console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
@@ -267,11 +267,17 @@ app.get('/playlists', async (req, res) => {
         });
 });
 /**
- * get playlist by id
+ * get playlist songs by playlist id
  */
-app.get('/playlist/:id', (req, res) => {
-    db.get_row('SELECT NAME,USER_ID FROM PLAYLISTS WHERE ID = ?', +req.params.id)
+app.get('/playlist/:id', async (req, res) => {
+    // console.log("hallo: ", req.params.id);
+    const token = jwt.decode(req.get("Authorization")).username;
+    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
+    const SongsOfPlaylist = await db.get_row("SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_CONTAINS.PLAYLIST_ID = ?", +req.params.id);
+    console.log("DAS IST SONGS OF PLAYLIST: ", SongsOfPlaylist);
+    db.get_row("SELECT * FROM SONGS WHERE ID = ?", SongsOfPlaylist.SONG_ID)
         .then(row => {
+            console.log(row);
             if (!row)
                 throw 'playlist does not exist';
             res.send({
@@ -280,6 +286,7 @@ app.get('/playlist/:id', (req, res) => {
             });
         })
         .catch(err => {
+            console.log(err);
             res.send({
                 success: false,
                 msg: 'access playlist failed',
