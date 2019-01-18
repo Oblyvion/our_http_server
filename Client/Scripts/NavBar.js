@@ -33,22 +33,27 @@ export class NavBar {
                 this.dom_newplaylist.style.display = "block";
             }
             else {
-                this.insertNewPlaylist(this.dom_newplaylist.value);
-                this.fetchPlaylists().then((result) => {
-                    this.listofPlaylists = result.data;
-                    console.log("das ist list of playlists: ", this.listofPlaylists);
-                    this.addPlaylistNames();
-                })
-                    .catch(err => {
-                    console.log("NavBar.ts, constructor = ", err);
-                });
-                this.addPlaylistNames();
+                if (this.dom_newplaylist.value.length > 1) {
+                    this.insertNewPlaylist(this.dom_newplaylist.value);
+                    this.fetchPlaylists().then((result) => {
+                        console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
+                        this.listofPlaylists = result.data;
+                        console.log("das ist list of playlists: ", this.listofPlaylists);
+                        this.addPlaylistNames();
+                    })
+                        .catch(err => {
+                        console.log("NavBar.ts, constructor = ", err);
+                    });
+                }
                 this.dom_newplaylist.style.display = "none";
             }
         });
         this.dom_newplaylist = document.createElement("input");
         this.dom_newplaylist.classList.add("NavBarInputNewSong");
         this.dom_addButton.appendChild(this.dom_newplaylist);
+        this.dom_UList = document.createElement('ul');
+        this.dom_UList.classList.add("NavBarUL");
+        this.dom_divNavBar.appendChild(this.dom_UList);
         // this.dom_divNavBarToggle = document.createElement('div');
         // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
         // this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
@@ -89,9 +94,6 @@ export class NavBar {
         }
     }
     addPlaylistNames() {
-        this.dom_UList = document.createElement('ul');
-        this.dom_UList.classList.add("NavBarUL");
-        this.dom_divNavBar.appendChild(this.dom_UList);
         for (let i = 0; i < this.listofPlaylists.length; i++) {
             this.dom_ListElement = document.createElement('li');
             this.dom_ListElement.classList.add("NavBarListElement");
@@ -102,6 +104,11 @@ export class NavBar {
         }
         this.setNamesofPlaylists();
     }
+    // deletePlaylist() {
+    //     console.log("0NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
+    //     this.listofPlaylists = {};
+    //     console.log("1NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
+    // }
     setNamesofPlaylists() {
         let n = this.dom_UList.childNodes.length;
         for (let i = 0; i < n; i++) {
