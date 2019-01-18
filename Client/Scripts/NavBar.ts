@@ -12,8 +12,8 @@ export class NavBar {
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divNavBar: HTMLElement;
-    private dom_addButton:HTMLDivElement;
-    private dom_addButtonImg:HTMLImageElement;
+    private dom_addButton: HTMLDivElement;
+    private dom_addButtonImg: HTMLImageElement;
     private dom_UList: HTMLUListElement;
     private dom_ListElement: HTMLLIElement;
     private dom_divNavBarToggle: HTMLElement;
@@ -30,7 +30,11 @@ export class NavBar {
             this.listofPlaylists = result.data;
             console.log("das ist list of playlists: ", this.listofPlaylists);
             this.addPlaylistNames();
-        });
+        })
+            .catch(err => {
+                console.log("NavBar.ts, constructor = ", err);
+            }
+        );
 
 
         this.dom_root = dom_body;
@@ -40,51 +44,51 @@ export class NavBar {
         this.dom_divNavBar.classList.add("NavBarDiv");
         this.dom_content.appendChild(this.dom_divNavBar);
 
-            this.dom_addButton = document.createElement('div');
-            this.dom_addButton.classList.add("NavBarAddButtonDiv");
-            this.dom_divNavBar.appendChild(this.dom_addButton);
+        this.dom_addButton = document.createElement('div');
+        this.dom_addButton.classList.add("NavBarAddButtonDiv");
+        this.dom_divNavBar.appendChild(this.dom_addButton);
 
-                this.dom_addButtonImg = document.createElement('img');
-                this.dom_addButtonImg.classList.add("NavBarAddButtonImage");
-                this.dom_addButton.appendChild(this.dom_addButtonImg);
-                this.dom_addButtonImg.src = "./Images/add_button.png";
-                this.dom_addButtonImg.style.width = "40px";
-                this.dom_addButtonImg.addEventListener('click', () => {
-                    if(this.dom_newplaylist.style.display === "none") {
-                        this.dom_newplaylist.style.display = "block";
-                    }
-                    else {
-                        this.insertNewPlaylist(this.dom_newplaylist.value);
-                        this.dom_newplaylist.style.display = "none";
-                    }
-                });
+        this.dom_addButtonImg = document.createElement('img');
+        this.dom_addButtonImg.classList.add("NavBarAddButtonImage");
+        this.dom_addButton.appendChild(this.dom_addButtonImg);
+        this.dom_addButtonImg.src = "./Images/add_button.png";
+        this.dom_addButtonImg.style.width = "40px";
+        this.dom_addButtonImg.addEventListener('click', () => {
+            if (this.dom_newplaylist.style.display === "none") {
+                this.dom_newplaylist.style.display = "block";
+            } else {
+                this.insertNewPlaylist(this.dom_newplaylist.value);
+                this.dom_newplaylist.style.display = "none";
+            }
+        });
 
-                this.dom_newplaylist = document.createElement("input");
-                this.dom_newplaylist.classList.add("NavBarInputNewSong");
-                this.dom_addButton.appendChild(this.dom_newplaylist);
+        this.dom_newplaylist = document.createElement("input");
+        this.dom_newplaylist.classList.add("NavBarInputNewSong");
+        this.dom_addButton.appendChild(this.dom_newplaylist);
 
-            // this.dom_divNavBarToggle = document.createElement('div');
-            // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
-            // this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
-            // this.dom_divNavBarToggle.addEventListener('click', () => {
-            //     this.toggleNavBar();
-            //     this.moveBurgerButton();
-            //     this.changeColorOfSpan();
-            // });
-            //
-            //     for(let i = 0; i<3; i++) {
-            //         this.dom_span_array[i] = document.createElement('span');
-            //         this.dom_span_array[i].classList.add("NavBarSpan");
-            //         this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
-            //     }
+        // this.dom_divNavBarToggle = document.createElement('div');
+        // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
+        // this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
+        // this.dom_divNavBarToggle.addEventListener('click', () => {
+        //     this.toggleNavBar();
+        //     this.moveBurgerButton();
+        //     this.changeColorOfSpan();
+        // });
+        //
+        //     for(let i = 0; i<3; i++) {
+        //         this.dom_span_array[i] = document.createElement('span');
+        //         this.dom_span_array[i].classList.add("NavBarSpan");
+        //         this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
+        //     }
 
 
     }
 
     async fetchPlaylists() {
-        //try {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
+        //try {
+
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
         let response = await fetch(API_URL + "/playlists/", {
             cache: 'no-cache',
@@ -102,9 +106,11 @@ export class NavBar {
 
         let data = await response.json();
 
-        console.log("DATA: ", data);
+        console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
 
         return data;
+
+
 
     }
 
@@ -127,11 +133,11 @@ export class NavBar {
     setNamesofPlaylists() {
         let n = this.dom_UList.childNodes.length;
         for (let i = 0; i < n; i++) {
-                this.dom_UList.childNodes.item(i).textContent = this.listofPlaylists[i].NAME;
+            this.dom_UList.childNodes.item(i).textContent = this.listofPlaylists[i].NAME;
         }
     }
 
-    async insertNewPlaylist(playlist_name:String) {
+    async insertNewPlaylist(playlist_name: String) {
         // try {
         //     const response = await fetch(API_URL + '/playlist/', {
         //         body: JSON.stringify({

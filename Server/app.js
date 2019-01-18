@@ -5,7 +5,7 @@ const {celebrate, Joi, isCelebrate} = require('celebrate');
 const EscapeHtml = require('escape-html');
 const DB = require('./db');
 const cors = require('cors');
-const basic_auth = require("basic-auth");
+const basic_auth = require('basic-auth');
 const jwt = require('jsonwebtoken');
 
 let UserData = null;
@@ -69,7 +69,7 @@ const schema_user_post = Joi.object().keys({
 const auth = async (req, res, next) => {
     try {
         const user = basic_auth(req);
-        console.log("User: "+user);
+        console.log("User: " + user);
         if (!user || !user.name || !user.pass) {
             throw "Invalid Basic Auth";
         }
@@ -78,11 +78,11 @@ const auth = async (req, res, next) => {
 
         //console.log("user pass: "+user.pass);
         //console.log("auth password: "+auth.PASSWORD);
-        if(auth.PASSWORD !== user.pass) {
+        if (auth.PASSWORD !== user.pass) {
             throw "Invalid Password!";
         }
         next();
-    } catch(err) {
+    } catch (err) {
         console.log(err.toString());
         res.set("WWW-Authenticate", "Basic real-Authorization Required");
         //error_handler(res, 'Authorization Required', err);
@@ -163,16 +163,16 @@ app.get('/user/:id', (req, res) => {
  * get user by name
  */
 app.post('/login', (req, res) => {
-    // console.log("name = ", req.body.name);
+    console.log("app.js, login: NAME = ", req.body.name);
     // console.log("password = ", req.body.password);
-    const result =  db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
+    const result = db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
         .then(user => {
             if (!user)
                 throw 'user does not exist';
 
             // console.log("eingabe password = ", req.body.password);
             // console.log("database password = ", user.PASSWORD);
-            if(user.PASSWORD !== req.body.password) {
+            if (user.PASSWORD !== req.body.password) {
                 throw 'wrong password'
             }
 
@@ -185,6 +185,7 @@ app.post('/login', (req, res) => {
                 success: true,
                 data: token
             });
+            console.log("jwt");
         })
         .catch(err => {
             res.send({
@@ -192,6 +193,7 @@ app.post('/login', (req, res) => {
                 msg: 'access user failed',
                 err: err
             });
+            console.log("blbalbl");
         });
 });
 
@@ -238,6 +240,7 @@ app.get('/song/:id', (req, res) => {
         });
 });
 
+
 /**
  * get all playlists from authorized user
  */
@@ -245,19 +248,17 @@ app.get('/playlists', async (req, res) => {
     const token = jwt.decode(req.get("Authorization")).username;
     //console.log("das ist username generiert aus token:" ,token);
     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
-    //console.log("das ist die id des users: ", USER.ID);
-    const PLAYLIST = await db.get_row('SELECT * FROM PLAYLIST_FROM WHERE PLAYLIST_FROM.USER_ID = ?', USER.ID);
-    //console.log("das ist die id der Playlist: ", PLAYLIST.PLAYLIST_ID);
-    db.get_rows('SELECT * FROM PLAYLISTS WHERE ID = ?', PLAYLIST.PLAYLIST_ID)
+    console.log("das ist die id des users: ", USER.ID);
+    await db.get_rows('SELECT * FROM PLAYLISTS WHERE USER_ID = ?', USER.ID)
         .then(rows => {
-            //console.log("Das sind die playlists hoffentlich: ", rows);
-            if (!rows)
-                throw 'found no playlists';
-            res.send({
-                success: true,
-                data: rows
-            });
-        })
+        console.log("Das sind die playlists hoffentlich: ", rows);
+        if (!rows)
+            throw 'found no playlists';
+        res.send({
+            success: true,
+            data: rows
+        });
+    })
         .catch(err => {
             res.send({
                 success: false,

@@ -114,6 +114,10 @@ class DB {
     get_rows(sql = '', ...params) {
         return new Promise((resolve, reject) => {
             this.db.all(sql, params, (err, rows) => {
+                console.log("db.js, get_rows: ROW = ", rows)
+                rows.forEach(function (row) {
+                    console.log(row.col1, row.col2);    // and other columns, if desired
+                })
                 if (err !== null) {
                     reject(err);
                 } else {
@@ -123,18 +127,23 @@ class DB {
         });
     }
 
+    
     skeleton() {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 console.log('AAAAALLLLLLESSSSSSSSSS CREATE STANDARD DATABASE');
                 // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("test", "test")');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("max", "test")');
                 // this.db.run('INSERT INTO USERS (ID, NAME) VALUES (1, "admin")');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 1", "Beispiel Artist 1", 1)');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES ("Beispiel Title 2 du geile Eidechse", "Beispiel Artist 2", 1)');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 0", 1)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 0", 2)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 1", 1)');
-                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 1)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 2", 1)');
+                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 2)');
+                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (2, 1)');
+                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (3, 1)');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (1, 1, 1)');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (2, 1, 1)');
                 resolve();

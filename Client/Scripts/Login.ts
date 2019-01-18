@@ -112,8 +112,9 @@ export class Login implements iAppContainer {
                 });
 
                 const result: UserResult = await response.json();
-                
-                //console.log(result.data.toString());
+
+                console.log("HELLO");
+                console.log("Login.ts, loginUser: result = ", result.data.toString());
 
 
                 //console.log("server: "+result.data.PASSWORD);
@@ -124,12 +125,10 @@ export class Login implements iAppContainer {
                     throw "wrong data";
                 }
                 else {
-                    console.log("das ist result data", result.data);
-
+                    console.log("HUUUUUUUUHUUUUUUUUUU")
                     localStorage.setItem("token", result.data);
-
                     this.info(`Login successful!`, '', 'success');
-                    this.close()
+                    this.close();
                     manager("page_first_steps");
                 }
 
