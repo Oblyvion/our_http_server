@@ -78,7 +78,8 @@ export class Login {
                     mode: 'cors',
                 });
                 const result = await response.json();
-                //console.log(result.data.toString());
+                console.log("HELLO");
+                console.log("Login.ts, loginUser: result = ", result.data.toString());
                 //console.log("server: "+result.data.PASSWORD);
                 //console.log("client: "+password);
                 if (!result.success) {
@@ -86,7 +87,7 @@ export class Login {
                     throw "wrong data";
                 }
                 else {
-                    console.log("das ist result data", result.data);
+                    console.log("HUUUUUUUUHUUUUUUUUUU");
                     localStorage.setItem("token", result.data);
                     this.info(`Login successful!`, '', 'success');
                     this.close();

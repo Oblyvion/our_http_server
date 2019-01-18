@@ -23,6 +23,7 @@ export const manager = function (app) {
         active_app = null;
     }
 
+    console.log("KOMM HIN");
     switch (app) {
         case 'login':
             header.set('Login');

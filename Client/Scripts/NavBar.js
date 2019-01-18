@@ -11,6 +11,9 @@ export class NavBar {
             this.listofPlaylists = result.data;
             console.log("das ist list of playlists: ", this.listofPlaylists);
             this.addPlaylistNames();
+        })
+            .catch(err => {
+            console.log("NavBar.ts, constructor = ", err);
         });
         this.dom_root = dom_body;
         this.dom_content = dom_content;
@@ -53,9 +56,9 @@ export class NavBar {
         //     }
     }
     async fetchPlaylists() {
-        //try {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
+        //try {
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
         let response = await fetch(API_URL + "/playlists/", {
             cache: 'no-cache',
@@ -67,7 +70,10 @@ export class NavBar {
             method: 'GET',
             mode: 'cors',
         });
-        return await response.json();
+        let data = await response.json();
+        console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
+        return data;
+        // return await response.json();
     }
     addPlaylistNames() {
         this.dom_UList = document.createElement('ul');
