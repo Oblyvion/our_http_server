@@ -100,8 +100,11 @@ export class NavBar {
             // credentials: 'include',
         });
 
+        let data = await response.json();
 
-        return await response.json();
+        console.log("DATA: ", data);
+
+        return data;
 
     }
 

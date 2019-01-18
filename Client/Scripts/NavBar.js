@@ -67,7 +67,9 @@ export class NavBar {
             method: 'GET',
             mode: 'cors',
         });
-        return await response.json();
+        let data = await response.json();
+        console.log("DATA: ", data);
+        return data;
     }
     addPlaylistNames() {
         this.dom_UList = document.createElement('ul');

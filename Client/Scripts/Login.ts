@@ -9,6 +9,7 @@ export class Login implements iAppContainer {
     private dom_login: HTMLElement;
     private dom_loginInputID;
     private dom_loginInputPW;
+    private dom_loginButton;
     private dom_login_notification;
 
     constructor(dom: HTMLElement) {
@@ -42,13 +43,20 @@ export class Login implements iAppContainer {
         this.dom_login.appendChild(this.dom_loginInputPW);
         this.dom_loginInputPW.placeholder = "password";
         this.dom_loginInputPW.type = "password";
+        this.dom_loginInputPW.addEventListener("keypress", event => {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Trigger the button element with a click
+                this.dom_loginButton.click();
+            }
+        });
 
 
-        const dom_loginButton = document.createElement('button');
-        dom_loginButton.classList.add('button');
-        this.dom_login.appendChild(dom_loginButton);
-        dom_loginButton.textContent = "Login";
-        dom_loginButton.addEventListener('click', () => {
+        this.dom_loginButton = document.createElement('button');
+        this.dom_loginButton.classList.add('button');
+        this.dom_login.appendChild(this.dom_loginButton);
+        this.dom_loginButton.textContent = "Login";
+        this.dom_loginButton.addEventListener('click', () => {
             this.loginUser();
         });
 
