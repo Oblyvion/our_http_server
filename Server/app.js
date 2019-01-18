@@ -244,9 +244,9 @@ app.get('/song/:id', (req, res) => {
  * get all playlists from authorized user
  */
 app.get('/playlists', async (req, res) => {
-    const token = jwt.decode(req.get("Authorization")).username;
-    //console.log("das ist username generiert aus token:" ,token);
-    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
+    const token = jwt.decode(req.get('Authorization'));
+    console.log("app.js, app.get/playlists: TOKEN = ", token.username);
+    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token.username);
     console.log("das ist die id des users: ", USER.ID);
     await db.get_rows('SELECT * FROM PLAYLISTS WHERE USER_ID = ?', USER.ID)
         .then(rows => {
@@ -330,7 +330,12 @@ app.post('/user', async (req, res) => {
  */
 app.post('/playlist', async (req, res) => {
     try {
-        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', req.body.name, req.body.user_id);
+        console.log("app.js, app.post/playlist: body.name = ", req.body.name);
+        console.log("app.js, app.post/playlist: token = ", req.get('Authorization'));
+        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.post/playlist: USER ID = ", user.ID);
+        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', req.body.name, user.ID);
+        console.log("app.js, app.post/playlist: playlist = ", playlist);
 
         res.send({
             success: true,

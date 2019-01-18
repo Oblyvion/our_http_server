@@ -58,6 +58,16 @@ export class NavBar {
                 this.dom_newplaylist.style.display = "block";
             } else {
                 this.insertNewPlaylist(this.dom_newplaylist.value);
+                this.fetchPlaylists().then((result) => {
+                    this.listofPlaylists = result.data;
+                    console.log("das ist list of playlists: ", this.listofPlaylists);
+                    this.addPlaylistNames();
+                })
+                    .catch(err => {
+                            console.log("NavBar.ts, constructor = ", err);
+                        }
+                    );
+                this.addPlaylistNames();
                 this.dom_newplaylist.style.display = "none";
             }
         });
@@ -87,28 +97,30 @@ export class NavBar {
     async fetchPlaylists() {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
-        //try {
+        try {
 
-        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/playlists/", {
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/javascript',
-                'crossDomain': 'true',
-                'Authorization': localStorage.getItem("token")
-            },
-            method: 'GET',
-            mode: 'cors',
-            // todo REST POST redirect
-            // redirect: 'follow',
-            // credentials: 'include',
-        });
-        let data = await response.json();
-        console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
-        return data;
+            console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
+            let response = await fetch(API_URL + "/playlists/", {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem('token')
+                },
+                method: 'GET',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+            let data = await response.json();
+            console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
+            return data;
 
-        // return await response.json();
-
+            // return await response.json();
+        } catch (err) {
+            console.log("NavBar.ts, fetchPlaylists: ERROR = ", err);
+        }
     }
 
     addPlaylistNames() {
@@ -135,37 +147,40 @@ export class NavBar {
     }
 
     async insertNewPlaylist(playlist_name: String) {
-        // try {
-        //     const response = await fetch(API_URL + '/playlist/', {
-        //         body: JSON.stringify({
-        //             name: playlist_name
-        //         }),
-        //         cache: 'no-cache',
-        //         headers: {
-        //             'content-type': 'application/json',
-        //             'crossDomain': 'true'
-        //         },
-        //         method: 'POST',
-        //         mode: 'cors',
-        //         // todo REST POST redirect
-        //         // redirect: 'follow',
-        //         // credentials: 'include',
-        //     });
-        //
-        //     const result: PlaylistResult = await response.json();
-        //     if (!result.success) {
-        //         console.error(result);
-        //         throw result.msg;
-        //     }
-        //
-        //     if (result.success) {
-        //         this.listofPlaylists.push(result.data.NAME)
-        //     }
-        //     return result;
-        //
-        // } catch(err)  {
-        //     console.log(err);
-        // }
+        try {
+            const response = await fetch(API_URL + '/playlist/', {
+                body: JSON.stringify({
+                    name: playlist_name
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem('token')
+                },
+                method: 'POST',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            console.log('NavBar.ts, insertNewPlaylist: RESPONSE = ', response);
+
+            const result: PlaylistResult = await response.json();
+            if (!result.success) {
+                console.error(result);
+                throw result.msg;
+            }
+
+            if (result.success) {
+                this.listofPlaylists.push(result.data.NAME)
+            }
+            return result;
+
+        } catch(err)  {
+            console.log(err);
+        }
 
 
     }
