@@ -127,6 +127,7 @@ class DB {
         });
     }
 
+    
     skeleton() {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {

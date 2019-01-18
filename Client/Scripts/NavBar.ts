@@ -116,7 +116,6 @@ export class NavBar {
             let data = await response.json();
             console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
             return data;
-
             // return await response.json();
         } catch (err) {
             console.log("NavBar.ts, fetchPlaylists: ERROR = ", err);
