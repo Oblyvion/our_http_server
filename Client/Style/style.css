@@ -248,7 +248,8 @@ button:hover, .form button:active {
   background: rgba(0, 0, 0, 0.7);
   transition: all 500ms linear;
   grid-area: navbar;
-  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5); }
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5);
+  overflow-y: auto; }
 
 .NavBarDiv.active {
   height: 100%;

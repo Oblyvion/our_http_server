@@ -56,8 +56,18 @@ export class NavBar {
         this.dom_addButtonImg.addEventListener('click', () => {
             if (this.dom_newplaylist.style.display === "none") {
                 this.dom_newplaylist.style.display = "block";
-            } else {
+            }
+            else {
                 this.insertNewPlaylist(this.dom_newplaylist.value);
+                this.fetchPlaylists().then((result) => {
+                    this.listofPlaylists = result.data;
+                    console.log("das ist list of playlists: ", this.listofPlaylists);
+                    this.addPlaylistNames();
+                })
+                    .catch(err => {
+                        console.log("NavBar.ts, constructor = ", err);
+                    }
+                    );
                 this.dom_newplaylist.style.display = "none";
             }
         });
@@ -65,6 +75,10 @@ export class NavBar {
         this.dom_newplaylist = document.createElement("input");
         this.dom_newplaylist.classList.add("NavBarInputNewSong");
         this.dom_addButton.appendChild(this.dom_newplaylist);
+
+        this.dom_UList = document.createElement('ul');
+        this.dom_UList.classList.add("NavBarUL");
+        this.dom_divNavBar.appendChild(this.dom_UList);
 
         // this.dom_divNavBarToggle = document.createElement('div');
         // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
@@ -87,35 +101,34 @@ export class NavBar {
     async fetchPlaylists() {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
-        //try {
+        try {
 
-        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/playlists/", {
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/javascript',
-                'crossDomain': 'true',
-                'Authorization': localStorage.getItem("token")
-            },
-            method: 'GET',
-            mode: 'cors',
-            // todo REST POST redirect
-            // redirect: 'follow',
-            // credentials: 'include',
-        });
-
-        let data = await response.json();
-
-        console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
-
-        return data;
+            console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
+            let response = await fetch(API_URL + "/playlists/", {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem('token')
+                },
+                method: 'GET',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+            let data = await response.json();
+            console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
+            return data;
+            // return await response.json();
+        } catch (err) {
+            console.log("NavBar.ts, fetchPlaylists: ERROR = ", err);
+        }
     }
 
     addPlaylistNames() {
-        this.dom_UList = document.createElement('ul');
-        this.dom_UList.classList.add("NavBarUL");
-        this.dom_divNavBar.appendChild(this.dom_UList);
 
+        console.log("länge: ", this.listofPlaylists.length);
         for (let i = 0; i < this.listofPlaylists.length; i++) {
             this.dom_ListElement = document.createElement('li');
             this.dom_ListElement.classList.add("NavBarListElement");
@@ -153,6 +166,9 @@ export class NavBar {
                 // credentials: 'include',
             });
 
+
+            console.log('NavBar.ts, insertNewPlaylist: RESPONSE = ', response);
+
             const result: PlaylistResult = await response.json();
             if (!result.success) {
                 console.error(result);
@@ -167,7 +183,6 @@ export class NavBar {
         } catch(err)  {
             console.log(err);
         }
-
     }
 
 
