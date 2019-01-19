@@ -1,19 +1,9 @@
 const API_URL = 'http://localhost:3000';
 export class PlaylistTable {
     constructor(dom_root, dom_content, PlaylistData) {
-        this.SongObject = {
-            Title: "Bad_Habit_Terrasound.mp3",
-            Artist: "Terrasound",
-            AddedBy: "fliesentischbesitzerklaus25",
-        };
-        this.SongObject1 = {
-            Title: "Dark_Blue_Echoes.mp3",
-            Artist: "Terrasound",
-            AddedBy: "fliesentischbesitzerklaus25",
-        };
         this.Playlist = {
             name: "",
-            songs: [this.SongObject, this.SongObject1],
+            songs: [],
         };
         this.dom_root = dom_root;
         this.dom_content = dom_content;
@@ -66,11 +56,12 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.textContent = "Added By";
     }
     async fetchPlaylistSongs() {
+        console.log("this.PlaylistID = ", this.PlaylistID);
         //try {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/playlist/" + this.PlaylistID, {
+        let response = await fetch(API_URL + "/songsuser/ " + this.PlaylistID, {
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/javascript',
@@ -95,25 +86,26 @@ export class PlaylistTable {
                 console.log(clicked);
                 for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
                     console.log(this.audioPlayer.Songs[i]);
-                    console.log(this.Playlist[clicked].Title);
-                    if (this.audioPlayer.Songs[i] === this.Playlist[clicked].Title) {
+                    console.log(this.Playlist.songs[clicked].Title);
+                    if (this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
                         this.audioPlayer.loadSong(clicked);
                         this.audioPlayer.playorpauseSong();
                     }
                 }
             });
+            console.log("PlaylistTable.ts: this.Playlist[i].Title = ", this.Playlist.songs[i].TITLE);
             const dom_TableDataTitle = document.createElement('td');
             dom_TableDataTitle.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataTitle);
-            dom_TableDataTitle.textContent = this.Playlist[i].Title;
+            dom_TableDataTitle.textContent = this.Playlist.songs[i].TITLE;
             const dom_TableDataArtist = document.createElement('td');
             dom_TableDataArtist.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataArtist);
-            dom_TableDataArtist.textContent = this.Playlist[i].Artist;
+            dom_TableDataArtist.textContent = this.Playlist.songs[i].ARTIST;
             const dom_TableDataAddedBy = document.createElement('td');
             dom_TableDataAddedBy.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataAddedBy);
-            dom_TableDataAddedBy.textContent = this.Playlist[i].AddedBy;
+            dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
         }
     }
     close() {

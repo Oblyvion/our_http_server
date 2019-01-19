@@ -180,7 +180,6 @@ app.post('/login', (req, res) => {
                 success: true,
                 data: token
             });
-            console.log("jwt");
         })
         .catch(err => {
             res.send({
@@ -218,16 +217,14 @@ app.get('/songs', async (req, res) => {
 /**
  * get all songs
  */
-app.get('/songsuser', async (req, res) => {
-    // const playlistName = req.:::
-    const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE NAME = ?', 'Playlist 2');
-    console.log("app.js, app.get/songuser: USER = ", playlist);
-    console.log("app.js, app.get/songuser: USER_ID = ", playlist.USER_ID);
+app.get('/songsuser/:id', async (req, res) => {
+    console.log("app.js, app.get/songuser: ID = ", req.params.id);
+
+    const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE ID = ?', +req.params.id);
+    console.log("app.js, app.get/songuser: ID = ", playlist.ID);
     console.log("app.js, app.get/songuser: NAME = ", playlist.NAME);
-    console.log("app.js, app.get/songuser: PLAYLIST_ID = ", playlist.ID);
 
     const songsids = await db.get_rows('SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?', playlist.ID);
-    console.log("app.js, app.get/songsuser: SONGSIDS = ", songsids[1].SONG_ID);
 
     const songs = await db.get_rows('SELECT * FROM SONGS WHERE (SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?)', playlist.ID)
     .then(rows => {
@@ -299,31 +296,31 @@ app.get('/playlists', auth, async (req, res) => {
 /**
  * get playlist songs by playlist id
  */
-app.get('/playlist/:id', async (req, res) => {
-    // console.log("hallo: ", req.params.id);
-    const token = jwt.decode(req.get("Authorization")).username;
-    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
-    const SongsOfPlaylist = await db.get_row("SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_CONTAINS.PLAYLIST_ID = ?", +req.params.id);
-    console.log("DAS IST SONGS OF PLAYLIST: ", SongsOfPlaylist);
-    db.get_row("SELECT * FROM SONGS WHERE ID = ?", SongsOfPlaylist.SONG_ID)
-        .then(row => {
-            console.log(row);
-            if (!row)
-                throw 'playlist does not exist';
-            res.send({
-                success: true,
-                data: row
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.send({
-                success: false,
-                msg: 'access playlist failed',
-                err: err
-            });
-        });
-});
+// app.get('/playlist/:id', async (req, res) => {
+//     // console.log("hallo: ", req.params.id);
+//     const token = jwt.decode(req.get("Authorization")).username;
+//     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
+//     const SongsOfPlaylist = await db.get_row("SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_CONTAINS.PLAYLIST_ID = ?", +req.params.id);
+//     console.log("DAS IST SONGS OF PLAYLIST: ", SongsOfPlaylist);
+//     db.get_row("SELECT * FROM SONGS WHERE ID = ?", SongsOfPlaylist.SONG_ID)
+//         .then(row => {
+//             console.log(row);
+//             if (!row)
+//                 throw 'playlist does not exist';
+//             res.send({
+//                 success: true,
+//                 data: row
+//             });
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.send({
+//                 success: false,
+//                 msg: 'access playlist failed',
+//                 err: err
+//             });
+//         });
+// });
 
 // ----------------------------POST section----------------------------
 /**

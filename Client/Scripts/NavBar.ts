@@ -151,6 +151,7 @@ export class NavBar {
                     this.dom_content.childNodes[i].remove();
                 }
                 console.log(this.dom_content);
+                console.log("this.listofPlaylists", this.listofPlaylists);
                 this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }
