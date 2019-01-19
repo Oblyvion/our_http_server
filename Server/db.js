@@ -137,9 +137,9 @@ class DB {
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 1", 2)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 2", 1)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 3", 1)');
-                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 2)');
-                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (2, 1)');
-                this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (3, 1)');
+                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 2)');
+                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (2, 1)');
+                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (3, 1)');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (1, 2, 1)');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (2, 2, 2)');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (1, 1, 2)');
