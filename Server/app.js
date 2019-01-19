@@ -218,15 +218,15 @@ app.get('/songs', async (req, res) => {
  * get all songs
  */
 app.get('/songsuser/:id', async (req, res) => {
-    console.log("app.js, app.get/songuser: ID = ", req.params.id);
-
+    console.log("app.js, app.get/songsuser: PLAYLIST_ID = ", req.params.id);
     const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE ID = ?', +req.params.id);
-    console.log("app.js, app.get/songuser: ID = ", playlist.ID);
-    console.log("app.js, app.get/songuser: NAME = ", playlist.NAME);
 
-    const songsids = await db.get_rows('SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?', playlist.ID);
+    console.log("app.js, app.get/songsuser: PLAYLIST_ID = ", playlist.ID);
+    console.log("app.js, app.get/songsuser: PLAYLIST_NAME = ", playlist.NAME);
 
-    const songs = await db.get_rows('SELECT * FROM SONGS WHERE (SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?)', playlist.ID)
+    const songs = await db.get_rows('SELECT * FROM SONGS JOIN PLAYLIST_CONTAINS ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID' +
+        ' AND PLAYLIST_CONTAINS.PLAYLIST_ID = ?', playlist.ID)
+    // console.log("app.js, app.get/songsuser: SONGSSSS = ", songs);
     .then(rows => {
             if (!rows)
                 throw 'no songs available';

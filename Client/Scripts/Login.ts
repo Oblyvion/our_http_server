@@ -113,18 +113,22 @@ export class Login implements iAppContainer {
 
                 const result: UserResult = await response.json();
 
-                //console.log("server: "+result.data.PASSWORD);
-                //console.log("client: "+password);
+                // console.log("server: "+result.data.PASSWORD);
+                // console.log("client: "+password);
                 
                 if (!result.success) {
                     console.error(result);
                     throw "wrong data";
                 }
                 else {
-                    localStorage.clear();
-                    console.log("result.data = ", result.data);
-                    localStorage.setItem("token", result.data);
                     this.info(`Login successful!`, '', 'success');
+                    console.log("Login.ts, loginUser: result.data = ", result.data);
+                    console.log("HALDSAFLAFOIJDSOSJFJSAJSLFLDSAÖJAJFÖ");
+                    console.log("Login.ts, loginUser: 0localStorage = ", localStorage.getItem('token'));
+                    localStorage.clear();
+                    console.log("Login.ts, loginUser: 1localStorage = ", localStorage.getItem('token'));
+                    localStorage.setItem("token", result.data);
+                    console.log("Login.ts, 2loginUser: 2localStorage = ", localStorage.getItem('token'));
                     this.close();
                     manager("page_first_steps");
                 }
