@@ -68,24 +68,18 @@ const schema_user_post = Joi.object().keys({
 
 const auth = async (req, res, next) => {
     try {
-        const user = basic_auth(req);
-        console.log("User: " + user);
-        if (!user || !user.name || !user.pass) {
-            throw "Invalid Basic Auth";
+        const token = req.get('Authorization');
+        console.log("app.js, auth: TOKEN = " + jwt.decode(token).username);
+        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(token).username);
+        console.log("app.js, auth: USER = " + user.ID);
+        if (!user) {
+            throw "Invalid Authentication";
         }
 
-        const auth = await db.get_row('SELECT PASSWORD FROM USERS WHERE NAME = ?', user.name);
-
-        //console.log("user pass: "+user.pass);
-        //console.log("auth password: "+auth.PASSWORD);
-        if (auth.PASSWORD !== user.pass) {
-            throw "Invalid Password!";
-        }
         next();
     } catch (err) {
-        console.log(err.toString());
-        res.set("WWW-Authenticate", "Basic real-Authorization Required");
-        //error_handler(res, 'Authorization Required', err);
+        console.log("hisd: ", err.toString());
+        res.set("ERROR: You are not authorized for this action!");
     }
 };
 
@@ -205,7 +199,7 @@ app.get('/songs', async (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)
-                throw 'song not found';
+                throw 'no songs available';
             res.send({
                 success: true,
                 data: rows
@@ -219,6 +213,40 @@ app.get('/songs', async (req, res) => {
             });
         });
 });
+
+
+/**
+ * get all songs
+ */
+app.get('/songsuser', async (req, res) => {
+    // const playlistName = req.:::
+    const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE NAME = ?', 'Playlist 2');
+    console.log("app.js, app.get/songuser: USER = ", playlist);
+    console.log("app.js, app.get/songuser: USER_ID = ", playlist.USER_ID);
+    console.log("app.js, app.get/songuser: NAME = ", playlist.NAME);
+    console.log("app.js, app.get/songuser: PLAYLIST_ID = ", playlist.ID);
+
+    const songsids = await db.get_rows('SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?', playlist.ID);
+    console.log("app.js, app.get/songsuser: SONGSIDS = ", songsids[1].SONG_ID);
+
+    const songs = await db.get_rows('SELECT * FROM SONGS WHERE (SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_ID = ?)', playlist.ID)
+    .then(rows => {
+            if (!rows)
+                throw 'no songs available';
+            res.send({
+                success: true,
+                data: rows
+            });
+        })
+        .catch(err => {
+            res.send({
+                success: false,
+                msg: 'access song failed',
+                err: err
+            });
+        });
+});
+
 /**
  * get song by id
  */
@@ -245,7 +273,7 @@ app.get('/song/:id', (req, res) => {
 /**
  * get all playlists from authorized user
  */
-app.get('/playlists', async (req, res) => {
+app.get('/playlists', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
     console.log("app.js, app.get/playlists: TOKEN = ", token.username);
     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token.username);
@@ -311,6 +339,7 @@ app.post('/user', async (req, res) => {
         });
 
     } catch (err) {
+
         if (err.message.match('SQLITE_CONSTRAINT')) {
             console.log(err);
             res.send({
