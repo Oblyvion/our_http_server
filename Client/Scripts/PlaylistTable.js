@@ -105,11 +105,11 @@ export class PlaylistTable {
             const dom_TableDataTitle = document.createElement('td');
             dom_TableDataTitle.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataTitle);
-            dom_TableDataTitle.textContent = this.Playlist[i].Title;
+            dom_TableDataTitle.textContent = this.Playlist.songs[i].Title;
             const dom_TableDataArtist = document.createElement('td');
             dom_TableDataArtist.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataArtist);
-            dom_TableDataArtist.textContent = this.Playlist[i].Artist;
+            dom_TableDataArtist.textContent = this.Playlist.songs[i].Artist;
             const dom_TableDataAddedBy = document.createElement('td');
             dom_TableDataAddedBy.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataAddedBy);
