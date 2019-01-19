@@ -120,11 +120,7 @@ export class PlaylistTable {
             // credentials: 'include',
         });
 
-        console.log("Was is heir los heyß?: ", response);
-
         const data = await response.json();
-
-        console.log("Hier komm ich hin DATA!!: ", data);
 
         return data;
     }

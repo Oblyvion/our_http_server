@@ -145,7 +145,7 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, ADDED_BY) VALUES (1, 1, 2)');
                 resolve();
             });
-        }).catch(err => reject(err));
+        }).catch(err => console.log(err));
     }
 }
 module.exports = DB;

@@ -112,7 +112,7 @@ export class NavBar {
                 for (let i = 2; i < this.dom_content.childNodes.length; i++) {
                     this.dom_content.childNodes[i].remove();
                 }
-                console.log(this.dom_content);
+                console.log("HALLO: " + this.listofPlaylists[i].ID);
                 this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }

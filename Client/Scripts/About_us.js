@@ -18,9 +18,11 @@ export class About_us {
             "We are students of the \"University of Applied Sciences\" in Worms and created this WebApp for private use only.";
     }
     close() {
+        this.dom_AboutUs.classList.remove("ContentAboutUs");
         while (this.dom_AboutUs.firstChild) {
             this.dom_AboutUs.removeChild(this.dom_AboutUs.firstChild);
         }
+        this.dom_AboutUs.remove();
     }
 }
 //# sourceMappingURL=About_us.js.map

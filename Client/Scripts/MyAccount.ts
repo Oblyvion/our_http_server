@@ -87,5 +87,6 @@ export class MyAccount {
         while (this.dom_ContentMyAccount.firstChild) {
             this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
         }
+        this.dom_ContentMyAccount.remove();
     }
 }

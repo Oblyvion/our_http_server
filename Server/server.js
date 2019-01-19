@@ -8,6 +8,9 @@ const options = {
     cert: fs.readFileSync('./Server/Signature/certificate.cert')
 };
 
-https.createServer(options, (req, res) => {
-    res.writeHead(200);
-}).listen(port);
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}!`);
+});
+// https.createServer(options, (req, res) => {
+//     res.writeHead(200);
+// }).listen(port);
