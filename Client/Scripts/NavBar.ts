@@ -28,13 +28,14 @@ export class NavBar {
 
         this.fetchPlaylists().then((result) => {
             this.listofPlaylists = result.data;
-            console.log("das ist list of playlists: ", this.listofPlaylists);
+            console.log("das ist list of playlists beim ersten fetch: ", this.listofPlaylists);
             this.addPlaylistNames();
+            //this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[0]);
         })
             .catch(err => {
-                console.log("NavBar.ts, constructor = ", err);
-            }
-        );
+                    console.log("NavBar.ts, constructor = ", err);
+                }
+            );
 
 
         this.dom_root = dom_body;
@@ -56,18 +57,25 @@ export class NavBar {
         this.dom_addButtonImg.addEventListener('click', () => {
             if (this.dom_newplaylist.style.display === "none") {
                 this.dom_newplaylist.style.display = "block";
-            }
-            else {
-                this.insertNewPlaylist(this.dom_newplaylist.value);
-                this.fetchPlaylists().then((result) => {
-                    this.listofPlaylists = result.data;
-                    console.log("das ist list of playlists: ", this.listofPlaylists);
-                    this.addPlaylistNames();
-                })
-                    .catch(err => {
-                        console.log("NavBar.ts, constructor = ", err);
-                    }
-                    );
+
+            } else {
+                if (this.dom_newplaylist.value.length > 1) {
+                    this.insertNewPlaylist(this.dom_newplaylist.value);
+                    this.fetchPlaylists().then((result) => {
+                        //this.dom_UList.removeChild()
+                        while (this.dom_UList.firstChild) {
+                            this.dom_UList.removeChild(this.dom_UList.firstChild);
+                        }
+                        console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
+                        this.listofPlaylists = result.data;
+                        console.log("das ist list of playlists nach dem 2. fetch: ", this.listofPlaylists);
+                        this.addPlaylistNames();
+                    })
+                        .catch(err => {
+                                console.log("NavBar.ts, constructor = ", err);
+                            }
+                        );
+                }
                 this.dom_newplaylist.style.display = "none";
             }
         });
@@ -75,6 +83,7 @@ export class NavBar {
         this.dom_newplaylist = document.createElement("input");
         this.dom_newplaylist.classList.add("NavBarInputNewSong");
         this.dom_addButton.appendChild(this.dom_newplaylist);
+        this.dom_newplaylist.placeholder = "type in new playlist";
 
         this.dom_UList = document.createElement('ul');
         this.dom_UList.classList.add("NavBarUL");
@@ -129,16 +138,30 @@ export class NavBar {
     addPlaylistNames() {
 
         console.log("länge: ", this.listofPlaylists.length);
+
         for (let i = 0; i < this.listofPlaylists.length; i++) {
             this.dom_ListElement = document.createElement('li');
             this.dom_ListElement.classList.add("NavBarListElement");
             this.dom_UList.appendChild(this.dom_ListElement);
             this.dom_ListElement.addEventListener('click', () => {
+                if (this.playlistTable) {
+                    this.playlistTable.close();
+                }
+                for (let i = 2; i < this.dom_content.childNodes.length; i++) {
+                    this.dom_content.childNodes[i].remove();
+                }
+                console.log(this.dom_content);
                 this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }
         this.setNamesofPlaylists();
     }
+
+    // deletePlaylist() {
+    //     console.log("0NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
+    //     this.listofPlaylists = {};
+    //     console.log("1NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
+    // }
 
     setNamesofPlaylists() {
         let n = this.dom_UList.childNodes.length;
@@ -166,8 +189,7 @@ export class NavBar {
                 // credentials: 'include',
             });
 
-
-            console.log('NavBar.ts, insertNewPlaylist: RESPONSE = ', response);
+            console.log('NavBar.ts, insertNewPlaylist: Response = ', response);
 
             const result: PlaylistResult = await response.json();
             if (!result.success) {
@@ -176,11 +198,11 @@ export class NavBar {
             }
 
             if (result.success) {
-                this.listofPlaylists.push(result.data.NAME)
+                console.log('NavBar.ts, insertNewPlaylist: Result success!');
+                return;
             }
-            return result;
 
-        } catch(err)  {
+        } catch (err) {
             console.log(err);
         }
     }
@@ -202,6 +224,8 @@ export class NavBar {
 
     close() {
         this.dom_content.remove();
-        this.playlistTable.close();
+        if (this.playlistTable) {
+            this.playlistTable.close();
+        }
     }
 }

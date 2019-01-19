@@ -28,6 +28,8 @@ export class About_us {
     }
 
     close() {
-        this.dom_AboutUs.remove();
+        while (this.dom_AboutUs.firstChild) {
+            this.dom_AboutUs.removeChild(this.dom_AboutUs.firstChild);
+        }
     }
 }
