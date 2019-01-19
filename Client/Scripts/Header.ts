@@ -1,4 +1,5 @@
 import {manager} from "./app.js";
+import {MyPlaylistMates} from "./MyPlaylistMates.js";
 
 export class Header {
     private dom_root: HTMLElement;
@@ -17,11 +18,13 @@ export class Header {
     private dom_DropdownMenuData1: HTMLElement;
     private dom_DropdownMenuData2: HTMLElement;
     private dom_DropdownMenuData3: HTMLElement;
+    private MyPlaylistMates:MyPlaylistMates;
 
     constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
         this.dom_root = dom_body;
         this.dom_content = dom_content;
         this.dom_header = document.createElement('header');
+        this.dom_header.setAttribute("id", "header");
         this.dom_root.appendChild(this.dom_header);
         this.set('');
 
@@ -78,16 +81,16 @@ export class Header {
         this.dom_HeaderAccountBttn.addEventListener('mouseover', () => {
             this.dom_DropdownMenuContent.style.display = "block";
         });
-        this.dom_HeaderAccountBttn.addEventListener('mouseleave', () => {
-            setTimeout(() => {
-                this.dom_DropdownMenuContent.style.display = "none";
-            }, 7000);
-        });
 
 
         this.dom_DropdownMenu = document.createElement('div');
         this.dom_root.appendChild(this.dom_DropdownMenu);
         this.dom_DropdownMenu.classList.add('HeaderDropdownMenu');
+        this.dom_DropdownMenu.addEventListener('mouseleave', () => {
+            // setTimeout(() => {
+                this.dom_DropdownMenuContent.style.display = "none";
+            // }, 5000);
+        });
 
         this.dom_DropdownMenuContent = document.createElement('div');
         this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
@@ -98,7 +101,12 @@ export class Header {
         this.dom_DropdownMenuData0.classList.add('HeaderDropdownMenuData');
         this.dom_DropdownMenuData0.setAttribute('href', '#');
         this.dom_DropdownMenuData0.addEventListener('click', () => {
-
+            for (let i = 2; i < this.dom_content.childNodes.length; i++) {
+                this.dom_content.childNodes[i].remove();
+            }
+            new manager("page_first_steps");
+            this.set("My Playlist Mates");
+            this.MyPlaylistMates = new MyPlaylistMates(this.dom_root, this.dom_content)
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData0);
 

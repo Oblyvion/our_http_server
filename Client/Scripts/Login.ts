@@ -121,6 +121,8 @@ export class Login implements iAppContainer {
                     throw "wrong data";
                 }
                 else {
+                    localStorage.clear();
+                    console.log("result.data = ", result.data);
                     localStorage.setItem("token", result.data);
                     this.info(`Login successful!`, '', 'success');
                     this.close();

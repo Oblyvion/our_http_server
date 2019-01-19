@@ -249,7 +249,8 @@ button:hover, .form button:active {
   transition: all 500ms linear;
   grid-area: navbar;
   box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5);
-  overflow-y: auto; }
+  overflow-y: auto;
+  cursor: pointer; }
 
 .NavBarDiv.active {
   height: 100%;
@@ -346,6 +347,51 @@ button:hover, .form button:active {
 
 .TableDataRow:hover {
   background-color: darkblue; }
+
+.FirstSteps {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(20%, 20%) minmax(80%, 80%);
+  grid-template-rows: minmax(20%, 20%) minmax(80%, 80%);
+  grid-template-areas: "navbar player" "navbar content"; }
+
+.PlaylistMatesDiv {
+  width: 100%;
+  height: 100%;
+  grid-area: content;
+  margin-top: 8px; }
+
+.PlaylistMatesHeaderDiv {
+  height: 40px;
+  line-height: 40px;
+  background-color: rgba(70, 70, 70, 0.6);
+  border: 1px black solid; }
+
+.PlaylistMatesHeaderName {
+  float: left;
+  margin-left: 10px;
+  font-size: 15px;
+  font-weight: bold; }
+
+.PlaylistMatesHeaderButtonDiv {
+  margin-right: 15px;
+  float: right;
+  height: 40px; }
+
+.PlaylistMatesHeaderAddBtn {
+  margin-top: 10px; }
+
+.MatesTable {
+  width: 100%;
+  background-color: rgba(204, 204, 204, 0.29);
+  cursor: pointer; }
+
+.PlaylistMatesContent {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(20%, 20%) minmax(80%, 80%);
+  grid-template-rows: minmax(20%, 20%) minmax(80%, 80%);
+  grid-template-areas: "navbar player" "navbar content"; }
 
 .FirstSteps {
   height: 100vh;

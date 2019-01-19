@@ -150,7 +150,11 @@ export class NavBar {
                 for (let i = 2; i < this.dom_content.childNodes.length; i++) {
                     this.dom_content.childNodes[i].remove();
                 }
+                const header = document.getElementById("header");
+                header.textContent = "Music Playlist";
                 console.log("HALLO: "+this.listofPlaylists[i].ID);
+                console.log(this.dom_content);
+                console.log("this.listofPlaylists", this.listofPlaylists);
                 this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }
