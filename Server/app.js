@@ -83,6 +83,7 @@ const auth = async (req, res, next) => {
     }
 };
 
+
 // ----------------------------GET section----------------------------
 /**
  * get app root

@@ -12,13 +12,13 @@ dom_content.classList.add('content');
 const header = new Header(dom_root, dom_content);
 //const audioPlayer = new AudioPlayer(dom_content);
 dom_root.appendChild(dom_content);
+localStorage.setItem("PlaylistIndex", "1");
 let active_app = null;
 export const manager = function (app) {
     if (active_app != null) {
         active_app.close();
         active_app = null;
     }
-    console.log("KOMM HIN");
     switch (app) {
         case 'login':
             header.set('Login');

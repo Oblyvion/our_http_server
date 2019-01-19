@@ -17,7 +17,9 @@ export class Contact {
         dom_ContactInformation.textContent = "info@music-playlist.com";
     }
     close() {
-        this.dom_Contact.remove();
+        while (this.dom_Contact.firstChild) {
+            this.dom_Contact.removeChild(this.dom_Contact.firstChild);
+        }
     }
 }
 //# sourceMappingURL=Contact.js.map

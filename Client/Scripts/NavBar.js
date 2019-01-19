@@ -9,8 +9,9 @@ export class NavBar {
         this.dom_span_array = [];
         this.fetchPlaylists().then((result) => {
             this.listofPlaylists = result.data;
-            console.log("das ist list of playlists: ", this.listofPlaylists);
+            console.log("das ist list of playlists beim ersten fetch: ", this.listofPlaylists);
             this.addPlaylistNames();
+            //this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[0]);
         })
             .catch(err => {
             console.log("NavBar.ts, constructor = ", err);
@@ -36,9 +37,13 @@ export class NavBar {
                 if (this.dom_newplaylist.value.length > 1) {
                     this.insertNewPlaylist(this.dom_newplaylist.value);
                     this.fetchPlaylists().then((result) => {
+                        //this.dom_UList.removeChild()
+                        while (this.dom_UList.firstChild) {
+                            this.dom_UList.removeChild(this.dom_UList.firstChild);
+                        }
                         console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
                         this.listofPlaylists = result.data;
-                        console.log("das ist list of playlists: ", this.listofPlaylists);
+                        console.log("das ist list of playlists nach dem 2. fetch: ", this.listofPlaylists);
                         this.addPlaylistNames();
                     })
                         .catch(err => {
@@ -51,6 +56,7 @@ export class NavBar {
         this.dom_newplaylist = document.createElement("input");
         this.dom_newplaylist.classList.add("NavBarInputNewSong");
         this.dom_addButton.appendChild(this.dom_newplaylist);
+        this.dom_newplaylist.placeholder = "type in new playlist";
         this.dom_UList = document.createElement('ul');
         this.dom_UList.classList.add("NavBarUL");
         this.dom_divNavBar.appendChild(this.dom_UList);
@@ -94,11 +100,19 @@ export class NavBar {
         }
     }
     addPlaylistNames() {
+        console.log("länge: ", this.listofPlaylists.length);
         for (let i = 0; i < this.listofPlaylists.length; i++) {
             this.dom_ListElement = document.createElement('li');
             this.dom_ListElement.classList.add("NavBarListElement");
             this.dom_UList.appendChild(this.dom_ListElement);
             this.dom_ListElement.addEventListener('click', () => {
+                if (this.playlistTable) {
+                    this.playlistTable.close();
+                }
+                for (let i = 2; i < this.dom_content.childNodes.length; i++) {
+                    this.dom_content.childNodes[i].remove();
+                }
+                console.log(this.dom_content);
                 this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[i]);
             });
         }
@@ -125,21 +139,21 @@ export class NavBar {
                 headers: {
                     'content-type': 'application/json',
                     'crossDomain': 'true',
-                    'Authorization': localStorage.getItem('token')
+                    'Authorization': localStorage.getItem("token")
                 },
                 method: 'POST',
                 mode: 'cors',
             });
-            console.log('NavBar.ts, insertNewPlaylist: RESPONSE = ', response);
+            console.log('NavBar.ts, insertNewPlaylist: Response = ', response);
             const result = await response.json();
             if (!result.success) {
                 console.error(result);
                 throw result.msg;
             }
             if (result.success) {
-                this.listofPlaylists.push(result.data.NAME);
+                console.log('NavBar.ts, insertNewPlaylist: Result success!');
+                return;
             }
-            return result;
         }
         catch (err) {
             console.log(err);
@@ -158,7 +172,9 @@ export class NavBar {
     }
     close() {
         this.dom_content.remove();
-        this.playlistTable.close();
+        if (this.playlistTable) {
+            this.playlistTable.close();
+        }
     }
 }
 //# sourceMappingURL=NavBar.js.map

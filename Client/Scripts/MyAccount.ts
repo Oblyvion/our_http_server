@@ -1,5 +1,6 @@
 import {AudioPlayer} from "./AudioPlayer.js";
 import {NavBar} from "./NavBar.js";
+import {jwt} from "../../Server/app.js"
 
 
 const API_URL = 'http://localhost:3000';
@@ -37,13 +38,19 @@ export class MyAccount {
         this.dom_divMyAccHeaderUserName = document.createElement('div');
         this.dom_divMyAccHeaderUserName.classList.add('MyAccHeaderUserName');
         this.dom_divMyAccHeader.appendChild(this.dom_divMyAccHeaderUserName);
-        this.dom_divMyAccHeaderUserName.textContent = localStorage.getItem("token");
+        this.dom_divMyAccHeaderUserName.textContent = this.parseJwt(localStorage.getItem("token")).username;
 
         this.dom_MyAccountInfoContainer = document.createElement('div');
         this.dom_MyAccountInfoContainer.classList.add('MyAccountInfoContainer');
         this.dom_MyAccountContainer.appendChild(this.dom_MyAccountInfoContainer);
 
     }
+
+    parseJwt (token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(window.atob(base64));
+    };
 
     async getPlaylists() {
         try {
@@ -62,7 +69,7 @@ export class MyAccount {
                 // todo REST POST redirect
                 // redirect: 'follow',
                 // credentials: 'include',
-            })
+            });
 
             const result = await playlists.json();
 
