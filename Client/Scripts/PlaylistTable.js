@@ -34,6 +34,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
         this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
         this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
+        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
         this.dom_divTable.appendChild(this.dom_Table);
@@ -107,6 +108,19 @@ export class PlaylistTable {
             dom_TableData.appendChild(dom_TableDataAddedBy);
             dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
         }
+    }
+    async uploadNewSong() {
+        let response = await fetch(API_URL + "/song/ ", {
+            body: JSON.stringify({}),
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'multipart/form-data',
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'POST',
+            mode: 'cors',
+        });
     }
     close() {
         this.dom_divTable.remove();

@@ -5,19 +5,19 @@ const API_URL = 'http://localhost:3000';
 
 
 export class PlaylistTable {
-    private dom_root:HTMLElement;
-    private dom_content:HTMLElement;
-    private dom_divTable:HTMLDivElement;
-    private dom_divPlaylistHeader:HTMLDivElement;
-    private dom_Table:HTMLTableElement;
-    private dom_TableHeader:HTMLTableRowElement;
-    private dom_TableHeaderName1:HTMLTableCaptionElement;
-    private dom_TableHeaderName2:HTMLTableCaptionElement;
-    private dom_TableHeaderName3:HTMLTableCaptionElement;
+    private dom_root: HTMLElement;
+    private dom_content: HTMLElement;
+    private dom_divTable: HTMLDivElement;
+    private dom_divPlaylistHeader: HTMLDivElement;
+    private dom_Table: HTMLTableElement;
+    private dom_TableHeader: HTMLTableRowElement;
+    private dom_TableHeaderName1: HTMLTableCaptionElement;
+    private dom_TableHeaderName2: HTMLTableCaptionElement;
+    private dom_TableHeaderName3: HTMLTableCaptionElement;
     private audioPlayer: AudioPlayer;
-    private dom_divPlaylistHeaderButtons:HTMLElement;
-    private dom_divPlaylistHeaderAddBtn:HTMLImageElement;
-    private dom_divPlaylistHeaderPlaylistName:HTMLDivElement;
+    private dom_divPlaylistHeaderButtons: HTMLElement;
+    private dom_divPlaylistHeaderAddBtn: HTMLImageElement;
+    private dom_divPlaylistHeaderPlaylistName: HTMLDivElement;
     private PlaylistID;
 
     private Playlist = {
@@ -62,7 +62,7 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
         this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
         this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
-
+        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
 
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
@@ -96,7 +96,7 @@ export class PlaylistTable {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/songsuser/ " +this.PlaylistID, {
+        let response = await fetch(API_URL + "/songsuser/ " + this.PlaylistID, {
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/javascript',
@@ -120,17 +120,17 @@ export class PlaylistTable {
     }
 
     addPlaylistSongs() {
-        for (let i = 0; i<this.Playlist.songs.length; i++) {
+        for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
             dom_TableData.classList.add('TableDataRow');
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
-                let clicked = dom_TableData.rowIndex-1;
+                let clicked = dom_TableData.rowIndex - 1;
                 console.log(clicked);
                 for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
                     console.log(this.audioPlayer.Songs[i]);
                     console.log(this.Playlist.songs[clicked].Title);
-                    if(this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
+                    if (this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
                         this.audioPlayer.loadSong(clicked);
                         this.audioPlayer.playorpauseSong();
                     }
@@ -155,6 +155,26 @@ export class PlaylistTable {
             dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
         }
     }
+
+    async uploadNewSong() {
+        let response = await fetch(API_URL + "/song/ ", {
+            body: JSON.stringify({
+                
+            }),
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'multipart/form-data',
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'POST',
+            mode: 'cors',
+            // todo REST POST redirect
+            // redirect: 'follow',
+            // credentials: 'include',
+        });
+    }
+
 
     close() {
         this.dom_divTable.remove();
