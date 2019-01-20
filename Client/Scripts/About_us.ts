@@ -28,8 +28,10 @@ export class About_us {
     }
 
     close() {
+        this.dom_AboutUs.classList.remove("ContentAboutUs");
         while (this.dom_AboutUs.firstChild) {
             this.dom_AboutUs.removeChild(this.dom_AboutUs.firstChild);
         }
+        this.dom_AboutUs.remove();
     }
 }

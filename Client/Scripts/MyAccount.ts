@@ -1,3 +1,4 @@
+
 import {AudioPlayer} from "./AudioPlayer.js";
 import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
@@ -87,5 +88,6 @@ export class MyAccount {
         while (this.dom_ContentMyAccount.firstChild) {
             this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
         }
+        this.dom_ContentMyAccount.remove();
     }
 }

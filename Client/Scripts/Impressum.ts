@@ -26,8 +26,10 @@ export class Impressum {
     }
 
     close() {
+        this.dom_Impressum.classList.remove("ContentImpressum");
         while (this.dom_Impressum.firstChild) {
             this.dom_Impressum.removeChild(this.dom_Impressum.firstChild);
         }
+        this.dom_Impressum.remove();
     }
 }

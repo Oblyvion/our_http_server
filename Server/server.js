@@ -13,5 +13,6 @@ const port = 3000;
 // }).listen(port);
 
 app.listen(port, () => {
-    console.log("listening on port ", port);
+    console.log(`Server listening on port ${port}!`);
 });
+

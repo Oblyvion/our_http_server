@@ -6,6 +6,7 @@ import {About_us} from "./About_us.js";
 import {Contact} from "./Contact.js";
 import {Impressum} from "./Impressum.js";
 import {MyAccount} from "./MyAccount.js";
+import {MyPlaylistMates} from "./MyPlaylistMates";
 
 const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');

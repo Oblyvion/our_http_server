@@ -153,7 +153,7 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_MATE (USER_ID, USER_ID_MATE) VALUES (3, 1)');  // TODO ""  ""  ""
                 resolve();
             });
-        }).catch(err => reject(err));
+        }).catch(err => console.log(err));
     }
 }
 module.exports = DB;

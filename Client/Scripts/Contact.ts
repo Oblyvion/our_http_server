@@ -26,8 +26,10 @@ export class Contact {
     }
 
     close() {
+        this.dom_Contact.classList.remove("ContentContact");
         while (this.dom_Contact.firstChild) {
             this.dom_Contact.removeChild(this.dom_Contact.firstChild);
         }
+        this.dom_Contact.remove();
     }
 }

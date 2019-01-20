@@ -17,9 +17,11 @@ export class Impressum {
         dom_ImpressumInformation2.textContent = "Franz-Johannes Weber\r\nFriedrich-Ebert-Str. 72\r\nWörrstadt";
     }
     close() {
+        this.dom_Impressum.classList.remove("ContentImpressum");
         while (this.dom_Impressum.firstChild) {
             this.dom_Impressum.removeChild(this.dom_Impressum.firstChild);
         }
+        this.dom_Impressum.remove();
     }
 }
 //# sourceMappingURL=Impressum.js.map
