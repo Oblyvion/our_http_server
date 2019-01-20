@@ -292,6 +292,7 @@ app.get('/playlists', auth, async (req, res) => {
     console.log("app.js, app.get/playlists: TOKEN = ", token.username);
     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token.username);    // TODO und vom playlist_mate die playlists liefern
     console.log("das ist die id des users: ", USER.ID);                                         // TODO über USER.ID und COLLABORATER
+    const playlistMates = await db.get_rows('SELECT ');
     await db.get_rows('SELECT * FROM PLAYLISTS WHERE USER_ID = ?', USER.ID)
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
@@ -405,88 +406,113 @@ app.post('/playlist', async (req, res) => {
     }
 });
 /**
- * create new song
+ * upload song into global SONGS and users PLAYLIST_CONTAINS
  */
-app.post('/song', async (req, res) => {
+app.post('/song/:playlistID', async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
 
+        // File exists?
         if (Object.keys(req.files).length === 0) {
             return res.status(400).send('No files were uploaded.');
         }
 
-        // if () {
-        //
-        // }
-
-        let song = req.files.fileSong;
+        // save the song with key 'filesong'
+        const song = req.files.fileSong;
+        // path for saving song on server
+        const filePath = __dirname + '/Songs/' + song.name;
         console.log("app.js, app.post/song: FILE = ", req.files);
-        song.mv(__dirname + '/Songs/' + song.name, function (err) {
+        console.log("app.js, app.post/song: FILEPATH = ", filePath);
+
+        // move song to directory /Server/Songs
+        song.mv(filePath, function (err) {
             if (err) {
                 console.log("app.js, app.post/song: ERROR = ", err);
                 return res.status(500).send(err);
             }
+        });
+
+        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+        console.log("app.js, app.post/song: USERID = ", userID.ID);
+
+        const playlistID = req.params.playlistID;
+        console.log("app.js, app.post/song: PLAYLISTID = ", playlistID);
+
+        // insert song into global SONGS
+        await db.cmd('INSERT INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) VALUES (?, ?, ?, ?)', req.body.title, req.body.artist, user, filePath);
+        // find ID from uploaded song
+        const songID = await db.get_row('SELECT ID FROM SONGS WHERE PATH = ?', filePath);
+
+        try {
+            // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
+            await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', playlistID, userID.ID);
+            console.log("app.js, app.post/song: KLAPPT ?  ");
+            console.log("app.js, app.post/song: SONGID = ", songID.ID);
+            // insert song into users playlistID
+            await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
             res.send({
                 success: true,
-                msg: 'File uploaded successfully'
+                msg: 'File uploaded successfully',
+                path: filePath
             });
-        })
+            console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
+        } catch (err) {
+            console.log("app.js, app.post/song: ERROR OCCURRED = ", err.message);
+            if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed: SONGS.PATH')) {
+                console.log("app.js, app.post/song: ERROR PATH EXISTS ALREADY, PLEASE CHANGE SONG TITLE.");
+                return res.status(500).send({
+                    success: false,
+                    msg: 'Path exists already: Do you want this song instead?',
+                    data: song.name,
+                    err: err
+                });
+            }
+            if (err.message.match('SQLITE_CONSTRAINT')) {
+                console.log("app.js, app.post/song: ERROR PLAYLISTID NOT FOUND, PLAYLIST COMES FROM MATE = ", err);
+                try {
+                    await db.get_row('SELECT USER_ID FROM COLLABORATOR WHERE MATE_ID = ? AND PLAYLIST_ID = ?', userID.ID, playlistID);
+                    // const songID = await db.get_row('SELECT ID FROM SONGS WHERE PATH = ?', filePath);
+                    console.log("app.js, app.post/song: SONGID COLLA = ", songID.ID);
+                    await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
+                    res.send({
+                        success: true,
+                        msg: 'Recognized that playlist is from Collaborator and inserted song into PLAYLIST_CONTAINS.',
+                        path: filePath
+                    });
+                    console.log("app.js, app.post/song: WÄRE TOLL, WENN ES WIEDER GEKLAPPT HÄTTE. ");
+                } catch (e) {
+                    console.log("app.js, app.post/song: ERROR PLAYLIST VON MATE KONNTE NICHT IN COLLABORATOR GEFUNDEN WERDEN!", err);
+                    return res.status(500).send({
+                        success: false,
+                        msg: 'Playlist von Mate konnte nicht in COLLABORATOR gefunden werden',
+                        err: err
+                    });
+                }
+
+            }
+        }
+
     } catch (err) {
         if (err !== null) {
-            console.log('app.js, app.post/song: CATCHED ERROR0 = ', err);
+            console.log('app.js, app.post/song, Z.497: CATCHED ERROR = ', err);
         }
-        console.log('app.js, app.post/song: CATCHED ERROR1 = ', err);
-
+        if (err.message.match('SQLITE_CONSTRAINT: FOREIGN KEY constraint failed')) {
+            console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
+            res.send({
+                success: false,
+                msg: 'song exists already',
+            });
+        } else {
+            console.log(err);
+            res.send({
+                success: false,
+                msg: 'access song failed',
+                err: err
+            });
+        }
+        // console.log('app.js, app.post/song: CATCHED ERROR1 = ', err);
     }
-    // let fstream;
-    // // Path where song will be uploaded
-    // fstream = fs.createWriteStream(__dirname + '/Server/Songs/' + filename);
-    // file.pipe(fstream);
-    // fstream.on('close', function () {
-    //     console.log('Upload finished of ' + filename);
-    //     res.redirect('back');   // where to go next
-    // });
-    // console.log("SOMETHING WENT WRONG");
-// upload(req, res, function (err) {
-//     if (err) {
-//         return res.end("Error uploading file.");
-//     }
-//     res.end("File is uploaded");
-// });
-// console.log("app.js, app.post/song: UPLOAD = ", upload);
-//     console.log("app.js, app.post/song: FILES = ", req.file);
-
-// const song = db.cmd('INSERT INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) VALUES (?, ?, ?, ?))', );
-
-    // if (err !== null) {
-    //     throw 'File cannot uploaded!';
-    // }
-
-// const song = await db.cmd('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY) VALUES (?, ?, ?)',
-//     req.body.title, req.body.artist, req.body.added_by);
-//
-// res.send({
-//     success: true,
-//     data: song
-// });
-
-// } catch (err) {
-//     if (err.message.match('SQLITE_CONSTRAINT')) {
-//         console.log(err);
-//         res.send({
-//             success: false,
-//             msg: 'song exists already',
-//         });
-//     } else {
-//         console.log(err);
-//         res.send({
-//             success: false,
-//             msg: 'access song failed',
-//             err: err
-//         });
-//     }
-// }
 });
 
 module.exports = app;
