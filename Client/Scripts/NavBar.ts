@@ -8,7 +8,9 @@ export class NavBar {
     private dom_divNavBar: HTMLElement;
     private dom_addButton: HTMLDivElement;
     private dom_addButtonImg: HTMLImageElement;
+    private dom_UListSeperator0: HTMLDivElement;
     private dom_UList: HTMLUListElement;
+    private dom_UListSeperator: HTMLDivElement;
     private dom_UList2: HTMLUListElement;
     private dom_ListElement: HTMLLIElement;
     private dom_divNavBarToggle: HTMLElement;
@@ -18,7 +20,6 @@ export class NavBar {
 
     private OwnlistofPlaylists;
     private CollaboratedPlaylists;
-    private clickedPlaylistID;
 
 
     constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
@@ -89,12 +90,22 @@ export class NavBar {
         this.dom_addButton.appendChild(this.dom_newplaylist);
         this.dom_newplaylist.placeholder = "type in new playlist";
 
+        this.dom_UListSeperator0 = document.createElement('div');
+        this.dom_UListSeperator0.classList.add("UListSeperator");
+        this.dom_divNavBar.appendChild(this.dom_UListSeperator0);
+        this.dom_UListSeperator0.textContent = "Own Playlists";
+
         this.dom_UList = document.createElement('ul');
-        this.dom_UList.classList.add("NavBarUL");
+        this.dom_UList.classList.add("NavBarOwnList");
         this.dom_divNavBar.appendChild(this.dom_UList);
 
+        this.dom_UListSeperator = document.createElement('div');
+        this.dom_UListSeperator.classList.add("UListSeperator");
+        this.dom_divNavBar.appendChild(this.dom_UListSeperator);
+        this.dom_UListSeperator.textContent = "Collaborated Playlists";
+
         this.dom_UList2 = document.createElement('ul');
-        this.dom_UList2.classList.add("NavBarUL");
+        this.dom_UList2.classList.add("NavBarCollabList");
         this.dom_divNavBar.appendChild(this.dom_UList2);
 
         // this.dom_divNavBarToggle = document.createElement('div');

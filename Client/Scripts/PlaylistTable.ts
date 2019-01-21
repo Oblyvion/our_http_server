@@ -242,7 +242,7 @@ export class PlaylistTable {
 
     async uploadNewSong() {
         console.log("DAS IST FORM DATA: ", this.formData);
-        await fetch(API_URL + "/song/"+this.PlaylistID,  {
+        await fetch(API_URL + "/song/global/"+this.PlaylistID,  {
             body: JSON.stringify({
                 fileSong: this.formData,
                 title: "blabla",
