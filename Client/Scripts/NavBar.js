@@ -9,7 +9,7 @@ export class NavBar {
         this.dom_span_array = [];
         this.fetchPlaylists().then((result) => {
             this.listofPlaylists = result.data;
-            console.log("das ist list of playlists beim ersten fetch: ", this.listofPlaylists);
+            console.log("das ist list of playlists beim fetch: ", this.listofPlaylists);
             this.addPlaylistNames();
             //this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.listofPlaylists[0]);
         })
@@ -30,20 +30,18 @@ export class NavBar {
         this.dom_addButtonImg.src = "./Images/add_button.png";
         this.dom_addButtonImg.style.width = "40px";
         this.dom_addButtonImg.addEventListener('click', () => {
-            if (this.dom_newplaylist.style.display === "none") {
-                this.dom_newplaylist.style.display = "block";
-            }
-            else {
+            if (this.dom_newplaylist.style.display === "block") {
                 if (this.dom_newplaylist.value.length > 1) {
                     this.insertNewPlaylist(this.dom_newplaylist.value);
+                    this.dom_newplaylist.value = null;
                     this.fetchPlaylists().then((result) => {
                         //this.dom_UList.removeChild()
                         while (this.dom_UList.firstChild) {
                             this.dom_UList.removeChild(this.dom_UList.firstChild);
                         }
-                        console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
+                        // console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
                         this.listofPlaylists = result.data;
-                        console.log("das ist list of playlists nach dem 2. fetch: ", this.listofPlaylists);
+                        // console.log("das ist list of playlists nach dem 2. fetch: ", this.listofPlaylists);
                         this.addPlaylistNames();
                     })
                         .catch(err => {
@@ -51,6 +49,9 @@ export class NavBar {
                     });
                 }
                 this.dom_newplaylist.style.display = "none";
+            }
+            else {
+                this.dom_newplaylist.style.display = "block";
             }
         });
         this.dom_newplaylist = document.createElement("input");

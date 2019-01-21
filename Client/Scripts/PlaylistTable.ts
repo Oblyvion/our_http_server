@@ -19,6 +19,11 @@ export class PlaylistTable {
     private dom_divPlaylistHeaderAddBtn:HTMLImageElement;
     private dom_divPlaylistHeaderPlaylistName:HTMLDivElement;
     private PlaylistID;
+    private dom_AddNewSong: HTMLDivElement;
+    private dom_AddNewSongInput: HTMLDivElement;
+    private dom_AddNewSongDialogButton: HTMLInputElement;
+    private dom_AddNewSongForm: HTMLFormElement;
+    private dom_AddNewSongSubmit: HTMLButtonElement;
 
     private Playlist = {
 
@@ -61,7 +66,15 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
         this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
         this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
-        this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
+        this.dom_divPlaylistHeaderAddBtn.style.width = "25px";
+        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', () => {
+            if (this.dom_AddNewSong.style.display == "grid") {
+                this.dom_AddNewSong.style.display = "none";
+            }
+            else {
+                this.dom_AddNewSong.style.display = "grid";
+            }
+        });
 
 
         this.dom_Table = document.createElement('table');
@@ -88,7 +101,43 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.classList.add('TableHeader');
         this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
         this.dom_TableHeaderName3.textContent = "Added By";
+
+        this.dom_AddNewSongForm = document.createElement("form");
+        this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_divTable.appendChild(this.dom_AddNewSongForm);
+
+        this.dom_AddNewSong = document.createElement("div");
+        this.dom_AddNewSong.classList.add('AddNewSongDiv');
+        this.dom_AddNewSongForm.appendChild(this.dom_AddNewSong);
+
+        this.dom_AddNewSongInput = document.createElement("input");
+        this.dom_AddNewSongInput.classList.add('AddNewSongInput');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
+
+        this.dom_AddNewSongDialogButton = document.createElement("input");
+        this.dom_AddNewSongDialogButton.setAttribute("type","file");
+        this.dom_AddNewSongDialogButton.setAttribute("id", "file");
+        this.dom_AddNewSongDialogButton.setAttribute("name", "files[]");
+        this.dom_AddNewSongDialogButton.type = "file";
+        this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
+        this.dom_AddNewSongDialogButton.addEventListener('change', function(){
+            var file = this.files[0];
+            // This code is only for demo ...
+            console.log("name : " + file.name);
+            console.log("size : " + file.size);
+            console.log("type : " + file.type);
+            console.log("date : " + file.lastModified);
+        }, false);
+
+
+        this.dom_AddNewSongSubmit = document.createElement("button");
+        this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
+        this.dom_AddNewSongSubmit.textContent = "Submit";
+
     }
+
 
     async fetchPlaylistSongs() {
         console.log("this.PlaylistID = ", this.PlaylistID);

@@ -1,3 +1,5 @@
+import { NewPlaylistMate } from "./NewPlaylistMate.js";
+import { manager } from "./app.js";
 const API_URL = 'http://localhost:3000';
 export class MyPlaylistMates {
     constructor(dom_root, dom_content) {
@@ -19,7 +21,7 @@ export class MyPlaylistMates {
         this.dom_divMatesHeaderName = document.createElement('div');
         this.dom_divMatesHeaderName.classList.add('PlaylistMatesHeaderName');
         this.dom_divMatesHeader.appendChild(this.dom_divMatesHeaderName);
-        this.dom_divMatesHeaderName.textContent = "Playlist Mates";
+        this.dom_divMatesHeaderName.textContent = "Your Playlist Mates";
         this.dom_divMatesHeaderButtons = document.createElement('div');
         this.dom_divMatesHeaderButtons.classList.add('PlaylistMatesHeaderButtonDiv');
         this.dom_divMatesHeader.appendChild(this.dom_divMatesHeaderButtons);
@@ -28,6 +30,11 @@ export class MyPlaylistMates {
         this.dom_divMatesHeaderButtons.appendChild(this.dom_MatesHeaderAddBtn);
         this.dom_MatesHeaderAddBtn.src = "./Images/add_button.png";
         this.dom_MatesHeaderAddBtn.style.width = "20px";
+        this.dom_MatesHeaderAddBtn.addEventListener('click', () => {
+            new manager("page_first_steps");
+            document.getElementById("header").textContent = "Music Playlist New Playlist Mate";
+            new NewPlaylistMate(this.dom_root, this.dom_content);
+        });
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('MatesTable');
         this.dom_divPlaylistMates.appendChild(this.dom_Table);

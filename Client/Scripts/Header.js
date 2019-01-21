@@ -1,5 +1,6 @@
 import { manager } from "./app.js";
 import { MyPlaylistMates } from "./MyPlaylistMates.js";
+import { NewPlaylistMate } from "./NewPlaylistMate.js";
 export class Header {
     constructor(dom_body, dom_content) {
         this.dom_root = dom_body;
@@ -40,7 +41,17 @@ export class Header {
     set(text) {
         this.dom_header.textContent = `Music Playlist ${text}`;
     }
+    removeRightButtons() {
+        if (this.dom_ButtonContainer != undefined) {
+            while (this.dom_ButtonContainer.firstChild) {
+                this.dom_ButtonContainer.removeChild(this.dom_ButtonContainer.firstChild);
+            }
+            this.dom_ButtonContainer.remove();
+            this.dom_DropdownMenuContent.remove();
+        }
+    }
     setRightButtons() {
+        this.removeRightButtons();
         //Header Right
         this.dom_ButtonContainer = document.createElement('div');
         this.dom_root.appendChild(this.dom_ButtonContainer);
@@ -51,6 +62,7 @@ export class Header {
         this.dom_HeaderAccountBttn.src = "./Images/account.png";
         this.dom_ButtonContainer.appendChild(this.dom_HeaderAccountBttn);
         this.dom_HeaderAccountBttn.style.width = "25px";
+        this.dom_HeaderAccountBttn.style.width = "25px";
         this.dom_HeaderAccountBttn.addEventListener('mouseover', () => {
             this.dom_DropdownMenuContent.style.display = "block";
         });
@@ -58,9 +70,7 @@ export class Header {
         this.dom_root.appendChild(this.dom_DropdownMenu);
         this.dom_DropdownMenu.classList.add('HeaderDropdownMenu');
         this.dom_DropdownMenu.addEventListener('mouseleave', () => {
-            // setTimeout(() => {
             this.dom_DropdownMenuContent.style.display = "none";
-            // }, 5000);
         });
         this.dom_DropdownMenuContent = document.createElement('div');
         this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
@@ -83,6 +93,12 @@ export class Header {
         this.dom_DropdownMenuData1.classList.add('HeaderDropdownMenuData');
         this.dom_DropdownMenuData1.setAttribute('href', '#');
         this.dom_DropdownMenuData1.addEventListener('click', () => {
+            for (let i = 2; i < this.dom_content.childNodes.length; i++) {
+                this.dom_content.childNodes[i].remove();
+            }
+            new manager("page_first_steps");
+            this.set("New Playlist Mate");
+            new NewPlaylistMate(this.dom_root, this.dom_content);
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData1);
         this.dom_DropdownMenuData2 = document.createElement('a');
@@ -98,6 +114,7 @@ export class Header {
         this.dom_DropdownMenuData3.classList.add('HeaderDropdownMenuData');
         this.dom_DropdownMenuData3.setAttribute('href', '#');
         this.dom_DropdownMenuData3.addEventListener('click', () => {
+            this.removeRightButtons();
             new manager('login');
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData3);
