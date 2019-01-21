@@ -87,6 +87,15 @@ const auth = async (req, res, next) => {
     }
 };
 
+async function userInit(req)  {
+    const standardPlaylistName = 'Your 1. Playlist';
+    const standardSongId = 1;
+    const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
+    await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
+    const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
+    await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+}
+
 
 // ----------------------------GET section----------------------------
 /**
@@ -370,25 +379,21 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 
 // ----------------------------POST section----------------------------
 
-async function userInit(req)  {
-    const standardPlaylistName = 'Your 1. Playlist';
-    const standardSongId = 1;
-    const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
-    await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
-    const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
-    await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
-}
-
-
 /**
  * create new user
  */
 app.post('/user', async (req, res) => {
     try {
         const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD) VALUES (?, ?)', req.body.name, req.body.password);
-        userInit(req).then(() => {
+        await userInit(req).then(() => {
             console.log("Hat funktioniert = ");
         });
+        // const standardPlaylistName = 'Your 1. Playlist';
+        // const standardSongId = 1;
+        // const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
+        // await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
+        // const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
+        // await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
         // res.header(`Access-Control-Allow-Origin:`, `*`);
         res.send({
             success: true,
