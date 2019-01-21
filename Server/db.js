@@ -148,6 +148,8 @@ class DB {
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 1", 2)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 2", 1)');
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 3", 1)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 4", 3)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 5", 4)');
                 // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 2)');
                 // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (2, 1)');
                 // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (3, 1)');
@@ -160,6 +162,7 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (3, 1)');  // TODO ""  ""  ""
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (3, 1, 4)');
                 resolve();
             });
         }).catch(err => console.log(err));
