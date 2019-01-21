@@ -19,6 +19,11 @@ export class PlaylistTable {
     private dom_divPlaylistHeaderAddBtn: HTMLImageElement;
     private dom_divPlaylistHeaderPlaylistName: HTMLDivElement;
     private PlaylistID;
+    private dom_AddNewSong: HTMLDivElement;
+    private dom_AddNewSongInput: HTMLDivElement;
+    private dom_AddNewSongDialogButton: HTMLInputElement;
+    private dom_AddNewSongForm: HTMLFormElement;
+    private dom_AddNewSongSubmit: HTMLButtonElement;
 
     private Playlist = {
 
@@ -26,6 +31,9 @@ export class PlaylistTable {
         songs: [],
 
     };
+
+    private files: FileList;
+    private formData: FormData;
 
     constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
@@ -61,8 +69,19 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
         this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
         this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
+        this.dom_divPlaylistHeaderAddBtn.style.width = "25px";
+        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', () => {
+            if (this.dom_AddNewSong.style.display == "grid") {
+                this.dom_AddNewSong.style.display = "none";
+            }
+            else {
+                this.dom_AddNewSong.style.display = "grid";
+            }
+        });
+
         this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
-        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
+        // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
+
 
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
@@ -88,7 +107,76 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.classList.add('TableHeader');
         this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
         this.dom_TableHeaderName3.textContent = "Added By";
+
+        this.dom_AddNewSongForm = document.createElement("form");
+        this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+        this.dom_AddNewSongForm.setAttribute("method", "POST");
+        this.dom_divTable.appendChild(this.dom_AddNewSongForm);
+
+
+        this.dom_AddNewSong = document.createElement("div");
+        this.dom_AddNewSong.classList.add('AddNewSongDiv');
+        this.dom_AddNewSongForm.appendChild(this.dom_AddNewSong);
+
+        this.dom_AddNewSongInput = document.createElement("input");
+        this.dom_AddNewSongInput.classList.add('AddNewSongInput');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
+
+        this.dom_AddNewSongDialogButton = document.createElement("input");
+        this.dom_AddNewSongDialogButton.setAttribute("type","file");
+        this.dom_AddNewSongDialogButton.setAttribute("id", "file");
+        this.dom_AddNewSongDialogButton.setAttribute("name", "files[]");
+        this.dom_AddNewSongDialogButton.type = "file";
+        this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
+        this.dom_AddNewSongDialogButton.addEventListener('change', () => {
+            try {
+                this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
+                this.formData = new FormData();
+
+
+                for (let i = 0; i < this.files.length; i++) {
+                    let file = this.files[i];
+
+                    if(file.type != "audio/mpeg") {
+                        throw "You can only upload Audio files!"
+                    }
+                    else if (file.name.length < 2) {
+                        throw "Your upload has a not allowed name!"
+                    }
+                    else {
+                        this.formData.append('files[]', file);
+                    }
+                }
+
+                // This code is only for demo ...
+                console.log("name : " + this.files[0].name);
+                console.log("size : " + this.files[0].size);
+                console.log("type : " + this.files[0].type);
+                console.log("date : " + this.files[0].lastModified);
+
+            } catch (err) {
+                console.log("Error: ", err);
+            }
+            }, false);
+
+
+        this.dom_AddNewSongSubmit = document.createElement("button");
+        this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
+        this.dom_AddNewSongSubmit.textContent = "Submit";
+        this.dom_AddNewSongSubmit.addEventListener('click', () => {
+            console.log("hallo");
+            this.uploadNewSong().then( response => {
+                console.log(response);
+            }).catch( err => {
+                console.log(err);
+            })
+        });
+
     }
+
 
     async fetchPlaylistSongs() {
         console.log("this.PlaylistID = ", this.PlaylistID);
@@ -145,29 +233,28 @@ export class PlaylistTable {
             dom_TableData.appendChild(dom_TableDataArtist);
             dom_TableDataArtist.textContent = this.Playlist.songs[i].ARTIST;
 
-            const dom_TableDataAddedBy = document.createElement('td');
-            dom_TableDataAddedBy.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataAddedBy);
-            dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
+            const dom_TableDataSupportedBy = document.createElement('td');
+            dom_TableDataSupportedBy.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataSupportedBy);
+            dom_TableDataSupportedBy.textContent = this.Playlist.songs[i].SUPPORTED_BY;
         }
     }
 
     async uploadNewSong() {
-        let response = await fetch(API_URL + "/song/ ", {
+        console.log("DAS IST FORM DATA: ", this.formData);
+        await fetch(API_URL + "/song/global/"+this.PlaylistID,  {
             body: JSON.stringify({
-                
+                fileSong: this.formData,
+                title: "blabla",
+                artist: "blub",
             }),
             cache: 'no-cache',
             headers: {
-                'content-type': 'multipart/form-data',
                 'crossDomain': 'true',
                 'Authorization': localStorage.getItem("token")
             },
             method: 'POST',
             mode: 'cors',
-            // todo REST POST redirect
-            // redirect: 'follow',
-            // credentials: 'include',
         });
     }
 
