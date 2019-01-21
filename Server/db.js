@@ -57,16 +57,16 @@ class DB {
                     )`, err => {
                         if (err !== null) reject(err);
                     });
-                    this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_MATE
+                    this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_MATES
                     (
                     USER_ID INTEGER,
-                    USER_ID_MATE INTEGER,
+                    MATE_ID INTEGER,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
-                    FOREIGN KEY (USER_ID_MATE) REFERENCES USERS(ID)
+                    FOREIGN KEY (MATE_ID) REFERENCES USERS(ID)
                     )`, err => {
                         if (err !== null) reject(err);
                     });
-                    this.db.run('CREATE TABLE IF NOT EXISTS COLLABORATOR ' +
+                    this.db.run('CREATE TABLE IF NOT EXISTS COLLABORATORS ' +
                         '(' +
                         'USER_ID INTEGER(2) NOT NULL,' +
                         'MATE_ID INTEGER(2) NOT NULL,' +
@@ -154,11 +154,12 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (2, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 1, "max")');
-                this.db.run('INSERT INTO PLAYLIST_MATE (USER_ID, USER_ID_MATE) VALUES (1, 2)');  //
-                this.db.run('INSERT INTO PLAYLIST_MATE (USER_ID, USER_ID_MATE) VALUES (1, 3)');
-                this.db.run('INSERT INTO PLAYLIST_MATE (USER_ID, USER_ID_MATE) VALUES (2, 1)');  // TODO automatisieren: Freundschaft beruht auf Gegenseitigkeit
-                this.db.run('INSERT INTO PLAYLIST_MATE (USER_ID, USER_ID_MATE) VALUES (3, 1)');  // TODO ""  ""  ""
-                this.db.run('INSERT INTO COLLABORATOR (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 2)');  //
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 3)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (2, 1)');  // TODO automatisieren: Freundschaft beruht auf Gegenseitigkeit
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (3, 1)');  // TODO ""  ""  ""
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
                 resolve();
             });
         }).catch(err => console.log(err));
