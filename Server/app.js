@@ -223,7 +223,7 @@ app.get('/songs', async (req, res) => {
  */
 app.get('/songsuser/:playlistID', async (req, res) => {
     // Aktuell angemeldeter Benutzer
-    const user = jwt.decode(req.get('Authorization')).username; // TODO wird beim Song hinzufügen benötigt!
+    const user = jwt.decode(req.get('Authorization')).username;
     console.log("app.js, app.get/songsuser: USER = ", user);
 
     // Playlist die ausgewählt wurde
@@ -242,7 +242,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
     const songs = await db.get_rows('SELECT SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
         'FROM SONGS ' +
         'JOIN PLAYLIST_CONTAINS ' +
-        'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
+        'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)  // TODO remove duplicates after join
     // console.log("app.js, app.get/songsuser: SOOOONGS = ", songs);
         .then(rows => {
             if (!rows)
@@ -295,7 +295,7 @@ app.get('/playlists', auth, async (req, res) => {
     const collaborators = await db.get_rows('SELECT PLAYLIST_ID FROM COLLABORATOR WHERE MATE_ID = ?', USER.ID);
     await db.get_rows('SELECT * FROM PLAYLISTS ' +
         'JOIN COLLABORATOR ' +
-        'ON PLAYLISTS.USER_ID = ? OR COLLABORATOR.MATE_ID = ? AND PLAYLISTS.ID = COLLABORATOR.PLAYLIST_ID', USER.ID, USER.ID)
+        'ON PLAYLISTS.USER_ID = ? OR COLLABORATOR.MATE_ID = ? AND PLAYLISTS.ID = COLLABORATOR.PLAYLIST_ID', USER.ID, USER.ID)   // TODO LIEFER DOPPELTE PLAYLISTS
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
