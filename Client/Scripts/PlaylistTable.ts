@@ -233,10 +233,10 @@ export class PlaylistTable {
             dom_TableData.appendChild(dom_TableDataArtist);
             dom_TableDataArtist.textContent = this.Playlist.songs[i].ARTIST;
 
-            const dom_TableDataAddedBy = document.createElement('td');
-            dom_TableDataAddedBy.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataAddedBy);
-            dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
+            const dom_TableDataSupportedBy = document.createElement('td');
+            dom_TableDataSupportedBy.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataSupportedBy);
+            dom_TableDataSupportedBy.textContent = this.Playlist.songs[i].SUPPORTED_BY;
         }
     }
 
