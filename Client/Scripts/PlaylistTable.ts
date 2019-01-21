@@ -5,19 +5,19 @@ const API_URL = 'http://localhost:3000';
 
 
 export class PlaylistTable {
-    private dom_root:HTMLElement;
-    private dom_content:HTMLElement;
-    private dom_divTable:HTMLDivElement;
-    private dom_divPlaylistHeader:HTMLDivElement;
-    private dom_Table:HTMLTableElement;
-    private dom_TableHeader:HTMLTableRowElement;
-    private dom_TableHeaderName1:HTMLTableCaptionElement;
-    private dom_TableHeaderName2:HTMLTableCaptionElement;
-    private dom_TableHeaderName3:HTMLTableCaptionElement;
+    private dom_root: HTMLElement;
+    private dom_content: HTMLElement;
+    private dom_divTable: HTMLDivElement;
+    private dom_divPlaylistHeader: HTMLDivElement;
+    private dom_Table: HTMLTableElement;
+    private dom_TableHeader: HTMLTableRowElement;
+    private dom_TableHeaderName1: HTMLTableCaptionElement;
+    private dom_TableHeaderName2: HTMLTableCaptionElement;
+    private dom_TableHeaderName3: HTMLTableCaptionElement;
     private audioPlayer: AudioPlayer;
-    private dom_divPlaylistHeaderButtons:HTMLElement;
-    private dom_divPlaylistHeaderAddBtn:HTMLImageElement;
-    private dom_divPlaylistHeaderPlaylistName:HTMLDivElement;
+    private dom_divPlaylistHeaderButtons: HTMLElement;
+    private dom_divPlaylistHeaderAddBtn: HTMLImageElement;
+    private dom_divPlaylistHeaderPlaylistName: HTMLDivElement;
     private PlaylistID;
     private dom_AddNewSong: HTMLDivElement;
     private dom_AddNewSongInput: HTMLDivElement;
@@ -31,6 +31,9 @@ export class PlaylistTable {
         songs: [],
 
     };
+
+    private files: FileList;
+    private formData: FormData;
 
     constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
@@ -76,6 +79,9 @@ export class PlaylistTable {
             }
         });
 
+        this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
+        // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
+
 
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
@@ -104,7 +110,10 @@ export class PlaylistTable {
 
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+        this.dom_AddNewSongForm.setAttribute("method", "POST");
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
+
 
         this.dom_AddNewSong = document.createElement("div");
         this.dom_AddNewSong.classList.add('AddNewSongDiv');
@@ -121,20 +130,50 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.type = "file";
         this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
-        this.dom_AddNewSongDialogButton.addEventListener('change', function(){
-            var file = this.files[0];
-            // This code is only for demo ...
-            console.log("name : " + file.name);
-            console.log("size : " + file.size);
-            console.log("type : " + file.type);
-            console.log("date : " + file.lastModified);
-        }, false);
+        this.dom_AddNewSongDialogButton.addEventListener('change', () => {
+            try {
+                this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
+                this.formData = new FormData();
+
+
+                for (let i = 0; i < this.files.length; i++) {
+                    let file = this.files[i];
+
+                    if(file.type != "audio/mpeg") {
+                        throw "You can only upload Audio files!"
+                    }
+                    else if (file.name.length < 2) {
+                        throw "Your upload has a not allowed name!"
+                    }
+                    else {
+                        this.formData.append('files[]', file);
+                    }
+                }
+
+                // This code is only for demo ...
+                console.log("name : " + this.files[0].name);
+                console.log("size : " + this.files[0].size);
+                console.log("type : " + this.files[0].type);
+                console.log("date : " + this.files[0].lastModified);
+
+            } catch (err) {
+                console.log("Error: ", err);
+            }
+            }, false);
 
 
         this.dom_AddNewSongSubmit = document.createElement("button");
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
         this.dom_AddNewSongSubmit.textContent = "Submit";
+        this.dom_AddNewSongSubmit.addEventListener('click', () => {
+            console.log("hallo");
+            this.uploadNewSong().then( response => {
+                console.log(response);
+            }).catch( err => {
+                console.log(err);
+            })
+        });
 
     }
 
@@ -145,7 +184,7 @@ export class PlaylistTable {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/songsuser/ " +this.PlaylistID, {
+        let response = await fetch(API_URL + "/songsuser/ " + this.PlaylistID, {
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/javascript',
@@ -165,17 +204,17 @@ export class PlaylistTable {
     }
 
     addPlaylistSongs() {
-        for (let i = 0; i<this.Playlist.songs.length; i++) {
+        for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
             dom_TableData.classList.add('TableDataRow');
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
-                let clicked = dom_TableData.rowIndex-1;
+                let clicked = dom_TableData.rowIndex - 1;
                 console.log(clicked);
                 for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
                     console.log(this.audioPlayer.Songs[i]);
                     console.log(this.Playlist.songs[clicked].Title);
-                    if(this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
+                    if (this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
                         this.audioPlayer.loadSong(clicked);
                         this.audioPlayer.playorpauseSong();
                     }
@@ -200,6 +239,25 @@ export class PlaylistTable {
             dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
         }
     }
+
+    async uploadNewSong() {
+        console.log("DAS IST FORM DATA: ", this.formData);
+        await fetch(API_URL + "/song/"+this.PlaylistID,  {
+            body: JSON.stringify({
+                fileSong: this.formData,
+                title: "blabla",
+                artist: "blub",
+            }),
+            cache: 'no-cache',
+            headers: {
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'POST',
+            mode: 'cors',
+        });
+    }
+
 
     close() {
         this.dom_divTable.remove();

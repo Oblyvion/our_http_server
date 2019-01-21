@@ -42,6 +42,8 @@ export class PlaylistTable {
                 this.dom_AddNewSong.style.display = "grid";
             }
         });
+        this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
+        // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
         this.dom_Table = document.createElement('table');
         this.dom_Table.classList.add('PlaylistTable');
         this.dom_divTable.appendChild(this.dom_Table);
@@ -64,6 +66,8 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.textContent = "Added By";
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+        this.dom_AddNewSongForm.setAttribute("method", "POST");
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
         this.dom_AddNewSong = document.createElement("div");
         this.dom_AddNewSong.classList.add('AddNewSongDiv');
@@ -78,18 +82,44 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.type = "file";
         this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
-        this.dom_AddNewSongDialogButton.addEventListener('change', function () {
-            var file = this.files[0];
-            // This code is only for demo ...
-            console.log("name : " + file.name);
-            console.log("size : " + file.size);
-            console.log("type : " + file.type);
-            console.log("date : " + file.lastModified);
+        this.dom_AddNewSongDialogButton.addEventListener('change', () => {
+            try {
+                this.files = document.querySelector('[type=file]').files;
+                this.formData = new FormData();
+                for (let i = 0; i < this.files.length; i++) {
+                    let file = this.files[i];
+                    if (file.type != "audio/mpeg") {
+                        throw "You can only upload Audio files!";
+                    }
+                    else if (file.name.length < 2) {
+                        throw "Your upload has a not allowed name!";
+                    }
+                    else {
+                        this.formData.append('files[]', file);
+                    }
+                }
+                // This code is only for demo ...
+                console.log("name : " + this.files[0].name);
+                console.log("size : " + this.files[0].size);
+                console.log("type : " + this.files[0].type);
+                console.log("date : " + this.files[0].lastModified);
+            }
+            catch (err) {
+                console.log("Error: ", err);
+            }
         }, false);
         this.dom_AddNewSongSubmit = document.createElement("button");
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
         this.dom_AddNewSongSubmit.textContent = "Submit";
+        this.dom_AddNewSongSubmit.addEventListener('click', () => {
+            console.log("hallo");
+            this.uploadNewSong().then(response => {
+                console.log(response);
+            }).catch(err => {
+                console.log(err);
+            });
+        });
     }
     async fetchPlaylistSongs() {
         console.log("this.PlaylistID = ", this.PlaylistID);
@@ -141,6 +171,23 @@ export class PlaylistTable {
             dom_TableData.appendChild(dom_TableDataAddedBy);
             dom_TableDataAddedBy.textContent = this.Playlist.songs[i].ADDED_BY;
         }
+    }
+    async uploadNewSong() {
+        console.log("DAS IST FORM DATA: ", this.formData);
+        await fetch(API_URL + "/song/" + this.PlaylistID, {
+            body: JSON.stringify({
+                fileSong: this.formData,
+                title: "blabla",
+                artist: "blub",
+            }),
+            cache: 'no-cache',
+            headers: {
+                'crossDomain': 'true',
+                'Authorization': localStorage.getItem("token")
+            },
+            method: 'POST',
+            mode: 'cors',
+        });
     }
     close() {
         this.dom_divTable.remove();
