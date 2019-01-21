@@ -32,7 +32,7 @@ class DB {
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     TITLE VARCHAR(30) NOT NULL,
                     ARTIST VARCHAR(30),
-                    ADDED_BY INTEGER NOT NULL,
+                    ADDED_BY INTEGER,
                     PATH TEXT UNIQUE,
                     FOREIGN KEY (ADDED_BY) REFERENCES USERS(ID)
                     )`, err => {

@@ -290,10 +290,12 @@ app.get('/song/:id', (req, res) => {
 app.get('/playlists', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
     console.log("app.js, app.get/playlists: TOKEN = ", token.username);
-    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token.username);    // TODO und vom playlist_mate die playlists liefern
-    console.log("das ist die id des users: ", USER.ID);                                         // TODO über USER.ID und COLLABORATER
-    const playlistMates = await db.get_rows('SELECT ');
-    await db.get_rows('SELECT * FROM PLAYLISTS WHERE USER_ID = ?', USER.ID)
+    const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token.username);
+    console.log("das ist die id des users: ", USER.ID);
+    const collaborators = await db.get_rows('SELECT PLAYLIST_ID FROM COLLABORATOR WHERE MATE_ID = ?', USER.ID);
+    await db.get_rows('SELECT * FROM PLAYLISTS ' +
+        'JOIN COLLABORATOR ' +
+        'ON PLAYLISTS.USER_ID = ? OR COLLABORATOR.MATE_ID = ? AND PLAYLISTS.ID = COLLABORATOR.PLAYLIST_ID', USER.ID, USER.ID)
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
@@ -440,10 +442,10 @@ app.post('/song/:playlistID', async (req, res) => {
         console.log("app.js, app.post/song: PLAYLISTID = ", playlistID);
 
         // insert song into global SONGS
-        await db.cmd('INSERT INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) VALUES (?, ?, ?, ?)', req.body.title, req.body.artist, user, filePath);
+        await db.cmd('INSERT INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) VALUES (?, ?, ?, ?)', req.body.title, req.body.artist, userID.ID, filePath);
+
         // find ID from uploaded song
         const songID = await db.get_row('SELECT ID FROM SONGS WHERE PATH = ?', filePath);
-
         try {
             // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
             await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', playlistID, userID.ID);
@@ -497,14 +499,15 @@ app.post('/song/:playlistID', async (req, res) => {
         if (err !== null) {
             console.log('app.js, app.post/song, Z.497: CATCHED ERROR = ', err);
         }
-        if (err.message.match('SQLITE_CONSTRAINT: FOREIGN KEY constraint failed')) {
+        if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed: SONGS.PATH')) {
             console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
             res.send({
                 success: false,
                 msg: 'song exists already',
+                err: err
             });
-        } else {
-            console.log(err);
+        } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
+            console.log("UNCATCHED ERROR = ", err);
             res.send({
                 success: false,
                 msg: 'access song failed',
