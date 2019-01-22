@@ -112,7 +112,7 @@ export class PlaylistTable {
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
         this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
         this.dom_AddNewSongForm.setAttribute("method", "POST");
-        this.dom_AddNewSongForm.setAttribute("action", API_URL + "/song/global/" + this.PlaylistID);
+        // this.dom_AddNewSongForm.setAttribute("action", API_URL + "/song/global/" + this.PlaylistID);
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
 
 

@@ -353,9 +353,15 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 app.get('/playlistMates', async (req, res) => {
     console.log("app.js, app.get/playlistMates, Z.352: USER = ", jwt.decode(req.get('Authorization')).username);
     const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+    console.log("app.js, app.get/playlistMates, Z.356: USER.ID = ", user.ID);
 
-    console.log("app.js, app.get/playlistMates, Z.355: USER.ID = ", user.ID);
-    await db.get_rows('SELECT USERS.NAME FROM USERS JOIN PLAYLIST_MATES ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID', user.ID)
+    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS CollabsCount FROM COLLABORATORS WHERE USER_ID = ?', user.ID);
+    console.log("app.js, app.get/playlistMates, Z.358: USERMATECOUNT = ", countPlaylistsCollabs[0].CollabsCount);
+
+    // Welche Mates hat der User:
+    await db.get_rows('SELECT USERS.NAME, USERS.SCORE FROM USERS ' +
+        'JOIN PLAYLIST_MATES ' +
+        'ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID ORDER BY USERS.NAME ASC', user.ID)
         .then((rows) => {
             console.log("app.js, app.get/playlistMates, Z.355: RESULT = ", rows);
             if (!rows || rows < 1) {
@@ -365,13 +371,45 @@ app.get('/playlistMates', async (req, res) => {
                 success: true,
                 data: rows
             });
-        }).
-        catch((err) => {
+        }).catch((err) => {
             console.log("app.js, app.get/playlistMates, Z.368: ERROR = ", err);
             res.send({
-               success: false,
+                success: false,
                 msg: 'Nothing in there.',
-               err: err
+                err: err
+            });
+        })
+});
+
+app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
+    const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.388: USER.ID = ", user.ID);
+
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.390: MATE = ", req.params.mate);
+    const mate = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.params.mate);
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.391: MATE.ID = ", mate.ID);
+
+    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS countSharedPlaylists ' +
+        'FROM COLLABORATORS WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mate.ID)
+        .then((rows) => {
+            console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows);
+            if (!rows || rows < 1) {
+                return res.send({
+                    success: false,
+                    data: 'No Collaborators found for Playlist Mate = ' + mate.username
+                });
+            }
+            res.send({
+                success: true,
+                data: rows
+            });
+        }).catch((err) => {
+            console.log("app.js, app.get/playlistMates, Z.408: ERROR = ", err);
+            res.send({
+                success: false,
+                msg: 'UNEXPECTED ERROR Z.411',
+                err: err
             });
         })
 });
