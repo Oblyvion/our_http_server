@@ -177,7 +177,7 @@ export class PlaylistTable {
                     }
                     else {
                         this.formData.append('files[]', file);
-                        console.log("DAS IST FORM DATA: ", this.formData.get("files[]"));
+                        console.log("DAS IST FORM DATA, Z.180: ", this.formData.get("files[]"));
                     }
                 }
 
