@@ -25,7 +25,10 @@ const db = new DB();
 db.create()
     .then(() => console.log('DB created'))
     .catch(err => {
-        throw err
+        console.log("HUUURENSOHHHN");
+        console.log("HUUURENSOHHHN");
+        throw err;
+        // console.log("SPACKIAD");
     });
 
 // TODO ka, obs gebraucht wird
@@ -88,16 +91,6 @@ const auth = async (req, res, next) => {
         res.set("ERROR: You are not authorized for this action!");
     }
 };
-
-async function userInit(req) {
-    const standardPlaylistName = 'Your 1. Playlist';
-    const standardSongId = 1;
-    const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
-    await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
-    const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
-    await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
-}
-
 
 // ----------------------------GET section----------------------------
 /**
@@ -445,14 +438,39 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
 
 // ----------------------------POST section----------------------------
 
+async function userInit(req) {
+    try {
+        const standardPlaylistName = 'Your 1. Playlist';
+        const standardSongId = 1;
+        console.log('WAS GEEEEHT????');
+        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
+        await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
+        console.log('WAS JJOOOOOOOOOOOOOOOOOOOOO????   ', userID.ID);
+        const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
+        console.log('playlistID = ', playlistID);
+        try {
+            console.log('BLABLABLBL');
+            await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+            console.log('WAS sakjfdlfd????');
+        }catch (err) {
+            console.log("HURENSOHN ===== ", err);
+        }
+
+        console.log('WAS sakjfdlfd????');
+    } catch (err) {
+        console.log("ERROR ===== ", err);
+    }
+}
 /**
  * create new user
  */
 app.post('/user', async (req, res) => {
     try {
-        const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD) VALUES (?, ?)', req.body.name, req.body.password);
+        console.log("HALLO");
+        console.log("req.body.name = ", req.body.name);
+        const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5);
         await userInit(req).then(() => {
-            console.log("Hat funktioniert");
+            console.log("userINIT(req) hat funktioniert");
         });
         // res.header(`Access-Control-Allow-Origin:`, `*`);
         res.send({
@@ -468,6 +486,7 @@ app.post('/user', async (req, res) => {
             res.send({
                 success: false,
                 msg: 'user exists already',
+                err: err
             });
         } else {
             console.log(err);
@@ -608,7 +627,17 @@ app.post('/song/global/:playlistID', async (req, res) => {
             console.log("app.js, app.post/song: SONGID = ", songID.ID);
             // insert song into users playlistID
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
-            res.header(`Access-Control-Allow-Origin:`, `*`);
+
+            const userScore = await db.get_row('SELECT SCORE FROM USERS WHERE ID = ?', userID.ID);
+            console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
+            // TODO UPDATE USER AND ADD 15 SCORE POINTS
+            await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
+            console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
+
+            // TODO FILETRANSFER: UPLOAD FILES FROM CLIENT TO SERVER
+            // res.header(`Access-Control-Allow-Origin:`, `*`);
+
+
             res.send({
                 success: true,
                 msg: 'File uploaded successfully',
@@ -673,7 +702,8 @@ app.post('/playlistMate', async (req, res) => {
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
         console.log('app.js, app.post/playlistMate: MATEID = ', mateID.ID);
         // const result = await db.get_row('SELECT USER_ID, MATE_ID FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', userID.ID, mateID.ID);
-        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', userID.ID, mateID.ID); // TODO creates BAD DUPLICATES!!!
+        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', userID.ID, mateID.ID);
+        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', mateID.ID, userID.ID);
         // console.log('app.js, app.post/playlistMate: RESULT = ', result);
         res.send({
             success: true,
@@ -690,7 +720,7 @@ app.post('/playlistMate', async (req, res) => {
 
             res.send({
                 success: false,
-                msg: 'Maybe the user -> ' + req.body.mate + ' <- does not ka.',
+                msg: 'YOU -> ' + req.body.mate + ' <- are not authorized for this action.',
                 err: err
             })
         }

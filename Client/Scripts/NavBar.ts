@@ -1,6 +1,6 @@
 import {PlaylistTable} from "./PlaylistTable.js";
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 
 export class NavBar {
     private dom_root: HTMLElement;

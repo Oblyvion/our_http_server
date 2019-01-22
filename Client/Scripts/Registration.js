@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 import { manager } from "./app.js";
 export class Registration {
     constructor(dom) {

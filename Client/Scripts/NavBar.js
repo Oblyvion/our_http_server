@@ -1,5 +1,5 @@
 import { PlaylistTable } from "./PlaylistTable.js";
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 export class NavBar {
     constructor(dom_body, dom_content) {
         this.dom_span_array = [];

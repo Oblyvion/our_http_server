@@ -1,7 +1,7 @@
 import {AudioPlayer} from "./AudioPlayer.js";
 import {manager} from "./app.js";
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 
 
 export class PlaylistTable {

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 export class PlaylistTable {
     constructor(dom_root, dom_content, PlaylistData) {
         this.Playlist = {

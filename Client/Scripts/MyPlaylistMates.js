@@ -1,6 +1,6 @@
 import { NewPlaylistMate } from "./NewPlaylistMate.js";
 import { manager } from "./app.js";
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 export class MyPlaylistMates {
     constructor(dom_root, dom_content) {
         this.sharedPlaylists = [];
