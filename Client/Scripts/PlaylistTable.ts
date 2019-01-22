@@ -165,25 +165,25 @@ export class PlaylistTable {
 
 
 
-                // this.formData = new FormData();
-                //
-                //
-                // for (let i = 0; i < this.files.length; i++) {
-                //     let file = this.files[i];
-                //     this.filestoSend[i] = this.files[i];
-                //
-                //     if(file.type != "audio/mpeg") {
-                //         alert('Error : Incorrect file type');
-                //         throw "You can only upload Audio files!"
-                //     }
-                //     else if (file.name.length < 2) {
-                //         throw "Your upload has a not allowed name!"
-                //     }
-                //     else {
-                //         this.formData.append('files[]', file);
-                //         console.log("DAS IST FORM DATA: ", this.formData.get("files[]"));
-                //     }
-                // }
+                this.formData = new FormData();
+
+
+                for (let i = 0; i < this.files.length; i++) {
+                    let file = this.files[i];
+                    this.filestoSend[i] = this.files[i];
+
+                    if(file.type != "audio/mpeg") {
+                        alert('Error : Incorrect file type');
+                        throw "You can only upload Audio files!"
+                    }
+                    else if (file.name.length < 2) {
+                        throw "Your upload has a not allowed name!"
+                    }
+                    else {
+                        this.formData.append('files[]', file);
+                        console.log("DAS IST FORM DATA: ", this.formData.get("files[]"));
+                    }
+                }
 
                 // This code is only for demo ...
                 console.log("name : " + this.files[0].name);
@@ -291,17 +291,18 @@ export class PlaylistTable {
         //console.log("das ist form data kurz vorm absenden: ", this.formData.get('files[]'));
         //this.filestoSend = this.formData.getAll('files[]');
         console.log("das ist files to send!", this.reader.result);
+        this.filestoSend[0] = this.reader.result;
         let response = await fetch(API_URL + "/song/global/" + this.PlaylistID,  {
             body: JSON.stringify({
                 //files: this.formData,
-                files: this.reader.result,
-                title: "blabla",
-                artist: "blub",
+                files: this.formData,
+                // title: "blabla",
+                // artist: "blub",
             }),
             cache: 'no-cache',
             headers: {
-                // 'enctype': 'multipart/form-data',
-                'content-type': 'application/json',
+                //'enctype': 'multipart/form-data',
+                'content-type': 'multipart/form-data',
                 'crossDomain': 'true',
                 'Authorization': localStorage.getItem("token")
             },
