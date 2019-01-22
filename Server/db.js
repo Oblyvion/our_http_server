@@ -14,7 +14,8 @@ class DB {
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     NAME TEXT NOT NULL UNIQUE,
-                    PASSWORD TEXT
+                    PASSWORD TEXT,
+                    SCORE INTEGER
                     )`, err => {
                         if (err !== null) reject(err);
                     });
@@ -139,8 +140,8 @@ class DB {
             this.db.serialize(() => {
                 console.log('AAAAALLLLLLESSSSSSSSSS CREATE STANDARD DATABASE');
                 // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("test", "test")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("max", "test")');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("test", "test", 10)');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("max", "test", 5)');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("heinz", "test")');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("garry", "test")');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("sigmuel", "test")');
@@ -164,6 +165,7 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (3, 1)');  // TODO ""  ""  ""
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 2)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (3, 1, 4)');
                 resolve();
             });

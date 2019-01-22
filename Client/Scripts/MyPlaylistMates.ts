@@ -19,7 +19,7 @@ export class MyPlaylistMates {
     private dom_divMatesHeaderName:HTMLDivElement;
 
     private Mates;
-    private sharedPlaylists;
+    private sharedPlaylists = [];
 
     constructor(dom_root, dom_content) {
         this.dom_root = dom_root;
@@ -113,6 +113,7 @@ export class MyPlaylistMates {
 
     async fetchSharedPlaylistsProMate(mate) {
         try {
+            console.log("Das ist mate: ", mate);
             let response = await fetch(API_URL + "/playlistMates/sharedPlaylists/"+mate, {
                 cache: 'no-cache',
                 headers: {
@@ -147,25 +148,40 @@ export class MyPlaylistMates {
             dom_TableData.appendChild(dom_TableDataName);
             dom_TableDataName.textContent = this.Mates[i].NAME;
 
-            this.addSharedPlaylistsToTable();
+            const dom_TableDataSharedPlaylists = document.createElement('td');
+            dom_TableDataSharedPlaylists.classList.add('TableData');
+            dom_TableData.appendChild(dom_TableDataSharedPlaylists);
+
+            console.log("Das ist i: ", i);
+            this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
+                console.log("Das ist RESUL!: ", result.data);
+                console.log("Das sind die sharedplaylist counts: ", result.data[0].countSharedPlaylists);
+                this.sharedPlaylists.push(result.data[0].countSharedPlaylists);
+                console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
+                if (this.sharedPlaylists[i] > 0) {
+                    dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
+                }
+                else {
+                    dom_TableDataSharedPlaylists.textContent = "-";
+                    dom_TableDataSharedPlaylists.style.fontWeight = "bold";
+                }
+            }).catch(err => {
+                console.log(err);
+            });
 
             const dom_TableDataScore = document.createElement('td');
             dom_TableDataScore.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataScore);
-            dom_TableDataScore.textContent = this.Mates[i].SCORE;
+            if (this.Mates[i].SCORE > 0) {
+                dom_TableDataScore.textContent = this.Mates[i].SCORE;
+            }
+            else {
+                dom_TableDataScore.textContent = "-";
+                dom_TableDataScore.style.fontWeight = "bold";
+            }
         }
     }
 
-    addSharedPlaylistsToTable() {
-        for (let i = 0; i < this.sharedPlaylists.length; i++) {
-        this.fetchSharedPlaylistsProMate(this.sharedPlaylists[i].NAME).then((result) => {
-            this.sharedPlaylists = result.data.sharedPlaylistCount;
-            console.log("Das sind die sharedplaylist counts: ", this.sharedPlaylists);
-        }).catch(err => {
-            console.log(err);
-        });
-        }
-    }
 
     close() {
         while (this.dom_content.firstChild) {

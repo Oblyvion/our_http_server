@@ -202,6 +202,7 @@ export class PlaylistTable {
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
         this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+
         this.dom_AddNewSongForm.setAttribute("method", "post");
         this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
         //this.dom_AddNewSongForm.setAttribute("name", "fileSong");
@@ -235,6 +236,7 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.addEventListener('change', async () => {
             try {
                 this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
+                console.log("PlaylistTable.ts, Z.137: THIS.FILES = ", this.files);
 
                 this.reader = new FileReader();
                 this.reader.onload = await function() {
@@ -247,12 +249,6 @@ export class PlaylistTable {
                     return this.result;
 
                 }; this.reader.readAsArrayBuffer(this.files[0]);
-
-
-
-
-
-
 
                 this.formData = new FormData();
 
@@ -428,7 +424,6 @@ export class PlaylistTable {
             console.log("Error: ", err);
         }
     }
-
 
     close() {
         this.dom_divTable.remove();

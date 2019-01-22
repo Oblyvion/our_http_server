@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 let UserData = null;
 
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(fileUpload());
+app.use(bodyParser.json());
 
 // SQLite DB Handler
 const db = new DB();
@@ -351,9 +353,15 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 app.get('/playlistMates', async (req, res) => {
     console.log("app.js, app.get/playlistMates, Z.352: USER = ", jwt.decode(req.get('Authorization')).username);
     const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+    console.log("app.js, app.get/playlistMates, Z.356: USER.ID = ", user.ID);
 
-    console.log("app.js, app.get/playlistMates, Z.355: USER.ID = ", user.ID);
-    await db.get_rows('SELECT USERS.NAME FROM USERS JOIN PLAYLIST_MATES ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID', user.ID)
+    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS CollabsCount FROM COLLABORATORS WHERE USER_ID = ?', user.ID);
+    console.log("app.js, app.get/playlistMates, Z.358: USERMATECOUNT = ", countPlaylistsCollabs[0].CollabsCount);
+
+    // Welche Mates hat der User:
+    await db.get_rows('SELECT USERS.NAME, USERS.SCORE FROM USERS ' +
+        'JOIN PLAYLIST_MATES ' +
+        'ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID ORDER BY USERS.NAME ASC', user.ID)
         .then((rows) => {
             console.log("app.js, app.get/playlistMates, Z.355: RESULT = ", rows);
             if (!rows || rows < 1) {
@@ -363,13 +371,45 @@ app.get('/playlistMates', async (req, res) => {
                 success: true,
                 data: rows
             });
-        }).
-        catch((err) => {
+        }).catch((err) => {
             console.log("app.js, app.get/playlistMates, Z.368: ERROR = ", err);
             res.send({
-               success: false,
+                success: false,
                 msg: 'Nothing in there.',
-               err: err
+                err: err
+            });
+        })
+});
+
+app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
+    const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.388: USER.ID = ", user.ID);
+
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.390: MATE = ", req.params.mate);
+    const mate = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.params.mate);
+    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.391: MATE.ID = ", mate.ID);
+
+    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS countSharedPlaylists ' +
+        'FROM COLLABORATORS WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mate.ID)
+        .then((rows) => {
+            console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows);
+            if (!rows || rows < 1) {
+                return res.send({
+                    success: false,
+                    data: 'No Collaborators found for Playlist Mate = ' + mate.username
+                });
+            }
+            res.send({
+                success: true,
+                data: rows
+            });
+        }).catch((err) => {
+            console.log("app.js, app.get/playlistMates, Z.408: ERROR = ", err);
+            res.send({
+                success: false,
+                msg: 'UNEXPECTED ERROR Z.411',
+                err: err
             });
         })
 });
@@ -525,11 +565,11 @@ app.post('/song/:playlistID', async (req, res) => {
  */
 app.post('/song/global/:playlistID', async (req, res) => {
     try {
-        console.log("app.js, app.post/song: HALLO");
+        console.log("app.js, app.post/song: HALLO = ", jwt.decode(req.get('Authorization')).username);
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
 
-        console.log("app.js, app.post/song: TITLE = ", req.body.title);
+        console.log("app.js, app.post/song, Z.534: TITLE = ", req.body.title);
 
         console.log("app.js, app.post/song: FILES = ", req.body.files);
 
@@ -603,15 +643,12 @@ app.post('/song/global/:playlistID', async (req, res) => {
         }
 
     } catch (err) {
-        if (err !== null) {
-            console.log('app.js, app.post/song, Z.497: CATCHED ERROR = ', err);
-        }
         if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed: SONGS.PATH')) {
             console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
             res.send({
                 success: false,
                 msg: 'Song exists already. Do you want this song instead?',
-                data: song.name,
+                data: req.files.fileSong.name,
                 err: err
             });
         } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
@@ -622,6 +659,7 @@ app.post('/song/global/:playlistID', async (req, res) => {
                 err: err
             });
         }
+
     }
 });
 

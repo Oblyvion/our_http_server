@@ -173,6 +173,7 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.addEventListener('change', async () => {
             try {
                 this.files = document.querySelector('[type=file]').files;
+                console.log("PlaylistTable.ts, Z.137: THIS.FILES = ", this.files);
                 this.reader = new FileReader();
                 this.reader.onload = await function () {
                     console.log("REEEEEADER!", this.result);
