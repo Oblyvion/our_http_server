@@ -62,7 +62,8 @@ class DB {
                     USER_ID INTEGER,
                     MATE_ID INTEGER,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
-                    FOREIGN KEY (MATE_ID) REFERENCES USERS(ID)
+                    FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),
+                    UNIQUE (USER_ID, MATE_ID)
                     )`, err => {
                         if (err !== null) reject(err);
                     });
@@ -73,7 +74,8 @@ class DB {
                         'PLAYLIST_ID INTEGER(2) NOT NULL,' +
                         'FOREIGN KEY (USER_ID) REFERENCES USERS(ID),' +
                         'FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),' +
-                        'FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID))');
+                        'FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),' +
+                        'UNIQUE (USER_ID, MATE_ID, PLAYLIST_ID))');
                     resolve();
                 });
             }
