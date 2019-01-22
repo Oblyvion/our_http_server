@@ -1,5 +1,4 @@
 import {AudioPlayer} from "./AudioPlayer";
-import {NavBar} from "./NavBar.js";
 
 const API_URL = 'http://localhost:3000';
 
@@ -34,11 +33,14 @@ export class PlaylistTable {
 
     private files: FileList;
     private formData: FormData;
+    private filestoSend = [];
+    private reader: FileReader;
 
     constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.PlaylistID = PlaylistData.ID;
+        console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
             this.Playlist.songs = result.data;
@@ -111,9 +113,20 @@ export class PlaylistTable {
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
         this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
-        this.dom_AddNewSongForm.setAttribute("method", "POST");
-        // this.dom_AddNewSongForm.setAttribute("action", API_URL + "/song/global/" + this.PlaylistID);
+
+        this.dom_AddNewSongForm.setAttribute("method", "post");
+        this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
+        //this.dom_AddNewSongForm.setAttribute("name", "fileSong");
+        //this.dom_AddNewSongForm.setAttribute("action", API_URL + "/song/global/" + this.PlaylistID);
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
+        // this.dom_AddNewSongForm.addEventListener('onsubmit', () => {
+        //     console.log("hallo");
+        //     this.uploadNewSong().then( response => {
+        //         console.log(response);
+        //     }).catch( err => {
+        //         console.log(err);
+        //     })
+        // });
 
 
         this.dom_AddNewSong = document.createElement("div");
@@ -127,21 +140,36 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton = document.createElement("input");
         this.dom_AddNewSongDialogButton.setAttribute("type","file");
         this.dom_AddNewSongDialogButton.setAttribute("id", "file");
-        this.dom_AddNewSongDialogButton.setAttribute("name", "files[]");
+        this.dom_AddNewSongDialogButton.setAttribute("name", "fileSong");
         this.dom_AddNewSongDialogButton.type = "file";
         this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
-        this.dom_AddNewSongDialogButton.addEventListener('change', () => {
+        this.dom_AddNewSongDialogButton.addEventListener('change', async () => {
             try {
                 this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
                 console.log("PlaylistTable.ts, Z.137: THIS.FILES = ", this.files);
+
+                this.reader = new FileReader();
+                this.reader.onload = await function() {
+
+                    console.log("REEEEEADER!",this.result);
+                    //     array = new Uint8Array(arrayBuffer),
+                    //     binaryString = String.fromCharCode.apply(null, array);
+                    //
+                    // console.log(binaryString);
+                    return this.result;
+
+                }; this.reader.readAsArrayBuffer(this.files[0]);
+
                 this.formData = new FormData();
 
 
                 for (let i = 0; i < this.files.length; i++) {
                     let file = this.files[i];
+                    this.filestoSend[i] = this.files[i];
 
                     if(file.type != "audio/mpeg") {
+                        alert('Error : Incorrect file type');
                         throw "You can only upload Audio files!"
                     }
                     else if (file.name.length < 2) {
@@ -149,6 +177,7 @@ export class PlaylistTable {
                     }
                     else {
                         this.formData.append('files[]', file);
+                        console.log("DAS IST FORM DATA: ", this.formData.get("files[]"));
                     }
                 }
 
@@ -169,12 +198,20 @@ export class PlaylistTable {
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
         this.dom_AddNewSongSubmit.textContent = "Submit";
         this.dom_AddNewSongSubmit.addEventListener('click', () => {
-            console.log("hallo");
-            this.uploadNewSong().then( response => {
-                console.log(response);
-            }).catch( err => {
-                console.log(err);
-            })
+                this.uploadNewSong().then( response => {
+                    console.log(response);
+                    this.Playlist.songs.push(response);
+                    this.fetchPlaylistSongs().then((result) => {
+                        this.Playlist.songs = result.data;
+                        console.log("das SIND DIE SONGS: ", this.Playlist.songs);
+                        this.addPlaylistSongs();
+                    }).catch(err => {
+                        console.log(err);
+                    });
+
+                }).catch( err => {
+                    console.log(err);
+                })
         });
 
     }
@@ -206,6 +243,9 @@ export class PlaylistTable {
     }
 
     addPlaylistSongs() {
+        if(this.dom_Table.firstChild) {
+            this.dom_Table.firstChild.remove();
+        }
         for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
             dom_TableData.classList.add('TableDataRow');
@@ -243,41 +283,35 @@ export class PlaylistTable {
     }
 
     async uploadNewSong() {
-        console.log("DAS IST FORM DATA: ", this.formData);
-        console.log("DAS IST TOKEN: ", localStorage.getItem("token"));
-        console.log("DAS IST PLAYLISTID: ", this.PlaylistID);
-        // await fetch(API_URL + "/song/global/"+this.PlaylistID,  {
-        //     body: JSON.stringify({
-        //         // fileSong: this.formData,
-        //         title: 'blabla',
-        //         artist: 'blub'
-        //     }),
-        //     cache: 'no-cache',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'crossDomain': 'true',
-        //         'Authorization': localStorage.getItem("token")
-        //     },
-        //     method: 'POST',
-        //     mode: 'cors',
-        // });
-        const response = await fetch(API_URL + '/playlist/', {
+        try {
+        //console.log("das ist form data kurz vorm absenden: ", this.formData.get('files[]'));
+        //this.filestoSend = this.formData.getAll('files[]');
+        console.log("das ist files to send!", this.reader.result);
+        this.filestoSend[0] = this.reader.result;
+        let response = await fetch(API_URL + "/song/global/" + this.PlaylistID,  {
             body: JSON.stringify({
-                title: this.PlaylistID
+                //files: this.formData,
+                files: this.formData,
+                // title: "blabla",
+                // artist: "blub",
             }),
             cache: 'no-cache',
             headers: {
-                'content-type': 'application/json',
+                //'enctype': 'multipart/form-data',
+                'content-type': 'multipart/form-data',
                 'crossDomain': 'true',
                 'Authorization': localStorage.getItem("token")
             },
             method: 'POST',
             mode: 'cors',
-            // todo REST POST redirect
-            // redirect: 'follow',
-            // credentials: 'include',
-        });}
+        });
+            const data = await response.json();
 
+            return data;
+        } catch (err) {
+            console.log("Error: ", err);
+        }
+    }
 
     close() {
         this.dom_divTable.remove();

@@ -571,6 +571,8 @@ app.post('/song/global/:playlistID', async (req, res) => {
 
         console.log("app.js, app.post/song, Z.534: TITLE = ", req.body.title);
 
+        console.log("app.js, app.post/song: FILES = ", req.body.files);
+
         // File exists?
         // if (Object.keys(req.files).length === 0) {
         //     return res.status(400).send('No files were uploaded.');
@@ -606,6 +608,7 @@ app.post('/song/global/:playlistID', async (req, res) => {
             console.log("app.js, app.post/song: SONGID = ", songID.ID);
             // insert song into users playlistID
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
+            res.header(`Access-Control-Allow-Origin:`, `*`);
             res.send({
                 success: true,
                 msg: 'File uploaded successfully',
