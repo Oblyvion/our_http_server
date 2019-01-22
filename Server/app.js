@@ -87,7 +87,7 @@ const auth = async (req, res, next) => {
     }
 };
 
-async function userInit(req)  {
+async function userInit(req) {
     const standardPlaylistName = 'Your 1. Playlist';
     const standardSongId = 1;
     const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
@@ -251,7 +251,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
     const songs = await db.get_rows('SELECT SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
         'FROM SONGS ' +
         'JOIN PLAYLIST_CONTAINS ' +
-        'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)  // TODO remove duplicates after join
+        'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
     // console.log("app.js, app.get/songsuser: SOOOONGS = ", songs);
         .then(rows => {
             if (!rows)
@@ -348,6 +348,32 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         });
 });
 
+app.get('/playlistMates', async (req, res) => {
+    console.log("app.js, app.get/playlistMates, Z.352: USER = ", jwt.decode(req.get('Authorization')).username);
+    const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+
+    console.log("app.js, app.get/playlistMates, Z.355: USER.ID = ", user.ID);
+    await db.get_rows('SELECT USERS.NAME FROM USERS JOIN PLAYLIST_MATES ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID', user.ID)
+        .then((rows) => {
+            console.log("app.js, app.get/playlistMates, Z.355: RESULT = ", rows);
+            if (!rows || rows < 1) {
+                throw 'ERROR: No Playlist Mates found for user ' + user + '.';
+            }
+            res.send({
+                success: true,
+                data: rows
+            });
+        }).
+        catch((err) => {
+            console.log("app.js, app.get/playlistMates, Z.368: ERROR = ", err);
+            res.send({
+               success: false,
+                msg: 'Nothing in there.',
+               err: err
+            });
+        })
+});
+
 /**
  * get playlist songs by playlist id
  */
@@ -386,14 +412,8 @@ app.post('/user', async (req, res) => {
     try {
         const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD) VALUES (?, ?)', req.body.name, req.body.password);
         await userInit(req).then(() => {
-            console.log("Hat funktioniert = ");
+            console.log("Hat funktioniert");
         });
-        // const standardPlaylistName = 'Your 1. Playlist';
-        // const standardSongId = 1;
-        // const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
-        // await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
-        // const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
-        // await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
         // res.header(`Access-Control-Allow-Origin:`, `*`);
         res.send({
             success: true,
@@ -480,6 +500,7 @@ app.post('/song/:playlistID', async (req, res) => {
             // Playlist must be from collaborator!!!
             await db.get_row('SELECT USER_ID FROM COLLABORATORS WHERE MATE_ID = ? AND PLAYLIST_ID = ?', req.body.songID, req.params.playlistID);
             // const songID = await db.get_row('SELECT ID FROM SONGS WHERE PATH = ?', filePath);
+            const filePath = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', req.body.songID);
             console.log("app.js, app.post/song: SONGID COLLA = ", req.body.userID);
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
             res.send({
@@ -504,13 +525,16 @@ app.post('/song/:playlistID', async (req, res) => {
  */
 app.post('/song/global/:playlistID', async (req, res) => {
     try {
+        console.log("app.js, app.post/song: HALLO");
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
 
+        console.log("app.js, app.post/song: TITLE = ", req.body.title);
+
         // File exists?
-        if (Object.keys(req.files).length === 0) {
-            return res.status(400).send('No files were uploaded.');
-        }
+        // if (Object.keys(req.files).length === 0) {
+        //     return res.status(400).send('No files were uploaded.');
+        // }
 
         // save the song with key 'filesong'
         const song = req.files.fileSong;
@@ -604,19 +628,64 @@ app.post('/playlistMate', async (req, res) => {
         console.log('app.js, app.post/playlistMate: USER = ', user);
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
         console.log('app.js, app.post/playlistMate: USERID = ', userID.ID);
-        console.log('app.js, app.post/playlistMate: USERID = ', req.body.mate);
+        console.log('app.js, app.post/playlistMate: MATE = ', req.body.mate);
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
         console.log('app.js, app.post/playlistMate: MATEID = ', mateID.ID);
-        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', userID.ID, mateID.ID);
+        // const result = await db.get_row('SELECT USER_ID, MATE_ID FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', userID.ID, mateID.ID);
+        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', userID.ID, mateID.ID); // TODO creates BAD DUPLICATES!!!
+        // console.log('app.js, app.post/playlistMate: RESULT = ', result);
         res.send({
             success: true,
             msg: 'Playlist Mate has been added to your account successfully.'
         })
     } catch (err) {
-        if (err !== null) {
-            console.log('app.js, app.post/playlistMate: ERROR = ', err);
+        if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
+            res.send({
+                success: false,
+                msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'
+            })
+        } else {
+            console.log('app.js, app.post/playlistMate: UNCATCHED ERROR = ', err);
+
+            res.send({
+                success: false,
+                msg: 'Maybe the user -> ' + req.body.mate + ' <- does not ka.',
+                err: err
+            })
         }
     }
-
 });
+
+app.post('/collabs/:playlistID', async (req, res) => {
+    try {
+        const user = jwt.decode(req.get('Authorization')).username;
+        console.log('app.js, app.post/collabs: USER = ', user);
+        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+        console.log('app.js, app.post/collabs: USERID = ', userID.ID);
+        console.log('app.js, app.post/collabs: USERID = ', req.body.mate);
+        const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+        console.log('app.js, app.post/collabs: MATEID = ', mateID.ID);
+        await db.cmd('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (?, ?, ?)', userID.ID, mateID.ID, req.params.playlistID);
+        res.send({
+            success: true,
+            msg: 'Collaborator ' + req.body.mate + ' has been added to your account successfully.'
+        })
+    } catch (err) {
+        if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
+            res.send({
+                success: false,
+                msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already. Invite another Playlist Mate.'
+            })
+        } else {
+            console.log('app.js, app.post/playlistMate: UNCATCHED ERROR = ', err);
+
+            res.send({
+                success: false,
+                msg: 'Maybe the user -> ' + req.body.mate + ' <- does not ka.',
+                err: err
+            })
+        }
+    }
+});
+
 module.exports = app;

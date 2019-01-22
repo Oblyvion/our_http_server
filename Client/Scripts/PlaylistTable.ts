@@ -1,5 +1,4 @@
 import {AudioPlayer} from "./AudioPlayer";
-import {NavBar} from "./NavBar.js";
 
 const API_URL = 'http://localhost:3000';
 
@@ -35,6 +34,7 @@ export class PlaylistTable {
     private files: FileList;
     private formData: FormData;
     private filestoSend = [];
+    private reader: FileReader;
 
     constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
@@ -147,18 +147,17 @@ export class PlaylistTable {
             try {
                 this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
 
-                const reader = new FileReader();
-                reader.onload = await function() {
+                this.reader = new FileReader();
+                this.reader.onload = await function() {
 
                     console.log("REEEEEADER!",this.result);
-                    const arrayBuffer = this.result;
                     //     array = new Uint8Array(arrayBuffer),
                     //     binaryString = String.fromCharCode.apply(null, array);
                     //
                     // console.log(binaryString);
-                    return arrayBuffer;
+                    return this.result;
 
-                }; reader.readAsArrayBuffer(this.files[0]);
+                }; this.reader.readAsArrayBuffer(this.files[0]);
 
 
 
@@ -291,11 +290,11 @@ export class PlaylistTable {
         try {
         //console.log("das ist form data kurz vorm absenden: ", this.formData.get('files[]'));
         //this.filestoSend = this.formData.getAll('files[]');
-        console.log("das ist files to send!", this.filestoSend[0]);
+        console.log("das ist files to send!", this.reader.result);
         let response = await fetch(API_URL + "/song/global/" + this.PlaylistID,  {
             body: JSON.stringify({
                 //files: this.formData,
-                files: this.filestoSend[0],
+                files: this.reader.result,
                 title: "blabla",
                 artist: "blub",
             }),
