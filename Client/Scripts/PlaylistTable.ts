@@ -1,6 +1,7 @@
-import {AudioPlayer} from "./AudioPlayer";
+import {AudioPlayer} from "./AudioPlayer.js";
+import {manager} from "./app.js";
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3001';
 
 
 export class PlaylistTable {
@@ -15,7 +16,12 @@ export class PlaylistTable {
     private dom_TableHeaderName3: HTMLTableCaptionElement;
     private audioPlayer: AudioPlayer;
     private dom_divPlaylistHeaderButtons: HTMLElement;
-    private dom_divPlaylistHeaderAddBtn: HTMLImageElement;
+    private dom_PlaylistHeaderAddBtn: HTMLImageElement;
+    private dom_PlaylistHeaderShare: HTMLImageElement;
+    private dom_DropdownMenu: HTMLDivElement;
+    private dom_DropdownMenuContent: HTMLDivElement;
+    private dom_DropdownMenuInput: HTMLInputElement;
+    private dom_DropdownMenuData;
     private dom_divPlaylistHeaderPlaylistName: HTMLDivElement;
     private PlaylistID;
     private dom_AddNewSong: HTMLDivElement;
@@ -23,6 +29,8 @@ export class PlaylistTable {
     private dom_AddNewSongDialogButton: HTMLInputElement;
     private dom_AddNewSongForm: HTMLFormElement;
     private dom_AddNewSongSubmit: HTMLButtonElement;
+
+    private Mates;
 
     private Playlist = {
 
@@ -67,12 +75,93 @@ export class PlaylistTable {
         this.dom_divPlaylistHeaderButtons.classList.add('PlaylistTablePlaylistHeaderButtons');
         this.dom_divPlaylistHeader.appendChild(this.dom_divPlaylistHeaderButtons);
 
-        this.dom_divPlaylistHeaderAddBtn = document.createElement('img');
-        this.dom_divPlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
-        this.dom_divPlaylistHeaderButtons.appendChild(this.dom_divPlaylistHeaderAddBtn);
-        this.dom_divPlaylistHeaderAddBtn.src = "./Images/add_button.png";
-        this.dom_divPlaylistHeaderAddBtn.style.width = "25px";
-        this.dom_divPlaylistHeaderAddBtn.addEventListener('click', () => {
+        this.dom_PlaylistHeaderShare = document.createElement('img');
+        this.dom_PlaylistHeaderShare.classList.add('PlaylistTablePlaylistHeaderShare');
+        this.dom_divPlaylistHeaderButtons.appendChild(this.dom_PlaylistHeaderShare);
+        this.dom_PlaylistHeaderShare.src = "./Images/share.png";
+        this.dom_PlaylistHeaderShare.style.width = "20px";
+        this.dom_PlaylistHeaderShare.addEventListener('click', () => {
+            this.dom_DropdownMenu.style.display = "block";
+            this.fetchPlaylistMates().then((result) => {
+                this.Mates = result.data;
+                console.log("Das sind die Mates: ", this.Mates);
+            }).catch(err => {
+                console.log(err);
+            });
+        });
+
+        this.dom_DropdownMenu = document.createElement('div');
+        this.dom_divTable.appendChild(this.dom_DropdownMenu);
+        this.dom_DropdownMenu.classList.add('ShareDropdownMenu');
+        this.dom_DropdownMenu.addEventListener('mouseleave', () => {
+            this.dom_DropdownMenu.style.display = "none";
+        });
+
+        this.dom_DropdownMenuContent = document.createElement('div');
+        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
+        this.dom_DropdownMenuContent.classList.add("ShareDropdownMenuContent");
+
+        this.dom_DropdownMenuInput = document.createElement('input');
+        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuInput);
+        this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuData");
+        this.dom_DropdownMenuInput.setAttribute('type', "text");
+        this.dom_DropdownMenuInput.onkeyup = () => {
+            console.log("EVENT!!!!");
+            if (this.dom_DropdownMenuContent.firstChild) {
+                this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
+            }
+            for (let j = 0; j < this.Mates.length; j++) {
+                for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
+                    console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
+                    if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
+                        // if (this.dom_DropdownMenuData) {
+                        //     this.dom_DropdownMenuData.remove();
+                        // }
+                        console.log("hallo add menu content");
+                        this.dom_DropdownMenuData = document.createElement('a');
+                        this.dom_DropdownMenuData.textContent = this.Mates[j].NAME;
+                        this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
+                        this.dom_DropdownMenuData.setAttribute('href', '#');
+                        this.dom_DropdownMenuData.addEventListener('click', () => {
+
+                        });
+                        this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
+                    } else {
+                        if (this.dom_DropdownMenuContent.firstChild) {
+                            this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
+                        }
+                    }
+                }
+            }
+        };
+
+
+        // this.dom_DropdownMenuInput.addEventListener('oninput', () => {
+        //     console.log("EVENT!!!!");
+        //     if(this.dom_DropdownMenuContent.firstChild) {
+        //         this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
+        //     }
+        //     this.Mates.forEach(elem => {
+        //         for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
+        //             if(elem.NAME[i] === this.dom_DropdownMenuInput.value[i]) {
+        //                 this.dom_DropdownMenuData = document.createElement('a');
+        //                 this.dom_DropdownMenuData.textContent = elem.NAME;
+        //                 this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
+        //                 this.dom_DropdownMenuData.setAttribute('href', '#');
+        //                 this.dom_DropdownMenuData.addEventListener('click', () => {
+        //
+        //                 });
+        //                 this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
+        //             }
+        //         }
+        //     })
+        // });
+
+        this.dom_PlaylistHeaderAddBtn = document.createElement('img');
+        this.dom_PlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
+        this.dom_divPlaylistHeaderButtons.appendChild(this.dom_PlaylistHeaderAddBtn);
+        this.dom_PlaylistHeaderAddBtn.src = "./Images/add_button.png";
+        this.dom_PlaylistHeaderAddBtn.addEventListener('click', () => {
             if (this.dom_AddNewSong.style.display == "grid") {
                 this.dom_AddNewSong.style.display = "none";
             }
@@ -81,7 +170,7 @@ export class PlaylistTable {
             }
         });
 
-        this.dom_divPlaylistHeaderAddBtn.style.width = "20px";
+        this.dom_PlaylistHeaderAddBtn.style.width = "20px";
         // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
 
 
@@ -216,6 +305,29 @@ export class PlaylistTable {
 
     }
 
+    async fetchPlaylistMates() {
+        try {
+            let response = await fetch(API_URL + "/playlistMates ", {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/javascript',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            return data;
+        } catch (err) {
+            console.log("Error fetching Mates!: ",err);
+        }
+    }
 
     async fetchPlaylistSongs() {
         console.log("this.PlaylistID = ", this.PlaylistID);

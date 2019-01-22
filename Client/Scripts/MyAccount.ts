@@ -4,7 +4,7 @@ import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
 
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3001';
 
 export class MyAccount {
     private dom_root: HTMLElement;
