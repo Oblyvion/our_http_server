@@ -134,6 +134,7 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.addEventListener('change', () => {
             try {
                 this.files = (<HTMLInputElement>document.querySelector('[type=file]')).files;
+                console.log("PlaylistTable.ts, Z.137: THIS.FILES = ", this.files);
                 this.formData = new FormData();
 
 
@@ -243,21 +244,39 @@ export class PlaylistTable {
 
     async uploadNewSong() {
         console.log("DAS IST FORM DATA: ", this.formData);
-        await fetch(API_URL + "/song/global/"+this.PlaylistID,  {
+        console.log("DAS IST TOKEN: ", localStorage.getItem("token"));
+        console.log("DAS IST PLAYLISTID: ", this.PlaylistID);
+        // await fetch(API_URL + "/song/global/"+this.PlaylistID,  {
+        //     body: JSON.stringify({
+        //         // fileSong: this.formData,
+        //         title: 'blabla',
+        //         artist: 'blub'
+        //     }),
+        //     cache: 'no-cache',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'crossDomain': 'true',
+        //         'Authorization': localStorage.getItem("token")
+        //     },
+        //     method: 'POST',
+        //     mode: 'cors',
+        // });
+        const response = await fetch(API_URL + '/playlist/', {
             body: JSON.stringify({
-                fileSong: this.formData,
-                title: "blabla",
-                artist: "blub",
+                title: this.PlaylistID
             }),
             cache: 'no-cache',
             headers: {
+                'content-type': 'application/json',
                 'crossDomain': 'true',
                 'Authorization': localStorage.getItem("token")
             },
             method: 'POST',
             mode: 'cors',
-        });
-    }
+            // todo REST POST redirect
+            // redirect: 'follow',
+            // credentials: 'include',
+        });}
 
 
     close() {

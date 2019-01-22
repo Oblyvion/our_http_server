@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 let UserData = null;
 
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(fileUpload());
+app.use(bodyParser.json());
 
 // SQLite DB Handler
 const db = new DB();
@@ -525,11 +527,11 @@ app.post('/song/:playlistID', async (req, res) => {
  */
 app.post('/song/global/:playlistID', async (req, res) => {
     try {
-        console.log("app.js, app.post/song: HALLO");
+        console.log("app.js, app.post/song: HALLO = ", jwt.decode(req.get('Authorization')).username);
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
 
-        console.log("app.js, app.post/song: TITLE = ", req.body.title);
+        console.log("app.js, app.post/song, Z.534: TITLE = ", req.body.title);
 
         // File exists?
         // if (Object.keys(req.files).length === 0) {
@@ -600,15 +602,12 @@ app.post('/song/global/:playlistID', async (req, res) => {
         }
 
     } catch (err) {
-        if (err !== null) {
-            console.log('app.js, app.post/song, Z.497: CATCHED ERROR = ', err);
-        }
         if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed: SONGS.PATH')) {
             console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
             res.send({
                 success: false,
                 msg: 'Song exists already. Do you want this song instead?',
-                data: song.name,
+                data: req.files.fileSong.name,
                 err: err
             });
         } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
@@ -619,6 +618,7 @@ app.post('/song/global/:playlistID', async (req, res) => {
                 err: err
             });
         }
+
     }
 });
 

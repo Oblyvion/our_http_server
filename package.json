@@ -25,6 +25,7 @@
   "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
   "dependencies": {
     "basic-auth": "^2.0.1",
+    "body-parser": "^1.18.3",
     "celebrate": "^9.0.1",
     "cors": "^2.8.5",
     "escape-html": "latest",
