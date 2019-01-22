@@ -1,7 +1,7 @@
 import {NewPlaylistMate} from "./NewPlaylistMate.js";
 import {manager} from "./app.js";
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3001';
 
 
 export class MyPlaylistMates {
@@ -19,13 +19,14 @@ export class MyPlaylistMates {
     private dom_divMatesHeaderName:HTMLDivElement;
 
     private Mates;
+    private sharedPlaylists;
 
     constructor(dom_root, dom_content) {
         this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.fetchPlaylistMates().then((result) => {
             this.Mates = result.data;
-            console.log("Das sind die Freunde: ", this.Mates);
+            console.log("Das sind die Mates: ", this.Mates);
             this.addMatesToTable();
         }).catch(err => {
             console.log(err);
@@ -88,7 +89,7 @@ export class MyPlaylistMates {
 
     async fetchPlaylistMates() {
         try {
-            let response = await fetch(API_URL + "/friends/ ", {
+            let response = await fetch(API_URL + "/playlistMates ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -106,7 +107,31 @@ export class MyPlaylistMates {
 
             return data;
         } catch (err) {
-            console.log("Error fetching Friends!: ",err);
+            console.log("Error fetching Mates!: ",err);
+        }
+    }
+
+    async fetchSharedPlaylistsProMate(mate) {
+        try {
+            let response = await fetch(API_URL + "/playlistMates/sharedPlaylists/"+mate, {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/javascript',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            return data;
+        } catch (err) {
+            console.log("Error fetching Mates!: ",err);
         }
     }
 
@@ -122,15 +147,23 @@ export class MyPlaylistMates {
             dom_TableData.appendChild(dom_TableDataName);
             dom_TableDataName.textContent = this.Mates[i].NAME;
 
-            const dom_TableDataSharedPlaylists = document.createElement('td');
-            dom_TableDataSharedPlaylists.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataSharedPlaylists);
-            dom_TableDataSharedPlaylists.textContent = this.Mates[i].SHARED_PLAYLISTS;
+            this.addSharedPlaylistsToTable();
 
             const dom_TableDataScore = document.createElement('td');
             dom_TableDataScore.classList.add('TableData');
             dom_TableData.appendChild(dom_TableDataScore);
             dom_TableDataScore.textContent = this.Mates[i].SCORE;
+        }
+    }
+
+    addSharedPlaylistsToTable() {
+        for (let i = 0; i < this.sharedPlaylists.length; i++) {
+        this.fetchSharedPlaylistsProMate(this.sharedPlaylists[i].NAME).then((result) => {
+            this.sharedPlaylists = result.data.sharedPlaylistCount;
+            console.log("Das sind die sharedplaylist counts: ", this.sharedPlaylists);
+        }).catch(err => {
+            console.log(err);
+        });
         }
     }
 
