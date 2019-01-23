@@ -1,10 +1,8 @@
 import {AudioPlayer} from "./AudioPlayer.js";
 import {manager} from "./app.js";
 
-const API_URL = 'http://localhost:3001';
-
-
 export class PlaylistTable {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divTable: HTMLDivElement;
@@ -296,7 +294,7 @@ export class PlaylistTable {
                     }
                     else {
                         this.formData.append('files[]', file);
-                        console.log("DAS IST FORM DATA: ", this.formData.get("files[]"));
+                        console.log("DAS IST FORM DATA, Z.180: ", this.formData.get("files[]"));
                     }
                 }
 
@@ -337,7 +335,7 @@ export class PlaylistTable {
 
     async fetchPlaylistMates() {
         try {
-            let response = await fetch(API_URL + "/playlistMates ", {
+            let response = await fetch(this.API_URL + "/playlistMates ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -365,7 +363,7 @@ export class PlaylistTable {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/songsuser/ " + this.PlaylistID, {
+        let response = await fetch(this.API_URL + "/songsuser/ " + this.PlaylistID, {
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/javascript',
@@ -430,7 +428,7 @@ export class PlaylistTable {
         //this.filestoSend = this.formData.getAll('files[]');
         console.log("das ist files to send!", this.reader.result);
         this.filestoSend[0] = this.reader.result;
-        let response = await fetch(API_URL + "/song/global/" + this.PlaylistID,  {
+        let response = await fetch(this.API_URL + "/song/global/" + this.PlaylistID,  {
             body: JSON.stringify({
                 //files: this.formData,
                 files: this.formData,

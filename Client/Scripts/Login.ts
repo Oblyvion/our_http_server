@@ -1,9 +1,9 @@
-const API_URL = 'http://localhost:3001';
-
 import {manager} from "./app.js";
 
-export class Login implements iAppContainer {
+console.log("port: ", localStorage.getItem("port"));
 
+export class Login implements iAppContainer {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_login: HTMLElement;
@@ -94,7 +94,7 @@ export class Login implements iAppContainer {
             try {
                 // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
                 // console.log(`das ist body pw: ${password.toString()}`);
-                const response = await fetch(API_URL + '/login', {
+                const response = await fetch(this.API_URL + '/login', {
                     body: JSON.stringify({
                         name: this.dom_loginInputID.value,
                         password: password

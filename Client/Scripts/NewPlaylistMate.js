@@ -1,6 +1,6 @@
-const API_URL = 'http://localhost:3001';
 export class NewPlaylistMate {
     constructor(dom_root, dom_content) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.randomIndex = [];
         this.topWerte = [];
         this.leftWerte = [];
@@ -115,11 +115,11 @@ export class NewPlaylistMate {
         // this.dom_TableHeaderName3.textContent = "Score";
     }
     addRandomContent() {
-        let added;
         let dom_NewRandomMate;
-        for (let i = 0; i < 10; i++) {
-            added = false;
-            let random = Math.floor(Math.random() * (this.Users.length - 1));
+        let random;
+        console.log("Users length: ", this.Users.length);
+        for (let i = 0; i < 5; i++) {
+            random = Math.floor(Math.random() * (this.Users.length - 1));
             console.log("random: ", random);
             if (i === 0) {
                 this.randomIndex.push(random);
@@ -127,13 +127,18 @@ export class NewPlaylistMate {
             }
             if (this.randomIndex.includes(random) && i !== 0) {
                 while (this.randomIndex.includes(random)) {
-                    let newrandom = Math.floor(Math.random() * (this.Users.length - 1));
+                    let a = 0;
+                    random = Math.floor(Math.random() * (this.Users.length - 1));
                     // console.log("random new: ", newrandom);
-                    if (!this.randomIndex.includes(newrandom)) {
-                        // console.log("crazy added");
-                        this.randomIndex.push(newrandom);
+                    if (!this.randomIndex.includes(random)) {
+                        console.log("crazy added");
+                        this.randomIndex.push(random);
                         break;
                     }
+                    if (a > 15) {
+                        break;
+                    }
+                    a++;
                 }
             }
             if (!this.randomIndex.includes(random) && i !== 0) {
@@ -156,7 +161,7 @@ export class NewPlaylistMate {
     }
     async fetchUsers() {
         try {
-            let response = await fetch(API_URL + "/users ", {
+            let response = await fetch(this.API_URL + "/users ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -184,10 +189,10 @@ export class NewPlaylistMate {
         }
         if (array.includes(random) && i !== 0) {
             while (array.includes(random)) {
-                let newrandom = Math.floor(Math.random() * (80));
-                // console.log("random new: ", newrandom);
-                if (!array.includes(newrandom)) {
-                    array.push(newrandom);
+                random = Math.floor(Math.random() * (80));
+                // console.log("random new: ", random);
+                if (!array.includes(random)) {
+                    array.push(random);
                     break;
                 }
             }

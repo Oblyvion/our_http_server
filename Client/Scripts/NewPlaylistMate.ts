@@ -1,8 +1,9 @@
 
-const API_URL = 'http://localhost:3001';
 
 
 export class NewPlaylistMate {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
+
     private dom_root:HTMLElement;
     private dom_content:HTMLElement;
     private dom_divNewPlaylistMate:HTMLDivElement;
@@ -158,64 +159,65 @@ export class NewPlaylistMate {
 
     addRandomContent() {
 
-        let added;
         let dom_NewRandomMate;
+        let random;
 
-        for (let i = 0; i < 10; i++) {
+        console.log("Users length: ", this.Users.length);
+        for (let i = 0; i < 5; i++) {
+                random = Math.floor(Math.random() * (this.Users.length - 1));
+                console.log("random: ", random);
 
-            added = false;
+                if (i === 0) {
+                    this.randomIndex.push(random);
+                    console.log("i === 0 added");
+                }
 
-            let random = Math.floor(Math.random() * (this.Users.length - 1));
-            console.log("random: ", random);
-
-            if(i === 0) {
-                this.randomIndex.push(random);
-                console.log("i === 0 added");
-            }
-
-            if(this.randomIndex.includes(random) && i !== 0) {
-                while(this.randomIndex.includes(random)) {
-                    let newrandom = Math.floor(Math.random() * (this.Users.length - 1));
-                    // console.log("random new: ", newrandom);
-                    if(!this.randomIndex.includes(newrandom)) {
-                        // console.log("crazy added");
-                        this.randomIndex.push(newrandom);
-                        break;
+                if (this.randomIndex.includes(random) && i !== 0) {
+                    while (this.randomIndex.includes(random)) {
+                        let a = 0;
+                        random = Math.floor(Math.random() * (this.Users.length - 1));
+                        // console.log("random new: ", newrandom);
+                        if (!this.randomIndex.includes(random)) {
+                            console.log("crazy added");
+                            this.randomIndex.push(random);
+                            break;
+                        }
+                        if (a > 15) {
+                            break;
+                        }
+                        a++;
                     }
                 }
-            }
-            if(!this.randomIndex.includes(random) && i !== 0) {
-                console.log("normal added");
-                this.randomIndex.push(random);
-            }
+                if (!this.randomIndex.includes(random) && i !== 0) {
+                    console.log("normal added");
+                    this.randomIndex.push(random);
+                }
 
+                console.log("randomarray: ", this.randomIndex);
 
-            console.log("randomarray: ", this.randomIndex);
+                dom_NewRandomMate = document.createElement('a');
+                this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
+                dom_NewRandomMate.classList.add("NewRandomMate");
+                dom_NewRandomMate.textContent = this.Users[this.randomIndex[i]].NAME;
 
+                let randomMarginWidth = Math.floor(Math.random() * (90));
 
-            dom_NewRandomMate = document.createElement('a');
-            this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
-            dom_NewRandomMate.classList.add("NewRandomMate");
-            dom_NewRandomMate.textContent = this.Users[this.randomIndex[i]].NAME;
+                this.checkIfRandomInArray(this.leftWerte, randomMarginWidth, i);
 
-            let randomMarginWidth = Math.floor(Math.random() * (90));
+                let randomMarginHeight = Math.floor(Math.random() * (90));
 
-            this.checkIfRandomInArray(this.leftWerte, randomMarginWidth, i);
+                this.checkIfRandomInArray(this.topWerte, randomMarginHeight, i);
 
-            let randomMarginHeight = Math.floor(Math.random() * (90));
+                console.log("margintop: und marginleft; ", this.topWerte[i].toString() + "%", this.leftWerte[i].toString() + "%");
 
-            this.checkIfRandomInArray(this.topWerte, randomMarginHeight, i);
-
-            console.log("margintop: und marginleft; ",this.topWerte[i].toString()+"%", this.leftWerte[i].toString()+"%");
-
-            dom_NewRandomMate.style.top = this.topWerte[i].toString()+"%";
-            dom_NewRandomMate.style.left = this.leftWerte[i].toString()+"%";
+                dom_NewRandomMate.style.top = this.topWerte[i].toString() + "%";
+                dom_NewRandomMate.style.left = this.leftWerte[i].toString() + "%";
         }
     }
 
     async fetchUsers() {
         try {
-            let response = await fetch(API_URL + "/users ", {
+            let response = await fetch(this.API_URL + "/users ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -250,10 +252,10 @@ export class NewPlaylistMate {
 
         if(array.includes(random) && i !== 0) {
             while(array.includes(random)) {
-                let newrandom = Math.floor(Math.random() * (80));
-                // console.log("random new: ", newrandom);
-                if(!array.includes(newrandom)) {
-                    array.push(newrandom);
+                random = Math.floor(Math.random() * (80));
+                // console.log("random new: ", random);
+                if(!array.includes(random)) {
+                    array.push(random);
                     break;
                 }
             }

@@ -3,10 +3,8 @@ import {AudioPlayer} from "./AudioPlayer.js";
 import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
 
-
-const API_URL = 'http://localhost:3001';
-
 export class MyAccount {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_ContentMyAccount: HTMLElement;
     private dom_MyAccountContainer: HTMLDivElement;
@@ -58,7 +56,7 @@ export class MyAccount {
             // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
             // console.log(`das ist body pw: ${password.toString()}`);
             // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-            const playlists = await fetch(API_URL + "/playlists/", {
+            const playlists = await fetch(this.API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',

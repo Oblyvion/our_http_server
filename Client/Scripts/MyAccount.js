@@ -1,8 +1,8 @@
 import { AudioPlayer } from "./AudioPlayer.js";
 import { NavBar } from "./NavBar.js";
-const API_URL = 'http://localhost:3001';
 export class MyAccount {
     constructor(dom) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.Playlists = this.getPlaylists();
         this.dom_root = document.getElementById('app');
         this.dom_ContentMyAccount = dom;
@@ -35,7 +35,7 @@ export class MyAccount {
             // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
             // console.log(`das ist body pw: ${password.toString()}`);
             // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-            const playlists = await fetch(API_URL + "/playlists/", {
+            const playlists = await fetch(this.API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',

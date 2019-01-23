@@ -1,8 +1,8 @@
 import { AudioPlayer } from "./AudioPlayer.js";
 import { NavBar } from "./NavBar.js";
-const API_URL = 'http://localhost:3000';
 export class FirstSteps {
     constructor(dom) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.dom_root = document.getElementById('app');
         this.dom_content = dom;
         this.dom_content.classList.add('FirstSteps');

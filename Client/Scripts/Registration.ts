@@ -1,9 +1,8 @@
-const API_URL = 'http://localhost:3001';
-
 import {manager} from "./app.js";
 
 export class Registration implements iAppContainer {
 
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_register: HTMLElement;
@@ -92,7 +91,7 @@ export class Registration implements iAppContainer {
                     console.log(`das ist body name: ${this.dom_registerID.value}`);
                     console.log(`das ist body pw: ${password.toString()}`);
 
-                    const response = await fetch(API_URL + '/user/', {
+                    const response = await fetch(this.API_URL + '/user/', {
                         body: JSON.stringify({
                             name: this.dom_registerID.value,
                             password: password

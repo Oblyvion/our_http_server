@@ -1,10 +1,8 @@
 import {NewPlaylistMate} from "./NewPlaylistMate.js";
 import {manager} from "./app.js";
 
-const API_URL = 'http://localhost:3001';
-
-
 export class MyPlaylistMates {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root:HTMLElement;
     private dom_content:HTMLElement;
     private dom_divPlaylistMates:HTMLDivElement;
@@ -89,7 +87,7 @@ export class MyPlaylistMates {
 
     async fetchPlaylistMates() {
         try {
-            let response = await fetch(API_URL + "/playlistMates ", {
+            let response = await fetch(this.API_URL + "/playlistMates ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -114,7 +112,7 @@ export class MyPlaylistMates {
     async fetchSharedPlaylistsProMate(mate) {
         try {
             console.log("Das ist mate: ", mate);
-            let response = await fetch(API_URL + "/playlistMates/sharedPlaylists/"+mate, {
+            let response = await fetch(this.API_URL + "/playlistMates/sharedPlaylists/"+mate, {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',

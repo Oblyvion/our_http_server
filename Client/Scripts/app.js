@@ -15,6 +15,7 @@ dom_root.appendChild(dom_content);
 localStorage.setItem("PlaylistIndex", "1");
 let active_app = null;
 export const manager = function (app) {
+    localStorage.setItem("port", "3000");
     if (active_app != null) {
         active_app.close();
         active_app = null;

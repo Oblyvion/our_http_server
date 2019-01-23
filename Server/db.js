@@ -7,6 +7,25 @@ class DB {
         this.db.exec('PRAGMA foreign_keys = ON');
     }
 
+    adminInit() {
+        // TODO auskommentiert für Testzwecke
+        // try {
+        //     const adminName = "admin";
+        //     // CREATE STANDARD USERS -> ADMINS
+        //     this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
+        //     console.log("jldsafjlsadjö");
+        //     // CREATE STANDARD SONGS
+        //     this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, PATH) VALUES ("Bad Habit Terrasound", "Free Artist", "./Songs/Bad_Habit_Terrasound.mp3")');
+        //     this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
+        //
+        //     // TODO DO NOT INSERT SONG INTO PLAYLIST_CONTAINS MULTIPLE
+        //     this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', 1, 1, 'Welcome ' + adminName);
+        //     console.log("hallooijsadfo");
+        // } catch (err) {
+        //     console.log("db.js, Z.87: CATCHED ERROR = ", err);
+        // }
+    }
+
     create() {
         return new Promise((resolve, reject) => {
                 this.db.serialize(() => {
@@ -60,8 +79,9 @@ class DB {
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_MATES
                     (
-                    USER_ID INTEGER,
-                    MATE_ID INTEGER,
+                    USER_ID INTEGER NOT NULL,
+                    MATE_ID INTEGER NOT NULL,
+                    REQUEST BOOLEAN NOT NULL,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
                     FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),
                     UNIQUE (USER_ID, MATE_ID)
@@ -77,8 +97,10 @@ class DB {
                         'FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),' +
                         'FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),' +
                         'UNIQUE (USER_ID, MATE_ID, PLAYLIST_ID))');
+
                     resolve();
                 });
+                this.adminInit();
             }
         )
     }
@@ -142,9 +164,9 @@ class DB {
                 // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("test", "test", 10)');
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("max", "test", 5)');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("heinz", "test")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("garry", "test")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD) VALUES ("sigmuel", "test")');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("heinz", "test", 5)');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("garry", "test", 5)');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("sigmuel", "test", 40)');
                 // this.db.run('INSERT INTO USERS (ID, NAME) VALUES (1, "admin")');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY, PATH) VALUES ("Beispiel Title 1", "Beispiel Artist 1", 1, "PATHBliBlaBlubbb")');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY, PATH) VALUES ("Beispiel Title 2 du geile Eidechse", "Beispiel Artist 2", 1, "BliBlaBlubbbPATH")');
@@ -159,10 +181,12 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (2, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 1, "max")');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 2)');  //
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 3)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (2, 1)');  // TODO automatisieren: Freundschaft beruht auf Gegenseitigkeit
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (3, 1)');  // TODO ""  ""  ""
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 2, 1)');  //
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 3, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 1, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (3, 1, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 4, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (4, 1, 0)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 2)');
@@ -172,4 +196,5 @@ class DB {
         }).catch(err => console.log(err));
     }
 }
+
 module.exports = DB;
