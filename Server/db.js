@@ -7,6 +7,24 @@ class DB {
         this.db.exec('PRAGMA foreign_keys = ON');
     }
 
+    adminInit() {
+        // try {
+        //     const adminName = "admin";
+        //     // CREATE STANDARD USERS -> ADMINS
+        //     this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
+        //     console.log("jldsafjlsadjö");
+        //     // CREATE STANDARD SONGS
+        //     this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, PATH) VALUES ("Bad Habit Terrasound", "Free Artist", "./Songs/Bad_Habit_Terrasound.mp3")');
+        //     this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
+        //
+        //     // TODO DO NOT INSERT SONG INTO PLAYLIST_CONTAINS MULTIPLE
+        //     this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', 1, 1, 'Welcome ' + adminName);
+        //     console.log("hallooijsadfo");
+        // } catch (err) {
+        //     console.log("db.js, Z.87: CATCHED ERROR = ", err);
+        // }
+    }
+
     create() {
         return new Promise((resolve, reject) => {
                 this.db.serialize(() => {
@@ -60,8 +78,8 @@ class DB {
                     });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_MATES
                     (
-                    USER_ID INTEGER,
-                    MATE_ID INTEGER,
+                    USER_ID INTEGER NOT NULL,
+                    MATE_ID INTEGER NOT NULL,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
                     FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),
                     UNIQUE (USER_ID, MATE_ID)
@@ -78,18 +96,9 @@ class DB {
                         'FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),' +
                         'UNIQUE (USER_ID, MATE_ID, PLAYLIST_ID))');
 
-                    // STANDARD USERS -> ADMINS
-                    // this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("admin", "admin", 5)');
-                    // STANDARD SONGS
-                    try {
-                        console.log("jldsafjlsadjö");
-                        // this.db.run('INSERT INTO SONGS (TITLE, ARTIST, PATH) VALUES ("Bad Habit Terrasound", "Free Artist", "./Songs/Bad_Habit_Terrasound.mp3")');
-                        console.log("hallooijsadfo");
-                    } catch (err) {
-                        console.log("db.js, Z.87: CATCHED ERROR = ", err);
-                    }
                     resolve();
                 });
+                this.adminInit();
             }
         )
     }
@@ -183,4 +192,5 @@ class DB {
         }).catch(err => console.log(err));
     }
 }
+
 module.exports = DB;

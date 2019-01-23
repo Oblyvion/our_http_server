@@ -92,6 +92,33 @@ const auth = async (req, res, next) => {
     }
 };
 
+async function userInit(req) {
+    try {
+        const standardPlaylistName = 'Your 1. Playlist';
+        const standardSongId = 1;
+        console.log('WAS GEEEEHT????');
+        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
+        await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
+        console.log('WAS JJOOOOOOOOOOOOOOOOOOOOO????   ', userID.ID);
+        const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
+        console.log('playlistID = ', playlistID);
+        console.log('BLABLABLBL');
+        await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+        console.log('WAS sakjfdlfd????');
+        console.log("HURENSOHN ===== ", err);
+
+        console.log('WAS sakjfdlfd????');
+    } catch (err) {
+        console.log("ERROR ===== ", err);
+    }
+}
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 // ----------------------------GET section----------------------------
 /**
  * get app root
@@ -123,9 +150,18 @@ app.get('/init', (req, res) => {
 /**
  * get all users
  */
-app.get('/users', (req, res) => {
-    db.get_rows('SELECT * FROM USERS')
+app.get('/users', async (req, res) => {
+    const user = jwt.decode(req.get('Authorization')).username;
+    console.log("app.js, app.get/users: USER = ", user);
+    const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+    console.log("app.js, app.get/users: ID = ", userID.ID);
+
+    await db.get_rows('SELECT NAME FROM USERS WHERE USERS.ID NOT IN (?) EXCEPT SELECT NAME FROM USERS ' +
+        'JOIN PLAYLIST_MATES ' +
+        'ON PLAYLIST_MATES.USER_ID = (?) ' +
+        'AND PLAYLIST_MATES.MATE_ID IN (USERS.ID)', userID.ID, userID.ID)
         .then(rows => {
+            console.log("app.js, app.get/users: USERS = ", rows);
             if (!rows)
                 throw 'users not found';
             res.send({
@@ -134,6 +170,7 @@ app.get('/users', (req, res) => {
             });
         })
         .catch(err => {
+            console.log("app.js, app.get/users: ERROR = ", err);
             res.send({
                 success: false,
                 msg: 'access users failed',
@@ -141,6 +178,7 @@ app.get('/users', (req, res) => {
             });
         });
 });
+
 /**
  * get user by id
  */
@@ -438,29 +476,6 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
 
 // ----------------------------POST section----------------------------
 
-async function userInit(req) {
-    try {
-        const standardPlaylistName = 'Your 1. Playlist';
-        const standardSongId = 1;
-        console.log('WAS GEEEEHT????');
-        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
-        await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
-        console.log('WAS JJOOOOOOOOOOOOOOOOOOOOO????   ', userID.ID);
-        const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
-        console.log('playlistID = ', playlistID);
-        try {
-            console.log('BLABLABLBL');
-            await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
-            console.log('WAS sakjfdlfd????');
-        }catch (err) {
-            console.log("HURENSOHN ===== ", err);
-        }
-
-        console.log('WAS sakjfdlfd????');
-    } catch (err) {
-        console.log("ERROR ===== ", err);
-    }
-}
 /**
  * create new user
  */
@@ -582,7 +597,7 @@ app.post('/song/:playlistID', async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */
-app.post('/song/global/:playlistID', async (req, res) => {
+app.post('/song/global/:playlistID', async (req, res, next) => {
     try {
         console.log("app.js, app.post/song: HALLO = ", jwt.decode(req.get('Authorization')).username);
         const user = jwt.decode(req.get('Authorization')).username;
