@@ -393,7 +393,7 @@ app.get('/playlistMates', async (req, res) => {
             .then((rows) => {
                 console.log("app.js, app.get/playlistMates, Z.394: RESULT = ", rows);
                 if (!rows || rows < 1) {
-                    throw 'ERROR: No Playlist Mates found for user ' + user + '.';
+                    throw 'ERROR: No Playlist Mates found for user.';
                 }
                 res.send({
                     success: true,
@@ -466,7 +466,7 @@ app.get('/playlistMates/request', async (req, res) => {
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
 
         await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
-            'WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, user.ID)
+            'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
             .then((row) => {
                 console.log('app.js, app.post/request Catch: REQUEST = ', row);
                 if (row < 1 || row === undefined) {
@@ -838,18 +838,35 @@ app.post('/collabs/:playlistID', async (req, res) => {
     }
 });
 
-// TODO STILL IN PROGRESS
 app.post('/playlistMates/request', async (req, res) => {
     try {
-        console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.post/playlistMates/request, Z.844: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-        console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
+        console.log("app.js, app.post/playlistMates/request: USER.ID = ", user.ID);
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
 
-        await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
+        const answer = req.body.answer;
+        if (!answer) {
+            try {
+                await db.cmd('DELETE FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID);
+                console.log("app.js, app.post/playlistMates/request, Z.853: ERROR = ");
+                await db.cmd('DELETE FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, user.ID);
+                console.log("app.js, app.post/playlistMates/request, Z.855: ERROR = ");
+                return res.send({
+                    success: true,
+                    msg: 'Decline Playlist Mate Request: Playlist Mates deleted!'
+                });
+            } catch (err) {
+                console.log("app.js, app.post/playlistMates/request, Z.859: ERROR = ", err);
+                return res.send({
+                    success: false,
+                    msg: 'Delete from Playlist Mates failed.',
+                    err: err
+                });
+            }
+        }
+        await db.cmd('UPDATE PLAYLIST_MATES SET REQUEST = 1 ' +
             'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
-
-
             .then((row) => {
                 console.log('app.js, app.post/request Catch: REQUEST = ', row);
                 if (row < 1 || row === undefined) {
@@ -860,7 +877,7 @@ app.post('/playlistMates/request', async (req, res) => {
                 }
                 res.send({
                     success: true,
-                    data: row
+                    msg: req.body.mate + ' added to your Playlist Mate list.'
                 });
             })
             .catch((err) => {
