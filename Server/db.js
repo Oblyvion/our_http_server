@@ -8,6 +8,7 @@ class DB {
     }
 
     adminInit() {
+        // TODO auskommentiert für Testzwecke
         // try {
         //     const adminName = "admin";
         //     // CREATE STANDARD USERS -> ADMINS
@@ -80,6 +81,7 @@ class DB {
                     (
                     USER_ID INTEGER NOT NULL,
                     MATE_ID INTEGER NOT NULL,
+                    REQUEST BOOLEAN NOT NULL,
                     FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
                     FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),
                     UNIQUE (USER_ID, MATE_ID)
@@ -179,10 +181,12 @@ class DB {
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (2, 2, "test")');
                 this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 1, "max")');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 2)');  //
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (1, 3)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (2, 1)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (3, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 2, 1)');  //
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 3, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 1, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (3, 1, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 4, 1)');
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (4, 1, 0)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
                 this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 2)');

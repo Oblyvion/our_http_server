@@ -382,34 +382,47 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 });
 
 app.get('/playlistMates', async (req, res) => {
-    console.log("app.js, app.get/playlistMates, Z.352: USER = ", jwt.decode(req.get('Authorization')).username);
-    const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-    console.log("app.js, app.get/playlistMates, Z.356: USER.ID = ", user.ID);
+    try {
+        console.log("app.js, app.get/playlistMates, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
+        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.get/playlistMates, Z.356: USER.ID = ", user.ID);
 
-    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS CollabsCount FROM COLLABORATORS WHERE USER_ID = ?', user.ID);
-    console.log("app.js, app.get/playlistMates, Z.358: USERMATECOUNT = ", countPlaylistsCollabs[0].CollabsCount);
-
-    // Welche Mates hat der User:
-    await db.get_rows('SELECT USERS.NAME, USERS.SCORE FROM USERS ' +
-        'JOIN PLAYLIST_MATES ' +
-        'ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID ORDER BY USERS.NAME ASC', user.ID)
-        .then((rows) => {
-            console.log("app.js, app.get/playlistMates, Z.355: RESULT = ", rows);
-            if (!rows || rows < 1) {
-                throw 'ERROR: No Playlist Mates found for user ' + user + '.';
-            }
-            res.send({
-                success: true,
-                data: rows
-            });
-        }).catch((err) => {
-            console.log("app.js, app.get/playlistMates, Z.368: ERROR = ", err);
-            res.send({
+        await db.get_rows('SELECT USERS.NAME, USERS.SCORE FROM USERS ' +
+            'JOIN PLAYLIST_MATES ' +
+            'ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID ORDER BY USERS.NAME ASC', user.ID)
+            .then((rows) => {
+                console.log("app.js, app.get/playlistMates, Z.394: RESULT = ", rows);
+                if (!rows || rows < 1) {
+                    throw 'ERROR: No Playlist Mates found for user ' + user + '.';
+                }
+                res.send({
+                    success: true,
+                    data: rows
+                });
+            }).catch((err) => {
+                console.log("app.js, app.get/playlistMates, Z.403: ERROR = ", err);
+                res.send({
+                    success: false,
+                    msg: 'Nothing in there.',
+                    err: err
+                });
+            })
+    } catch (err) {
+        console.log("app.js, app.get/playlistMates, Z.411: ERROR = ", err);
+        if (err.message.match('Cannot read property')) {
+            return res.send({
                 success: false,
-                msg: 'Nothing in there.',
+                msg: 'YOU are not authorized for this action. Please register first!',
                 err: err
             });
-        })
+        }
+        res.send({
+            success: false,
+            msg: 'UNCATCHED Error.',
+            err: err
+        });
+    }
+
 });
 
 app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
@@ -424,7 +437,7 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
     const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS countSharedPlaylists ' +
         'FROM COLLABORATORS WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mate.ID)
         .then((rows) => {
-            console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows);
+            console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows[0]);
             if (!rows || rows < 1) {
                 return res.send({
                     success: false,
@@ -433,7 +446,7 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
             }
             res.send({
                 success: true,
-                data: rows
+                data: rows[0]
             });
         }).catch((err) => {
             console.log("app.js, app.get/playlistMates, Z.408: ERROR = ", err);
@@ -443,6 +456,42 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
                 err: err
             });
         })
+});
+
+app.get('/playlistMates/request', async (req, res) => {
+    try {
+        console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
+        const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+
+        await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
+            'WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, user.ID)
+            .then((row) => {
+                console.log('app.js, app.post/request Catch: REQUEST = ', row);
+                if (row < 1 || row === undefined) {
+                    return res.send({
+                        success: false,
+                        msg: 'Cannot find such Playlist Mate. Add User as Playlist Mate first!'
+                    });
+                }
+                res.send({
+                    success: true,
+                    data: row
+                });
+            })
+            .catch((err) => {
+                console.log('app.js, app.post/request Catch: ERROR = ', err);
+                res.send({
+                    success: false,
+                    msg: 'Cannot select REQUEST Value of your mate in table Playlist_Mates.',
+                    err: err
+                });
+            })
+    } catch (err) {
+        console.log('app.js, app.post/request Catch: ERR = ', err);
+    }
+
 });
 
 /**
@@ -717,8 +766,8 @@ app.post('/playlistMate', async (req, res) => {
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
         console.log('app.js, app.post/playlistMate: MATEID = ', mateID.ID);
         // const result = await db.get_row('SELECT USER_ID, MATE_ID FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', userID.ID, mateID.ID);
-        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', userID.ID, mateID.ID);
-        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID) VALUES (?, ?)', mateID.ID, userID.ID);
+        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (?, ?, ?)', userID.ID, mateID.ID, 1);
+        await db.cmd('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (?, ?, ?)', mateID.ID, userID.ID, 0);
         // console.log('app.js, app.post/playlistMate: RESULT = ', result);
         res.send({
             success: true,
@@ -726,6 +775,21 @@ app.post('/playlistMate', async (req, res) => {
         })
     } catch (err) {
         if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
+            // const user = jwt.decode(req.get('Authorization')).username;
+            // console.log('app.js, app.post/playlistMate Catch: USER = ', user);
+            // const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+            // console.log('app.js, app.post/playlistMate Catch: USERID = ', userID.ID);
+            // const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+            //
+            // const request = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
+            //     'WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, userID.ID);
+            // console.log('app.js, app.post/playlistMate Catch: REQUEST = ', request);
+
+            // if (mateID.ID === ) {
+            //
+            // }
+
+
             res.send({
                 success: false,
                 msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'
@@ -735,7 +799,7 @@ app.post('/playlistMate', async (req, res) => {
 
             res.send({
                 success: false,
-                msg: 'YOU -> ' + req.body.mate + ' <- are not authorized for this action.',
+                msg: 'YOU are not authorized for this action.',
                 err: err
             })
         }
@@ -773,5 +837,45 @@ app.post('/collabs/:playlistID', async (req, res) => {
         }
     }
 });
+
+// TODO STILL IN PROGRESS
+app.post('/playlistMates/request', async (req, res) => {
+    try {
+        console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
+        const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+
+        await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
+            'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
+
+
+            .then((row) => {
+                console.log('app.js, app.post/request Catch: REQUEST = ', row);
+                if (row < 1 || row === undefined) {
+                    return res.send({
+                        success: false,
+                        msg: 'Cannot find such Playlist Mate. Add User as Playlist Mate first!'
+                    });
+                }
+                res.send({
+                    success: true,
+                    data: row
+                });
+            })
+            .catch((err) => {
+                console.log('app.js, app.post/request Catch: ERROR = ', err);
+                res.send({
+                    success: false,
+                    msg: 'Cannot select REQUEST Value of your mate in table Playlist_Mates.',
+                    err: err
+                });
+            })
+    } catch (err) {
+        console.log('app.js, app.post/request Catch: ERR = ', err);
+    }
+
+});
+
 
 module.exports = app;
