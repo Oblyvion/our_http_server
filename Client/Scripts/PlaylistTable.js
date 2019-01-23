@@ -51,41 +51,63 @@ export class PlaylistTable {
         this.dom_DropdownMenu.addEventListener('mouseleave', () => {
             this.dom_DropdownMenu.style.display = "none";
         });
+        this.dom_DropdownMenuDiv = document.createElement('div');
+        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuDiv);
+        this.dom_DropdownMenuDiv.classList.add("ShareDropdownMenuDiv");
         this.dom_DropdownMenuContent = document.createElement('div');
-        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
+        this.dom_DropdownMenuDiv.appendChild(this.dom_DropdownMenuContent);
         this.dom_DropdownMenuContent.classList.add("ShareDropdownMenuContent");
         this.dom_DropdownMenuInput = document.createElement('input');
-        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuInput);
-        this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuData");
+        this.dom_DropdownMenuDiv.insertBefore(this.dom_DropdownMenuInput, this.dom_DropdownMenuContent);
+        this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuInput");
         this.dom_DropdownMenuInput.setAttribute('type', "text");
         this.dom_DropdownMenuInput.onkeyup = () => {
-            console.log("EVENT!!!!");
-            if (this.dom_DropdownMenuContent.firstChild) {
-                this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
-            }
+            //console.log("EVENT!!!!");
             for (let j = 0; j < this.Mates.length; j++) {
-                for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
-                    console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
-                    if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
-                        // if (this.dom_DropdownMenuData) {
-                        //     this.dom_DropdownMenuData.remove();
-                        // }
-                        console.log("hallo add menu content");
-                        this.dom_DropdownMenuData = document.createElement('a');
-                        this.dom_DropdownMenuData.textContent = this.Mates[j].NAME;
-                        this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
-                        this.dom_DropdownMenuData.setAttribute('href', '#');
-                        this.dom_DropdownMenuData.addEventListener('click', () => {
-                        });
-                        this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
+                let regexp = new RegExp("(^" + this.dom_DropdownMenuInput.value + "){1}");
+                //console.log("DAS IST REGEXP: ", regexp);
+                if (this.Mates[j].NAME.match(regexp)) {
+                    for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
+                        if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
+                            console.log("hallo hier if remove!");
+                            this.dom_DropdownMenuContent.children[i].remove();
+                        }
                     }
-                    else {
-                        if (this.dom_DropdownMenuContent.firstChild) {
-                            this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
+                    this.dom_DropdownMenuData = document.createElement('a');
+                    this.dom_DropdownMenuData.textContent = this.Mates[j].NAME;
+                    this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
+                    this.dom_DropdownMenuData.setAttribute('href', '#');
+                    this.dom_DropdownMenuData.addEventListener('click', () => {
+                    });
+                    this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
+                }
+                else {
+                    console.log("hallo hier else!");
+                    for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
+                        if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
+                            console.log("hallo hier else remove!");
+                            this.dom_DropdownMenuContent.children[i].remove();
                         }
                     }
                 }
+                if (this.dom_DropdownMenuInput.value.length <= 0) {
+                    while (this.dom_DropdownMenuContent.firstChild) {
+                        this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
+                    }
+                }
             }
+            // for (let j = 0; j < this.Mates.length; j++) {
+            //     for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
+            //         console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
+            //         if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
+            //             console.log("hallo add menu content");
+            //         } else {
+            //             if (this.dom_DropdownMenuContent.childNodes) {
+            //                 this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
+            //             }
+            //         }
+            //     }
+            // }
         };
         // this.dom_DropdownMenuInput.addEventListener('oninput', () => {
         //     console.log("EVENT!!!!");
