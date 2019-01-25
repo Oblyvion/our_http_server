@@ -404,8 +404,8 @@ button:hover, .form button:active {
   /* [-(height/2)px 0 0 -(width/2)px] */
   background: #474747;
   grid-template-columns: minmax(10%, 10%) minmax(80%, 80%) minmax(10%, 10%);
-  grid-template-rows: minmax(20%, 20%) minmax(20%, 20%) minmax(20%, 20%) minmax(20%, 20%) minmax(20%, 20%);
-  grid-template-areas: ". . ." ". input ." ". upload ." ". submit ." ". . ."; }
+  grid-template-rows: minmax(20%, 20%) minmax(10%, 10%) minmax(20%, 20%) minmax(20%, 20%) minmax(10%, 10%) minmax(20%, 20%);
+  grid-template-areas: ". . ." ". input ." ". upload ." ". title ." ". submit ." ". . ."; }
 
 .AddNewSongInput {
   grid-area: input;
@@ -413,6 +413,9 @@ button:hover, .form button:active {
 
 .AddNewSongDialogButton {
   grid-area: upload; }
+
+.AddNewSongTitle {
+  grid-area: title; }
 
 .AddNewSongSubmit {
   grid-area: submit; }
