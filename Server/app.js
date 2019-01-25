@@ -667,7 +667,7 @@ app.post('/song/:playlistID', async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */                                                                     // , {name: 'nextInput', maxCount: 2}
-app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}]), async (req, res) => {
+app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title'}]), async (req, res) => {
     try {
         console.log("app.js, app.post/song: HUHUUUUUU = ", jwt.decode(req.get('Authorization')));
         console.log("app.js, app.post/song: PARAMS = ", req.params);
