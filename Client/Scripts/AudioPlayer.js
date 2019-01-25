@@ -5,11 +5,9 @@ let dom_player_duration;
 let dom_volume_slider;
 let currentSong;
 export class AudioPlayer {
-    constructor(dom) {
-        this.Songs = [
-            "Bad_Habit_Terrasound.mp3",
-            "Dark_Blue_Echoes.mp3",
-        ];
+    constructor(dom, Songs) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.songs = Songs;
         song = new Audio();
         song.addEventListener('loadedmetadata', () => {
             this.showDuration();
@@ -130,15 +128,36 @@ export class AudioPlayer {
         this.dom_nextSong.classList.add('AudioPlayer_NextSong');
         this.dom_player_controllers.appendChild(this.dom_nextSong);
         this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
-        this.loadSong(0);
+        //this.loadSong(0);
     }
-    loadSong(playSongNumber) {
-        currentSong = playSongNumber;
-        song.src = "./Songs/" + this.Songs[currentSong];
-        this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
-        this.dom_nextSong.textContent = "Next Song: " + this.Songs[(currentSong + 1) % this.Songs.length];
-        song.volume = dom_volume_slider.valueAsNumber;
-        setInterval(this.updateSongSlider, 100);
+    loadSong(clicked) {
+        this.fetchSong(clicked)
+            .then(data => {
+            console.log(data);
+            song.src = data.PATH;
+        })
+            .catch(err => {
+            console.log(err);
+        });
+    }
+    async fetchSong(clicked) {
+        try {
+            let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/javascript',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+            });
+            const data = await response.json();
+            return data;
+        }
+        catch (err) {
+            console.log("Error fetching Mates!: ", err);
+        }
     }
     updateSongSlider() {
         let c = Math.round(song.currentTime);
@@ -169,14 +188,14 @@ export class AudioPlayer {
         }
     }
     next() {
-        currentSong = (currentSong + 1) % this.Songs.length;
+        currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
         song.play();
     }
     previous() {
         currentSong--;
         if (currentSong < 0) {
-            currentSong = this.Songs.length - 1;
+            currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
         song.play();

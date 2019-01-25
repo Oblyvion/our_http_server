@@ -301,7 +301,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
 
     // const songs = await db.get_rows('SELECT * FROM SONGS JOIN PLAYLIST_CONTAINS ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID' +
     //     ' AND PLAYLIST_CONTAINS.PLAYLIST_ID = ?', playlist.ID);
-    const songs = await db.get_rows('SELECT SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
+    const songs = await db.get_rows('SELECT SONGS.ID, SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
         'FROM SONGS ' +
         'JOIN PLAYLIST_CONTAINS ' +
         'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
@@ -327,7 +327,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
  * get song by id
  */
 app.get('/song/:id', (req, res) => {
-    db.get_row('SELECT TITLE,ARTIST,ADDED_BY FROM SONGS WHERE ID = ?', +req.params.id)
+    db.get_row('SELECT TITLE,ARTIST,ADDED_BY,PATH FROM SONGS WHERE ID = ?', +req.params.id)
         .then(row => {
             if (!row)
                 throw 'song not found';

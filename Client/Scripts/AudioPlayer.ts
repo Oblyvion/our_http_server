@@ -8,6 +8,7 @@ let currentSong;
 
 export class AudioPlayer {
 
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_logoDiv: HTMLElement;
@@ -25,12 +26,15 @@ export class AudioPlayer {
     private dom_volume_up;
     private dom_nextSong: HTMLElement;
 
-    public Songs = [
-        "Bad_Habit_Terrasound.mp3",
-        "Dark_Blue_Echoes.mp3",
-    ];
+    // public Songs = [
+    //     "Bad_Habit_Terrasound.mp3",
+    //     "Dark_Blue_Echoes.mp3",
+    // ];
+    private songs;
 
-    constructor(dom: HTMLElement) {
+    constructor(dom: HTMLElement, Songs) {
+
+        this.songs = Songs;
 
         song = new Audio();
         song.addEventListener('loadedmetadata', () => {
@@ -178,17 +182,42 @@ export class AudioPlayer {
                 this.dom_player_controllers.appendChild(this.dom_nextSong);
                 this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
 
-        this.loadSong(0);
+        //this.loadSong(0);
     }
 
-    public loadSong(playSongNumber) {
-        currentSong = playSongNumber;
-        song.src = "./Songs/"+this.Songs[currentSong];
-        this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
-        this.dom_nextSong.textContent = "Next Song: " + this.Songs[(currentSong+1)%this.Songs.length];
-        song.volume = dom_volume_slider.valueAsNumber;
+    public loadSong(clicked) {
+        this.fetchSong(clicked)
+            .then( data => {
+                console.log(data);
+                song.src = data.PATH;
+            })
+            .catch( err => {
+                console.log(err);
+            })
+    }
 
-        setInterval(this.updateSongSlider, 100);
+    private async fetchSong(clicked) {
+            try {
+                let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
+                    cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/javascript',
+                        'crossDomain': 'true',
+                        'Authorization': localStorage.getItem("token")
+                    },
+                    method: 'GET',
+                    mode: 'cors',
+                    // todo REST POST redirect
+                    // redirect: 'follow',
+                    // credentials: 'include',
+                });
+
+                const data = await response.json();
+
+                return data;
+            } catch (err) {
+                console.log("Error fetching Mates!: ", err);
+            }
     }
 
 
@@ -225,7 +254,7 @@ export class AudioPlayer {
     }
 
     next() {
-        currentSong = (currentSong + 1) % this.Songs.length;
+        currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
         song.play();
     }
@@ -233,7 +262,7 @@ export class AudioPlayer {
     previous() {
         currentSong--;
         if(currentSong < 0) {
-            currentSong = this.Songs.length - 1;
+            currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
         song.play();

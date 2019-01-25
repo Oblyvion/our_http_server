@@ -1,3 +1,4 @@
+import { AudioPlayer } from "./AudioPlayer.js";
 export class PlaylistTable {
     constructor(dom_root, dom_content, PlaylistData) {
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
@@ -13,6 +14,7 @@ export class PlaylistTable {
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
             this.Playlist.songs = result.data;
+            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
             console.log("das SIND DIE SONGS: ", this.Playlist.songs);
             this.addPlaylistSongs();
         }).catch(err => {
@@ -165,15 +167,16 @@ export class PlaylistTable {
         this.dom_TableHeaderName3.textContent = "Added By";
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
-        this.dom_AddNewSongForm.setAttribute("action", this.API_URL + "/song/global/" + this.PlaylistID);
+        //this.dom_AddNewSongForm.setAttribute("action", this.API_URL + "/song/global/" + this.PlaylistID);
         this.dom_AddNewSongForm.setAttribute("method", "POST");
         this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+        this.dom_AddNewSongForm.setAttribute("data-rel", "back");
+        //this.dom_AddNewSongForm.onsubmit = new manager("page-first-steps");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
         console.log("ADDNEWSONGFORM = ", this.dom_AddNewSongForm);
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
-        this.dom_AddNewSongForm.addEventListener('submit', e => {
+        this.dom_AddNewSongForm.addEventListener('onsubmit', e => {
             console.log("hallo");
-            e.preventDefault();
         });
         this.dom_AddNewSong = document.createElement("div");
         this.dom_AddNewSong.classList.add('AddNewSongDiv');
@@ -254,9 +257,15 @@ export class PlaylistTable {
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
         this.dom_AddNewSongSubmit.textContent = "Submit";
-        this.dom_AddNewSongSubmit.addEventListener('click', (e) => {
+        this.dom_AddNewSongSubmit.addEventListener('click', async (e) => {
             e.preventDefault();
-            this.dom_AddNewSongForm.submit();
+            const formElement = document.querySelector("form");
+            const formData = new FormData(formElement);
+            const request = new XMLHttpRequest();
+            request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID);
+            request.send(formData);
+            console.log("Das ist die response vom server: " + request.responseText);
+            //await this.dom_AddNewSongForm.submit();
             // this.uploadNewSong().then(response => {
             //     console.log("Z.296: RESPONSE = ", await response);
             //     this.Playlist.songs.push(response);
@@ -327,16 +336,10 @@ export class PlaylistTable {
             dom_TableData.classList.add('TableDataRow');
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
-                let clicked = dom_TableData.rowIndex - 1;
+                let clicked = dom_TableData.rowIndex;
                 console.log(clicked);
-                for (let i = 0; i < this.audioPlayer.Songs.length; i++) {
-                    console.log(this.audioPlayer.Songs[i]);
-                    console.log(this.Playlist.songs[clicked].Title);
-                    if (this.audioPlayer.Songs[i] === this.Playlist.songs[clicked].Title) {
-                        this.audioPlayer.loadSong(clicked);
-                        this.audioPlayer.playorpauseSong();
-                    }
-                }
+                console.log(this.Playlist.songs[clicked].ID);
+                this.audioPlayer.loadSong(clicked);
             });
             console.log("PlaylistTable.ts: this.Playlist[i].Title = ", this.Playlist.songs[i].TITLE);
             const dom_TableDataTitle = document.createElement('td');
