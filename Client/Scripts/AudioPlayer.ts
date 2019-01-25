@@ -8,6 +8,7 @@ let currentSong;
 
 export class AudioPlayer {
 
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_logoDiv: HTMLElement;
@@ -25,17 +26,15 @@ export class AudioPlayer {
     private dom_volume_up;
     private dom_nextSong: HTMLElement;
 
-    public Songs = [
-        "Bad_Habit_Terrasound.mp3",
-        "Dark_Blue_Echoes.mp3",
-    ];
+    // public Songs = [
+    //     "Bad_Habit_Terrasound.mp3",
+    //     "Dark_Blue_Echoes.mp3",
+    // ];
+    private songs;
 
-    constructor(dom: HTMLElement) {
+    constructor(dom: HTMLElement, Songs) {
 
-        song = new Audio();
-        song.addEventListener('loadedmetadata', () => {
-            this.showDuration();
-        });
+        this.songs = Songs;
 
         this.dom_root = dom;
 
@@ -118,7 +117,7 @@ export class AudioPlayer {
                     });
                     // this.dom_play.addEventListener('mouseover', () => {
                     //     this.dom_play.style.width = "65px";
-                    // });
+                    // }
                     // this.dom_play.addEventListener('mouseleave', () => {
                     //     this.dom_play.style.width = "60px";
                     // });
@@ -178,17 +177,53 @@ export class AudioPlayer {
                 this.dom_player_controllers.appendChild(this.dom_nextSong);
                 this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
 
-        this.loadSong(0);
+        //this.loadSong(0);
     }
 
-    public async loadSong(playSongNumber) {
-        currentSong = playSongNumber;
-        song.src = "./Songs/"+this.Songs[currentSong];
-        this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
-        this.dom_nextSong.textContent = "Next Song: " + this.Songs[(currentSong+1)%this.Songs.length];
-        song.volume = dom_volume_slider.valueAsNumber;
+    public loadSong(clicked) {
+        console.log("ID = ", this.songs[clicked].ID);
+        song = new Audio(this.API_URL + '/song/' + this.songs[clicked].ID);
+        song.addEventListener('loadedmetadata', () => {
+            this.showDuration();
+        });
+        song.pause();
+        song.play();
 
-        setInterval(this.updateSongSlider, 100);
+
+        // this.fetchSong(clicked)
+        //     .then( data => {
+        //         console.log(data);
+        //         //song.src = data.PATH;
+        //     })
+        //     .catch( err => {
+        //         console.log(err);
+        //     })
+    }
+
+    private async fetchSong(clicked) {
+            try {
+                let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
+                    cache: 'no-cache',
+                    headers: {
+                        // 'content-type': 'application/javascript',
+                        'content-type': 'audio/mpeg',
+                        'crossDomain': 'true',
+                        'Authorization': localStorage.getItem("token")
+                    },
+                    method: 'GET',
+                    mode: 'cors',
+                    // todo REST POST redirect
+                    // redirect: 'follow',
+                    // credentials: 'include',
+                });
+                console.log("HDSAFJLDSA RESPONSE = ", response);
+                const data = await response;
+                console.log("HDSAFJLDSA RESPONSE = ", data);
+
+                return data;
+            } catch (err) {
+                console.log("Error fetching Mates!: ", err);
+            }
     }
 
 
@@ -215,6 +250,7 @@ export class AudioPlayer {
 
     playorpauseSong() {
         if(song.paused) {
+            console.log("hier wurde play aufgereufen ");
             song.play();
             this.dom_play.src = "./Images/pause.png";
         }
@@ -225,7 +261,7 @@ export class AudioPlayer {
     }
 
     next() {
-        currentSong = (currentSong + 1) % this.Songs.length;
+        currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
         song.play();
     }
@@ -233,7 +269,7 @@ export class AudioPlayer {
     previous() {
         currentSong--;
         if(currentSong < 0) {
-            currentSong = this.Songs.length - 1;
+            currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
         song.play();

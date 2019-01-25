@@ -5,15 +5,9 @@ let dom_player_duration;
 let dom_volume_slider;
 let currentSong;
 export class AudioPlayer {
-    constructor(dom) {
-        this.Songs = [
-            "Bad_Habit_Terrasound.mp3",
-            "Dark_Blue_Echoes.mp3",
-        ];
-        song = new Audio();
-        song.addEventListener('loadedmetadata', () => {
-            this.showDuration();
-        });
+    constructor(dom, Songs) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.songs = Songs;
         this.dom_root = dom;
         this.dom = document.createElement('div');
         this.dom.classList.add('AudioPlayer_Container');
@@ -82,7 +76,7 @@ export class AudioPlayer {
         });
         // this.dom_play.addEventListener('mouseover', () => {
         //     this.dom_play.style.width = "65px";
-        // });
+        // }
         // this.dom_play.addEventListener('mouseleave', () => {
         //     this.dom_play.style.width = "60px";
         // });
@@ -130,15 +124,46 @@ export class AudioPlayer {
         this.dom_nextSong.classList.add('AudioPlayer_NextSong');
         this.dom_player_controllers.appendChild(this.dom_nextSong);
         this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
-        this.loadSong(0);
+        //this.loadSong(0);
     }
-    async loadSong(playSongNumber) {
-        currentSong = playSongNumber;
-        song.src = "./Songs/" + this.Songs[currentSong];
-        this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
-        this.dom_nextSong.textContent = "Next Song: " + this.Songs[(currentSong + 1) % this.Songs.length];
-        song.volume = dom_volume_slider.valueAsNumber;
-        setInterval(this.updateSongSlider, 100);
+    loadSong(clicked) {
+        console.log("ID = ", this.songs[clicked].ID);
+        song = new Audio(this.API_URL + '/song/' + this.songs[clicked].ID);
+        song.addEventListener('loadedmetadata', () => {
+            this.showDuration();
+        });
+        song.pause();
+        song.play();
+        // this.fetchSong(clicked)
+        //     .then( data => {
+        //         console.log(data);
+        //         //song.src = data.PATH;
+        //     })
+        //     .catch( err => {
+        //         console.log(err);
+        //     })
+    }
+    async fetchSong(clicked) {
+        try {
+            let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
+                cache: 'no-cache',
+                headers: {
+                    // 'content-type': 'application/javascript',
+                    'content-type': 'audio/mpeg',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+            });
+            console.log("HDSAFJLDSA RESPONSE = ", response);
+            const data = await response;
+            console.log("HDSAFJLDSA RESPONSE = ", data);
+            return data;
+        }
+        catch (err) {
+            console.log("Error fetching Mates!: ", err);
+        }
     }
     updateSongSlider() {
         let c = Math.round(song.currentTime);
@@ -160,6 +185,7 @@ export class AudioPlayer {
     }
     playorpauseSong() {
         if (song.paused) {
+            console.log("hier wurde play aufgereufen ");
             song.play();
             this.dom_play.src = "./Images/pause.png";
         }
@@ -169,14 +195,14 @@ export class AudioPlayer {
         }
     }
     next() {
-        currentSong = (currentSong + 1) % this.Songs.length;
+        currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
         song.play();
     }
     previous() {
         currentSong--;
         if (currentSong < 0) {
-            currentSong = this.Songs.length - 1;
+            currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
         song.play();

@@ -15,11 +15,12 @@ const fs = require('fs');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
-    destination: function (req, files, cb) {
-        cb(null, './Server/Songs/')
+    destination: function (req, file, cb) {
+        cb(null, "./\Server/\Songs")
     },
-    filename: function (req, files, cb) {
-        cb(null, Date.now() + '_' + files.originalname)
+    filename: function (req, file, cb) {
+        console.log("MULTER FILENAME = ", file);
+        cb(null, file.originalname)
     }
 });
 const upload = multer({storage: storage});
@@ -326,25 +327,26 @@ app.get('/songsuser/:playlistID', auth, async (req, res) => {
 /**
  * get song by id
  */
-app.get('/song/:id', auth, (req, res) => {
-    db.get_row('SELECT TITLE,ARTIST,ADDED_BY FROM SONGS WHERE ID = ?', +req.params.id)
-        .then(row => {
-            if (!row)
-                throw 'song not found';
-            res.send({
-                success: true,
-                data: row
-            });
-        })
-        .catch(err => {
-            res.send({
-                success: false,
-                msg: 'access song failed',
-                err: err
-            });
-        });
-});
+app.get('/song/:id', async (req, res) => {
+    const path = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id);
+    console.log("Path = ", path);
+    const src = fs.createReadStream(path.PATH);
+    src.pipe(res);
 
+
+    // .then(row => {
+    //     if (!row)
+    //         throw 'song not found';
+    //     res.send(src)
+    //         .catch(err => {
+    //             res.send({
+    //                 success: false,
+    //                 msg: 'access song failed',
+    //                 err: err
+    //             });
+    //         });
+    // });
+});
 // TODO Die Playlists sind entweder privat, für Playlist-Mates offen oder für alle User öffentlich.
 /**
  * get USERS playlists from authorized user
@@ -667,7 +669,10 @@ app.post('/song/:playlistID', async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */                                                                     // , {name: 'nextInput', maxCount: 2}
-app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 2}, {name: 'token', maxCount: 2}]), async (req, res) => {
+app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 2}, {
+    name: 'token',
+    maxCount: 2
+}]), async (req, res) => {
     try {
         console.log("app.js, app.post/song: HUHUUUUUU = ", jwt.decode(req.get('Authorization')));
         console.log("app.js, app.post/song: PARAMS = ", req.params);
@@ -694,7 +699,8 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
         // save the song
         const song = req.files;
         // path for saving song on server
-        const filePath = __dirname + '/Server/Songs/' + Date.now() + '_' + song.originalname;
+        console.log("SHOW ME YOUR FILEPATH = ", song.audioFile[0].originalname);
+        const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
         console.log("app.js, app.post/song: FILEPATH = ", filePath);
 
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
