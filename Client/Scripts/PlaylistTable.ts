@@ -428,6 +428,7 @@ export class PlaylistTable {
         //this.filestoSend = this.formData.getAll('files[]');
         console.log("das ist files to send!", this.reader.result);
         this.filestoSend[0] = this.reader.result;
+        //console.log("API URL: ", this.API_URL);
         let response = await fetch(this.API_URL + "/song/global/" + this.PlaylistID,  {
             body: JSON.stringify({
                 //files: this.formData,
@@ -438,7 +439,7 @@ export class PlaylistTable {
             cache: 'no-cache',
             headers: {
                 //'enctype': 'multipart/form-data',
-                'content-type': 'multipart/form-data',
+                'content-type': 'application/json',
                 'crossDomain': 'true',
                 'Authorization': localStorage.getItem("token")
             },
