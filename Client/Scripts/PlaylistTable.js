@@ -173,30 +173,7 @@ export class PlaylistTable {
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
         this.dom_AddNewSongForm.addEventListener('submit', e => {
             console.log("hallo");
-            // e.preventDefault();
-            const files = document.querySelector('[type=file]').files;
-            const formData = new FormData();
-            for (let i = 0; i < files.length; i++) {
-                console.log("Z.218, FOR: this.files = ", files);
-                let file = files[i];
-                this.filestoSend[i] = files[i];
-                if (file.type != "audio/mpeg") {
-                    alert('Error : Incorrect file type');
-                    throw "You can only upload Audio files!";
-                }
-                else if (file.name.length < 2) {
-                    throw "Your upload has a not allowed name!";
-                }
-                else {
-                    this.formData.append('files[]', file);
-                    console.log("DAS IST FORM DATA, Z.229: ", this.formData.get("files[]"));
-                }
-            }
-            this.uploadNewSong().then(response => {
-                console.log("WAS GEEEHT = ", response);
-            }).catch(err => {
-                console.log("ERROR SCHON WIEDER = ", err);
-            });
+            e.preventDefault();
         });
         this.dom_AddNewSong = document.createElement("div");
         this.dom_AddNewSong.classList.add('AddNewSongDiv');
@@ -259,11 +236,27 @@ export class PlaylistTable {
                 console.log("Error: ", err);
             }
         }, false);
+        this.dom_InputToken = document.createElement("input");
+        this.dom_InputToken.classList.add("token");
+        this.dom_InputToken.setAttribute("id", "token");
+        this.dom_InputToken.setAttribute("name", "token");
+        this.dom_InputToken.setAttribute("type", "text");
+        this.dom_AddNewSong.appendChild(this.dom_InputToken);
+        this.dom_InputToken.value = localStorage.getItem("token");
+        this.dom_AddNewSongTitle = document.createElement("input");
+        this.dom_AddNewSongTitle.classList.add("AddNewSongTitle");
+        this.dom_AddNewSongTitle.setAttribute("id", "title");
+        this.dom_AddNewSongTitle.setAttribute("name", "title");
+        this.dom_AddNewSongTitle.setAttribute("type", "text");
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongTitle);
+        this.dom_AddNewSongTitle.placeholder = "Title from song";
         this.dom_AddNewSongSubmit = document.createElement("button");
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
         this.dom_AddNewSongSubmit.textContent = "Submit";
-        this.dom_AddNewSongSubmit.addEventListener('click', () => {
+        this.dom_AddNewSongSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.dom_AddNewSongForm.submit();
             // this.uploadNewSong().then(response => {
             //     console.log("Z.296: RESPONSE = ", await response);
             //     this.Playlist.songs.push(response);
@@ -360,52 +353,53 @@ export class PlaylistTable {
             dom_TableDataSupportedBy.textContent = this.Playlist.songs[i].SUPPORTED_BY;
         }
     }
-    async uploadNewSong() {
-        try {
-            //console.log("das ist form data kurz vorm absenden: ", this.formData.get('files[]'));
-            //this.filestoSend = this.formData.getAll('files[]');
-            // console.log("das ist files to send!", this.reader.result);
-            // this.filestoSend[0] = this.reader.result;
-            console.log("Z.415, uploadNewSong(): FILESFORMDATA = ", this.formData);
-            const filesFormData = this.formData;
-            filesFormData.append('file', this.files[0]);
-            filesFormData.append('title', JSON.stringify('Beispiel Title'));
-            filesFormData.append('artist', 'Beispiel Artist');
-            filesFormData.append('authorization', localStorage.getItem("token"));
-            console.log("Z.415, uploadNewSong(): THISFILES = ", this.files);
-            console.log("Z.415, uploadNewSong(): THISFILES[0] = ", this.files[0]);
-            console.log("Z.415, uploadNewSong(): FILESFORMDATA = ", filesFormData.get('file'));
-            console.log("Z.415, uploadNewSong(): LOCALSTORAGE = ", localStorage.getItem("token"));
-            let response = await fetch(this.API_URL + "/song/global/" + this.PlaylistID, {
-                body: JSON.stringify({
-                    audiofile: filesFormData,
-                    artist: 'bla artist',
-                    title: 'jo artist'
-                }),
-                cache: 'no-cache',
-                headers: {
-                    // 'Access-Control-Allow-Origin': '*',
-                    // 'content-type': 'multipart/form-data',
-                    // 'boundary':"xxxx",
-                    // 'Content-Type': 'undefined',
-                    'content-type': 'application/json',
-                    'crossDomain': 'true',
-                    'Authorization': localStorage.getItem("token")
-                },
-                method: 'POST',
-                mode: 'cors'
-            })
-                // TODO DAS HIER MUSS IRGENDWIE DURCHLAUFEN. response darf nicht undefined sein.
-                .then(response => response)
-                .then(success => console.log("SUCCESS = ", success))
-                .catch(err => console.log("WTF ERROR = ", err));
-            // const data = await response.json();
-            // return data;
-        }
-        catch (err) {
-            console.log("Error fetching Mates!: ", err);
-        }
-    }
+    // async uploadNewSong() {
+    //     try {
+    //         //console.log("das ist form data kurz vorm absenden: ", this.formData.get('files[]'));
+    //         //this.filestoSend = this.formData.getAll('files[]');
+    //         // console.log("das ist files to send!", this.reader.result);
+    //         // this.filestoSend[0] = this.reader.result;
+    //         console.log("Z.415, uploadNewSong(): FILESFORMDATA = ", this.formData);
+    //         const filesFormData = this.formData;
+    //         filesFormData.append('file', this.files[0]);
+    //         filesFormData.append('title', JSON.stringify('Beispiel Title'));
+    //         filesFormData.append('artist', 'Beispiel Artist');
+    //         filesFormData.append('authorization', localStorage.getItem("token"));
+    //         console.log("Z.415, uploadNewSong(): THISFILES = ", this.files);
+    //         console.log("Z.415, uploadNewSong(): THISFILES[0] = ", this.files[0]);
+    //         console.log("Z.415, uploadNewSong(): FILESFORMDATA = ", filesFormData.get('file'));
+    //         console.log("Z.415, uploadNewSong(): LOCALSTORAGE = ", localStorage.getItem("token"));
+    //         let response = await fetch(this.API_URL + "/song/global/" + this.PlaylistID, {
+    //             body: JSON.stringify({
+    //                 audiofile: filesFormData,
+    //                 artist: 'bla artist',
+    //                 title: 'jo artist'
+    //             }),
+    //             cache: 'no-cache',
+    //             headers: {
+    //                 // 'Access-Control-Allow-Origin': '*',
+    //                 // 'content-type': 'multipart/form-data',
+    //                 // 'boundary':"xxxx",
+    //                 // 'Content-Type': 'undefined',
+    //                 'content-type': 'application/json',
+    //                 'crossDomain': 'true',
+    //                 'Authorization': localStorage.getItem("token")
+    //             },
+    //             method: 'POST',
+    //             mode: 'cors'
+    //         })
+    //         // TODO DAS HIER MUSS IRGENDWIE DURCHLAUFEN. response darf nicht undefined sein.
+    //             .then(response => response)
+    //             .then(success => console.log("SUCCESS = ", success))
+    //             .catch(err => console.log("WTF ERROR = ", err));
+    //         // const data = await response.json();
+    //
+    //
+    //     } catch (err) {
+    //         console.log("Error fetching Mates!: ", err);
+    //
+    //     }
+    // }
     close() {
         this.dom_divTable.remove();
     }

@@ -15,11 +15,11 @@ const fs = require('fs');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function (req, files, cb) {
         cb(null, './Server/Songs/')
     },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '_' + file.originalname)
+    filename: function (req, files, cb) {
+        cb(null, Date.now() + '_' + files.originalname)
     }
 });
 const upload = multer({storage: storage});
@@ -666,8 +666,9 @@ app.post('/song/:playlistID', async (req, res) => {
 
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
+<<<<<<< HEAD
  */                                                                     // , {name: 'nextInput', maxCount: 2}
-app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title'}]), async (req, res) => {
+app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 2}, {name: 'token', maxCount: 2}]), async (req, res) => {
     try {
         console.log("app.js, app.post/song: HUHUUUUUU = ", jwt.decode(req.get('Authorization')));
         console.log("app.js, app.post/song: PARAMS = ", req.params);
@@ -677,8 +678,8 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
         console.log("app.js, app.post/song: ARTIST = ", req.body.artist);
         console.log("app.js, app.post/song: FILE = ", req.files);
         console.log("app.js, app.post/song: BODY = ", req.body);
-        console.log("app.js, app.post/song: HALLO = ", jwt.decode(req.get('Authorization')).username);
-        const user = jwt.decode(req.get('Authorization')).username;
+        console.log("app.js, app.post/song: HALLO = ", jwt.decode(req.body["token"]));
+        const user = jwt.decode(req.body["token"]).username;
 
         console.log("app.js, app.post/song: USER = ", user);
 
@@ -692,7 +693,7 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
         // }
 
         // save the song with key 'audioFile'
-        const song = req.file;
+        const song = req.files;
         // path for saving song on server
         const filePath = __dirname + '/Server/Songs/' + Date.now() + '_' + song.originalname;
         console.log("app.js, app.post/song: FILEPATH = ", filePath);
