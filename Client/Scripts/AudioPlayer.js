@@ -132,7 +132,7 @@ export class AudioPlayer {
         this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
         this.loadSong(0);
     }
-    loadSong(playSongNumber) {
+    async loadSong(playSongNumber) {
         currentSong = playSongNumber;
         song.src = "./Songs/" + this.Songs[currentSong];
         this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];

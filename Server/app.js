@@ -238,7 +238,7 @@ app.post('/login', (req, res) => {
             }
 
             //token generator
-            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "3600"});
+            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "10s"});
 
             console.log("das ist tooooooken!!!: ", token);
 
@@ -283,7 +283,7 @@ app.get('/songs', async (req, res) => {
 /**
  * get songs of playlist x from user
  */
-app.get('/songsuser/:playlistID', async (req, res) => {
+app.get('/songsuser/:playlistID', auth, async (req, res) => {
     // Aktuell angemeldeter Benutzer
     const user = jwt.decode(req.get('Authorization')).username;
     console.log("app.js, app.get/songsuser: USER = ", user);
@@ -301,7 +301,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
 
     // const songs = await db.get_rows('SELECT * FROM SONGS JOIN PLAYLIST_CONTAINS ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID' +
     //     ' AND PLAYLIST_CONTAINS.PLAYLIST_ID = ?', playlist.ID);
-    const songs = await db.get_rows('SELECT SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
+    const songs = await db.get_rows('SELECT SONGS.ID, SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
         'FROM SONGS ' +
         'JOIN PLAYLIST_CONTAINS ' +
         'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
@@ -311,7 +311,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
                 throw 'no songs available';
             res.send({
                 success: true,
-                data: rows
+                data: rows, auth
             });
         })
         .catch(err => {
@@ -326,7 +326,7 @@ app.get('/songsuser/:playlistID', async (req, res) => {
 /**
  * get song by id
  */
-app.get('/song/:id', (req, res) => {
+app.get('/song/:id', auth, (req, res) => {
     db.get_row('SELECT TITLE,ARTIST,ADDED_BY FROM SONGS WHERE ID = ?', +req.params.id)
         .then(row => {
             if (!row)
@@ -666,7 +666,6 @@ app.post('/song/:playlistID', async (req, res) => {
 
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
-<<<<<<< HEAD
  */                                                                     // , {name: 'nextInput', maxCount: 2}
 app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 2}, {name: 'token', maxCount: 2}]), async (req, res) => {
     try {
@@ -692,7 +691,7 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
         //     return res.status(400).send('No files were uploaded.');
         // }
 
-        // save the song with key 'audioFile'
+        // save the song
         const song = req.files;
         // path for saving song on server
         const filePath = __dirname + '/Server/Songs/' + Date.now() + '_' + song.originalname;

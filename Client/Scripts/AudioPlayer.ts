@@ -181,7 +181,7 @@ export class AudioPlayer {
         this.loadSong(0);
     }
 
-    public loadSong(playSongNumber) {
+    public async loadSong(playSongNumber) {
         currentSong = playSongNumber;
         song.src = "./Songs/"+this.Songs[currentSong];
         this.dom_player_songTitle.textContent = currentSong + 1 + ". " + this.Songs[currentSong];
