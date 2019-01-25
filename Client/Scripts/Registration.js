@@ -1,7 +1,7 @@
-const API_URL = 'http://localhost:3000';
 import { manager } from "./app.js";
 export class Registration {
     constructor(dom) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');
@@ -66,7 +66,7 @@ export class Registration {
                     console.log("PW too short = ", this.dom_registerPW.value.length);
                     console.log(`das ist body name: ${this.dom_registerID.value}`);
                     console.log(`das ist body pw: ${password.toString()}`);
-                    const response = await fetch(API_URL + '/user/', {
+                    const response = await fetch(this.API_URL + '/user/', {
                         body: JSON.stringify({
                             name: this.dom_registerID.value,
                             password: password

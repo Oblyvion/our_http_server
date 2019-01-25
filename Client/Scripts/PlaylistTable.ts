@@ -2,11 +2,8 @@ import {AudioPlayer} from "./AudioPlayer.js";
 import {manager} from "./app.js";
 import {response} from "express";
 
-const API_URL = 'http://localhost:3000';
-const xhttp = new XMLHttpRequest();
-
-
 export class PlaylistTable {
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divTable: HTMLDivElement;
@@ -21,6 +18,7 @@ export class PlaylistTable {
     private dom_PlaylistHeaderAddBtn: HTMLImageElement;
     private dom_PlaylistHeaderShare: HTMLImageElement;
     private dom_DropdownMenu: HTMLDivElement;
+    private dom_DropdownMenuDiv: HTMLDivElement;
     private dom_DropdownMenuContent: HTMLDivElement;
     private dom_DropdownMenuInput: HTMLInputElement;
     private dom_DropdownMenuData;
@@ -99,42 +97,70 @@ export class PlaylistTable {
             this.dom_DropdownMenu.style.display = "none";
         });
 
+        this.dom_DropdownMenuDiv = document.createElement('div');
+        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuDiv);
+        this.dom_DropdownMenuDiv.classList.add("ShareDropdownMenuDiv");
+
         this.dom_DropdownMenuContent = document.createElement('div');
-        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);
+        this.dom_DropdownMenuDiv.appendChild(this.dom_DropdownMenuContent);
         this.dom_DropdownMenuContent.classList.add("ShareDropdownMenuContent");
 
         this.dom_DropdownMenuInput = document.createElement('input');
-        this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuInput);
-        this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuData");
+        this.dom_DropdownMenuDiv.insertBefore(this.dom_DropdownMenuInput, this.dom_DropdownMenuContent);
+        this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuInput");
         this.dom_DropdownMenuInput.setAttribute('type', "text");
         this.dom_DropdownMenuInput.onkeyup = () => {
-            console.log("EVENT!!!!");
-            if (this.dom_DropdownMenuContent.firstChild) {
-                this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
-            }
-            for (let j = 0; j < this.Mates.length; j++) {
-                for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
-                    console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
-                    if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
-                        // if (this.dom_DropdownMenuData) {
-                        //     this.dom_DropdownMenuData.remove();
-                        // }
-                        console.log("hallo add menu content");
-                        this.dom_DropdownMenuData = document.createElement('a');
-                        this.dom_DropdownMenuData.textContent = this.Mates[j].NAME;
-                        this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
-                        this.dom_DropdownMenuData.setAttribute('href', '#');
-                        this.dom_DropdownMenuData.addEventListener('click', () => {
+            //console.log("EVENT!!!!");
 
-                        });
-                        this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
-                    } else {
-                        if (this.dom_DropdownMenuContent.firstChild) {
-                            this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
+            for (let j = 0; j < this.Mates.length; j++) {
+
+                let regexp = new RegExp("(^" + this.dom_DropdownMenuInput.value + "){1}");
+
+                //console.log("DAS IST REGEXP: ", regexp);
+                if (this.Mates[j].NAME.match(regexp)) {
+                    for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
+                        if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
+                            console.log("hallo hier if remove!");
+                            this.dom_DropdownMenuContent.children[i].remove();
+                        }
+                    }
+                    this.dom_DropdownMenuData = document.createElement('a');
+                    this.dom_DropdownMenuData.textContent = this.Mates[j].NAME;
+                    this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
+                    this.dom_DropdownMenuData.setAttribute('href', '#');
+                    this.dom_DropdownMenuData.addEventListener('click', () => {
+                    });
+                    this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
+                } else {
+                    console.log("hallo hier else!");
+                    for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
+                        if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
+                            console.log("hallo hier else remove!");
+                            this.dom_DropdownMenuContent.children[i].remove();
                         }
                     }
                 }
+
+                if (this.dom_DropdownMenuInput.value.length <= 0) {
+                    while (this.dom_DropdownMenuContent.firstChild) {
+                        this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild);
+                    }
+                }
+
             }
+
+            // for (let j = 0; j < this.Mates.length; j++) {
+            //     for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
+            //         console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
+            //         if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
+            //             console.log("hallo add menu content");
+            //         } else {
+            //             if (this.dom_DropdownMenuContent.childNodes) {
+            //                 this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
+            //             }
+            //         }
+            //     }
+            // }
         };
 
 
@@ -202,7 +228,7 @@ export class PlaylistTable {
 
         this.dom_AddNewSongForm = document.createElement("form");
         this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
-        this.dom_AddNewSongForm.setAttribute("action", API_URL + "/song/global/" + this.PlaylistID);
+        this.dom_AddNewSongForm.setAttribute("action", this.API_URL + "/song/global/" + this.PlaylistID);
         this.dom_AddNewSongForm.setAttribute("method", "POST");
         this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
@@ -230,9 +256,9 @@ export class PlaylistTable {
                 }
             }
 
-            this.uploadNewSong().then( response => {
+            this.uploadNewSong().then(response => {
                 console.log("WAS GEEEHT = ", response);
-            }).catch( err => {
+            }).catch(err => {
                 console.log("ERROR SCHON WIEDER = ", err);
             })
         });
@@ -313,23 +339,23 @@ export class PlaylistTable {
         this.dom_AddNewSongSubmit.textContent = "Submit";
         this.dom_AddNewSongSubmit.addEventListener('click', () => {
             // this.uploadNewSong().then(response => {
-                //     console.log("Z.296: RESPONSE = ", await response);
-                //     this.Playlist.songs.push(response);
-                //     this.fetchPlaylistSongs().then((result) => {
-                //         if (!result) {
-                //             console.log("Z.300, RESULT = ", result);
-                //             throw 'DU HUUUUURENSOOOOOHHHHHN'
-                //         }
-                //
-                //         this.Playlist.songs = result.data;
-                //         console.log("das SIND DIE SONGS: ", this.Playlist.songs);
-                //         this.addPlaylistSongs();
-                //     }).catch(err => {
-                //         console.log("Z.303: ERROR = ", err);
-                //     });
-                // TODO HIER MUSS VON UPLOADNEWSONG() WAS GESCHEITES ANKOMMEN.
-                // const res = response;
-                // console.log("Z.311: RESPONSE = ", res);
+            //     console.log("Z.296: RESPONSE = ", await response);
+            //     this.Playlist.songs.push(response);
+            //     this.fetchPlaylistSongs().then((result) => {
+            //         if (!result) {
+            //             console.log("Z.300, RESULT = ", result);
+            //             throw 'DU HUUUUURENSOOOOOHHHHHN'
+            //         }
+            //
+            //         this.Playlist.songs = result.data;
+            //         console.log("das SIND DIE SONGS: ", this.Playlist.songs);
+            //         this.addPlaylistSongs();
+            //     }).catch(err => {
+            //         console.log("Z.303: ERROR = ", err);
+            //     });
+            // TODO HIER MUSS VON UPLOADNEWSONG() WAS GESCHEITES ANKOMMEN.
+            // const res = response;
+            // console.log("Z.311: RESPONSE = ", res);
 
             // }).catch(err => {
             //     console.log("Z.307: ERROR = ", err);
@@ -340,7 +366,7 @@ export class PlaylistTable {
 
     async fetchPlaylistMates() {
         try {
-            let response = await fetch(API_URL + "/playlistMates ", {
+            let response = await fetch(this.API_URL + "/playlistMates ", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -368,7 +394,7 @@ export class PlaylistTable {
         // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
         // console.log(`das ist body pw: ${password.toString()}`);
         // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(API_URL + "/songsuser/ " + this.PlaylistID, {
+        let response = await fetch(this.API_URL + "/songsuser/ " + this.PlaylistID, {
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/javascript',
@@ -443,7 +469,7 @@ export class PlaylistTable {
             console.log("Z.415, uploadNewSong(): THISFILES[0] = ", this.files[0]);
             console.log("Z.415, uploadNewSong(): FILESFORMDATA = ", filesFormData.get('file'));
             console.log("Z.415, uploadNewSong(): LOCALSTORAGE = ", localStorage.getItem("token"));
-            let response = await fetch(API_URL + "/song/global/" + this.PlaylistID, {
+            let response = await fetch(this.API_URL + "/song/global/" + this.PlaylistID, {
                 body: JSON.stringify({
                     audiofile: filesFormData,
                     artist: 'bla artist',
@@ -470,7 +496,8 @@ export class PlaylistTable {
 
             // return data;
         } catch (err) {
-            console.log("Z.434, Error  =    : ", err);
+            console.log("Error fetching Mates!: ", err);
+
         }
     }
 

@@ -6,7 +6,6 @@ import {About_us} from "./About_us.js";
 import {Contact} from "./Contact.js";
 import {Impressum} from "./Impressum.js";
 import {MyAccount} from "./MyAccount.js";
-import {MyPlaylistMates} from "./MyPlaylistMates";
 
 const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');
@@ -19,6 +18,8 @@ localStorage.setItem("PlaylistIndex", "1");
 let active_app = null;
 
 export const manager = function (app) {
+
+    localStorage.setItem("port", "3000");
 
     if (active_app != null) {
         active_app.close();

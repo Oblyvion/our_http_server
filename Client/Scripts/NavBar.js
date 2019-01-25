@@ -1,7 +1,7 @@
 import { PlaylistTable } from "./PlaylistTable.js";
-const API_URL = 'http://localhost:3000';
 export class NavBar {
     constructor(dom_body, dom_content) {
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.dom_span_array = [];
         this.fetchPlaylists().then((result) => {
             this.OwnlistofPlaylists = result.data;
@@ -93,7 +93,7 @@ export class NavBar {
         // console.log(`das ist body pw: ${password.toString()}`);
         try {
             // console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
-            let response = await fetch(API_URL + "/playlists/", {
+            let response = await fetch(this.API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/json',
@@ -117,7 +117,7 @@ export class NavBar {
         // console.log(`das ist body pw: ${password.toString()}`);
         try {
             // console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
-            let response = await fetch(API_URL + "/playlists/collabs", {
+            let response = await fetch(this.API_URL + "/playlists/collabs", {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/json',
@@ -198,7 +198,7 @@ export class NavBar {
     }
     async insertNewPlaylist(playlist_name) {
         try {
-            const response = await fetch(API_URL + '/playlist/', {
+            const response = await fetch(this.API_URL + '/playlist/', {
                 body: JSON.stringify({
                     name: playlist_name
                 }),

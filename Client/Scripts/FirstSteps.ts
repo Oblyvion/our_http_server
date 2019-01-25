@@ -4,9 +4,8 @@ import {NavBar} from "./NavBar.js";
 import {PlaylistTable} from "./PlaylistTable.js";
 import {Login} from "./Login";
 
-const API_URL = 'http://localhost:3000';
-
 export class FirstSteps {
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private audioPlayer: AudioPlayer;
