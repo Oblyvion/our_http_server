@@ -181,12 +181,14 @@ export class AudioPlayer {
     }
 
     public loadSong(clicked) {
+        console.log("hallllo");
+
         console.log("ID = ", this.songs[clicked].ID);
         song = new Audio(this.API_URL + '/song/' + this.songs[clicked].ID);
         song.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-        song.playorpauseSong();
+        // song.play();
 
 
         // this.fetchSong(clicked)
@@ -204,8 +206,9 @@ export class AudioPlayer {
                 let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
                     cache: 'no-cache',
                     headers: {
-                        'content-type': 'application/octed-stream',
-                        // 'content-type': 'audio/mpeg',
+                        // 'content-type': 'application/octet-stream',
+                        'content-type': 'audio/mpeg',
+                        'content-disposition': 'inline',
                         'crossDomain': 'true',
                         'Authorization': localStorage.getItem("token")
                     },

@@ -188,7 +188,6 @@ export class PlaylistTable {
         this.dom_AddNewSongDialogButton.setAttribute("id", "file");
         this.dom_AddNewSongDialogButton.setAttribute("name", "audioFile");
         this.dom_AddNewSongDialogButton.setAttribute("type", "file");
-        // this.dom_AddNewSongDialogButton.setAttribute("multiple","multiple");
         // this.dom_AddNewSongDialogButton.type = "file";
         this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);

@@ -118,7 +118,7 @@ export class NewPlaylistMate {
         let dom_NewRandomMate;
         let random;
         console.log("Users length: ", this.Users.length);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < this.Users.length; i++) {
             random = Math.floor(Math.random() * (this.Users.length - 1));
             console.log("random: ", random);
             if (i === 0) {

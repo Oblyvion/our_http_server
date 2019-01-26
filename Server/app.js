@@ -13,9 +13,11 @@ const fs = require('fs');
 // const bodyParser = require('body-parser');
 // const fileUpload = require('express-fileupload');
 
+
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        // DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
         cb(null, "./\Server/\Songs")
     },
     filename: function (req, file, cb) {
@@ -634,6 +636,8 @@ app.post('/playlist', async (req, res) => {
 
 app.post('/song/:playlistID', async (req, res) => {
     try {
+        // console.log("DOCUMENT WRITE = ", navigator);
+
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
@@ -668,7 +672,7 @@ app.post('/song/:playlistID', async (req, res) => {
             });
             console.log("app.js, app.post/song: WÄRE TOLL, WENN ES WIEDER GEKLAPPT HÄTTE. ");
         } catch (e) {
-            console.log("app.js, app.post/song: ERROR PLAYLIST VON MATE KONNTE NICHT IN COLLABORATORS GEFUNDEN WERDEN!", err);
+            console.log("app.js, app.post/song: ERROR PLAYLIST KONNTE ÜBERHAUPT NICHT GEFUNDEN WERDEN!", err);
             return res.status(500).send({
                 success: false,
                 msg: 'Playlist von Mate konnte nicht in COLLABORATORS gefunden werden.',
@@ -681,10 +685,8 @@ app.post('/song/:playlistID', async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */                                                                     // , {name: 'nextInput', maxCount: 2}
-app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 2}, {
-    name: 'token',
-    maxCount: 2
-}]), async (req, res) => {
+app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 1}, {
+    name: 'token', maxCount: 1}, {name: 'artist'}]), async (req, res) => {
     try {
         console.log("app.js, app.post/song: HUHUUUUUU = ", jwt.decode(req.get('Authorization')));
         console.log("app.js, app.post/song: PARAMS = ", req.params);
@@ -712,6 +714,7 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
         const song = req.files;
         // path for saving song on server
         console.log("SHOW ME YOUR FILEPATH = ", song.audioFile[0].originalname);
+        // DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
         const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
         console.log("app.js, app.post/song: FILEPATH = ", filePath);
 
