@@ -1,7 +1,7 @@
 import {PlaylistTable} from "./PlaylistTable.js";
 
 export class NavBar {
-    private API_URL = 'http://192.168.178.44:'+localStorage.getItem("port");
+    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divNavBar: HTMLElement;

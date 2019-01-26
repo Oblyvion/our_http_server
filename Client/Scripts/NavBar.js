@@ -1,7 +1,7 @@
 import { PlaylistTable } from "./PlaylistTable.js";
 export class NavBar {
     constructor(dom_body, dom_content) {
-        this.API_URL = 'http://192.168.178.44:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.dom_span_array = [];
         this.fetchPlaylists().then((result) => {
             this.OwnlistofPlaylists = result.data;
