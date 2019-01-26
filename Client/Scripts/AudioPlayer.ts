@@ -190,7 +190,10 @@ export class AudioPlayer {
         console.log("NAME: ", this.songs[clicked]);
         this.dom_player_songTitle = this.songs[clicked].NAME;
         curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
-        // song.src();
+        console.log("JSADLFJSA: ", this.songs[clicked].TITLE);
+// song.src();
+        this.dom_player_songTitle.textContent = this.songs[clicked].TITLE;
+
         console.log("ID = ", this.songs[clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
         curSong.addEventListener('loadedmetadata', () => {
@@ -200,6 +203,9 @@ export class AudioPlayer {
 
         curSong.play();
         this.dom_play.src = "./Images/pause.png";
+        console.log("TITLE = ", curSong);
+        this.dom_player_songTitle.textContent = curSong.title;
+
         setInterval(this.updateSongSlider, 100);
 
         // this.fetchSong(clicked)

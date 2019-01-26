@@ -139,7 +139,7 @@ export class NavBar {
                     'Authorization': localStorage.getItem('token')
                 },
                 method: 'GET',
-                mode: 'cors',
+                mode: 'cors'
             });
             let data = await response.json();
             console.log("NavBar.ts, fetchPlaylists: data = ", data.data);

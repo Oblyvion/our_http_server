@@ -128,7 +128,7 @@ export class Login implements iAppContainer {
                     localStorage.clear();
                     // console.log("Login.ts, loginUser: 1localStorage = ", localStorage.getItem('token'));
                     localStorage.setItem("token", result.data);
-                    // console.log("Login.ts, 2loginUser: 2localStorage = ", localStorage.getItem('token'));
+                    console.log("Login.ts, loginUser: 2localStorage = ", localStorage.getItem('token'));
                     this.close();
                     manager("page_first_steps");
                 }
