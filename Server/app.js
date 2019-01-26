@@ -14,6 +14,8 @@ const fs = require('fs');
 // const fileUpload = require('express-fileupload');
 
 
+
+
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -335,7 +337,7 @@ app.get('/song/:id', async (req, res) => {
         console.log("Path = ", path);
         const src = fs.createReadStream(path.PATH);
         src.pipe(res);
-    }catch (err) {
+    } catch (err) {
         console.log("ERROR bei /song/:id: ERROR = ", err);
         if (err.message.match('ENOENT: no such file or directory')) {
             console.log("ERROR bei /song/:id: CATCHED ERROR = ", err);
@@ -343,7 +345,7 @@ app.get('/song/:id', async (req, res) => {
     }
     try {
 
-    }catch (err) {
+    } catch (err) {
         console.log("ERROR Z.346 bei /song/:id: CATCHED ERROR = ", err);
     }
 
@@ -712,10 +714,19 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
 
         // save the song
         const song = req.files;
+        let filePath;
         // path for saving song on server
         console.log("SHOW ME YOUR FILEPATH = ", song.audioFile[0].originalname);
+
+        // if (OSName === "Windows")
+        //     filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
+        // else
+        console.log("DirNAME: ", __dirname);
+        filePath = "./Server/Songs/" + song.audioFile[0].originalname;
+
         // DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
-        const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
+        //const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
+
         console.log("app.js, app.post/song: FILEPATH = ", filePath);
 
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);

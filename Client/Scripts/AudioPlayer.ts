@@ -4,6 +4,7 @@ let dom_player_current: HTMLElement;
 let dom_player_duration: HTMLElement;
 let dom_volume_slider: HTMLInputElement;
 let currentSong;
+let curSong = new Audio();
 
 export class AudioPlayer {
 
@@ -25,7 +26,6 @@ export class AudioPlayer {
     private dom_volume_down;
     private dom_volume_up;
     private dom_nextSong: HTMLElement;
-    private curSong = new Audio();
 
     // private song: HTMLAudioElement;
     //     "Bad_Habit_Terrasound.mp3",
@@ -185,18 +185,20 @@ export class AudioPlayer {
     // } else
     public loadSong(clicked) {
         console.log("hallllo");
-        console.log("song = ", this.curSong);
+        console.log("song = ", curSong);
         console.log("JSADLFJSA: ", this.songs[clicked].ID);
-        this.curSong.remove();
-        this.curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
+        curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
         // song.src();
         console.log("ID = ", this.songs[clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
-        this.curSong.addEventListener('loadedmetadata', () => {
+        curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-        this.curSong.play();
 
+
+        curSong.play();
+        this.dom_play.src = "./Images/pause.png";
+        setInterval(this.updateSongSlider, 100);
 
         // this.fetchSong(clicked)
         //     .then( data => {
@@ -237,7 +239,8 @@ export class AudioPlayer {
 
 
     updateSongSlider() {
-        let c = Math.round(this.curSong.currentTime);
+        //console.log("hallo hier curSong!: ", this.curSong);
+        let c = Math.round(curSong.currentTime);
         dom_player_slider.value = c.toString();
         dom_player_current.textContent = AudioPlayer.convertTime(c);
     }
@@ -251,19 +254,19 @@ export class AudioPlayer {
     }
 
     showDuration() {
-        let d = Math.floor(this.curSong.duration);
+        let d = Math.floor(curSong.duration);
         //console.log(d);
         dom_player_slider.setAttribute("max", d.toString());
         dom_player_duration.textContent = AudioPlayer.convertTime(d);
     }
 
     playorpauseSong() {
-        if (this.curSong.paused) {
+        if (curSong.paused) {
             console.log("hier wurde play aufgereufen ");
-            this.curSong.play();
+            curSong.play();
             this.dom_play.src = "./Images/pause.png";
         } else {
-            this.curSong.pause();
+            curSong.pause();
             this.dom_play.src = "./Images/play.png";
         }
     }
@@ -271,7 +274,7 @@ export class AudioPlayer {
     next() {
         currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
-        this.curSong.play();
+        curSong.play();
     }
 
     previous() {
@@ -280,25 +283,25 @@ export class AudioPlayer {
             currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
-        this.curSong.play();
+        curSong.play();
     }
 
     forward() {
-        this.curSong.currentTime = this.curSong.currentTime + 10;
+        curSong.currentTime = curSong.currentTime + 10;
     }
 
     backward() {
-        this.curSong.currentTime = this.curSong.currentTime - 10;
+        curSong.currentTime = curSong.currentTime - 10;
     }
 
     seekSong() {
-        this.curSong.currentTime = dom_player_slider.valueAsNumber;
-        dom_player_current.textContent = AudioPlayer.convertTime(this.curSong.currentTime);
+        curSong.currentTime = dom_player_slider.valueAsNumber;
+        dom_player_current.textContent = AudioPlayer.convertTime(curSong.currentTime);
     }
 
     adjustVolume() {
-        this.curSong.volume = dom_volume_slider.valueAsNumber;
-        if (this.curSong.volume === 0) {
+        curSong.volume = dom_volume_slider.valueAsNumber;
+        if (curSong.volume === 0) {
             this.dom_volume_down.src = "./Images/volume_silent.png"
         } else this.dom_volume_down.src = "./Images/volume_down.png";
     }
