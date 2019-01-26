@@ -186,7 +186,10 @@ export class AudioPlayer {
         song.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-        song.playorpauseSong();
+        song.play();
+        this.dom_play.src = "./Images/pause.png";
+
+        setInterval(this.updateSongSlider, 100);
 
 
         // this.fetchSong(clicked)

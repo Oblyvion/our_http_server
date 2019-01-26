@@ -398,24 +398,37 @@ button:hover, .form button:active {
   width: 50vw;
   height: 50vh;
   position: absolute;
-  top: 75%;
+  top: 40%;
   left: 70%;
-  margin: -37.5vh 0 0 -37.5vw;
+  margin: -20vh 0 0 -37.5vw;
   /* [-(height/2)px 0 0 -(width/2)px] */
-  background: #474747;
+  background: rgba(70, 70, 70, 0.8);
   grid-template-columns: minmax(10%, 10%) minmax(80%, 80%) minmax(10%, 10%);
-  grid-template-rows: minmax(20%, 20%) minmax(10%, 10%) minmax(20%, 20%) minmax(20%, 20%) minmax(10%, 10%) minmax(20%, 20%);
-  grid-template-areas: ". . ." ". input ." ". upload ." ". title ." ". submit ." ". . ."; }
+  grid-template-rows: minmax(20%, 20%) minmax(20%, 20%) minmax(20%, 20%) minmax(10%, 10%) minmax(10%, 10%) minmax(10%, 10%) minmax(10%, 10%);
+  grid-template-areas: "header header header" ". input ." ". upload ." ". title ." ". artist ." ". submit ." ". . ."; }
+
+.AddNewSongHeader {
+  background-color: lightblue;
+  grid-area: header;
+  margin-bottom: 10px;
+  text-align: center;
+  padding-top: 15px; }
 
 .AddNewSongInput {
   grid-area: input;
   margin-bottom: 10px; }
 
 .AddNewSongDialogButton {
-  grid-area: upload; }
+  grid-area: upload;
+  margin-bottom: 10px; }
 
 .AddNewSongTitle {
-  grid-area: title; }
+  grid-area: title;
+  margin-bottom: 10px; }
+
+.AddNewSongArtist {
+  grid-area: artist;
+  margin-bottom: 10px; }
 
 .AddNewSongSubmit {
   grid-area: submit; }
