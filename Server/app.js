@@ -5,15 +5,13 @@ const {celebrate, Joi, isCelebrate} = require('celebrate');
 const EscapeHtml = require('escape-html');
 const DB = require('./db');
 const cors = require('cors');
-const basic_auth = require('basic-auth');
 const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+// const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');
 // const fileUpload = require('express-fileupload');
-
-
 
 
 const multer = require('multer');
@@ -34,18 +32,6 @@ let UserData = null;
 const app = express();
 app.use(express.json());
 app.use(cors());
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', '*');
-//     if (req.method === 'OPTIONS') {
-//         res.header('Access-Control-Allow-Methods', 'PUT, POST, GET');
-//         return res.status(200).json({});
-//     }
-//     next();
-// });
-// app.use(fileUpload());
-// app.use(upload);
-// app.use(bodyParser.json());
 
 // SQLite DB Handler
 const db = new DB();
@@ -53,96 +39,78 @@ db.create()
     .then(() => console.log('DB created'))
     .catch(err => {
         throw err;
-        // console.log("SPACKIAD");
     });
 
-// TODO ka, obs gebraucht wird
-// // celebrate error middle ware handler
-// const errors = () => (err, req, res, next) => {
-//     if (isCelebrate(err)) {
-//         const error = {
-//             success: false,
-//             msg: 'Bad Request',
-//             err: err.message,
-//             validation: {
-//                 source: err._meta.source,
-//                 keys: [],
-//             },
-//         };
-//
-//         if (err.details) {
-//             for (let i = 0; i < err.details.length; i += 1) {
-//                 const path = err.details[i].path.join('.');
-//                 error.validation.keys.push(EscapeHtml(path));
-//             }
-//         }
-//         // return res.status(400).send(error);
-//         return res.send(error);
-//     }
-//     return next(err);
-// };
-// TODO ENDE
-
-// // Joi validation schemas for celebrate
-// const schema_group_get = {
-//     params: Joi.object().keys({
-//         id: Joi.number().required()
-//     })
-// };
-
-// const schema_user_post = {
-//     params: Joi.keys({
-//         name: Joi.string().required()
-//     })
-// };
-const schema_user_post = Joi.object().keys({
-    name: Joi.string().alphanum().min(3).max(30).required()
-});
-
-
 const auth = async (req, res, next) => {
-    try {
-        const token = req.get('Authorization');
-        console.log("app.js, auth: TOKEN = " + jwt.decode(token).username);
-        const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(token).username);
-        console.log("app.js, auth: USER = " + user.ID);
-        if (!user) {
-            throw "Invalid Authentication";
-        }
+        try {
+            let token = req.get('Authorization');
 
-        next();
-    } catch (err) {
-        console.log("hisd: ", err.toString());
-        res.set("ERROR: You are not authorized for this action!");
+            console.log("app.js, auth: TOKEN = " + token);
+            console.log("app.js, auth: TOKEN decoded = " + jwt.decode(token));
+            console.log("app.js, auth: TOKEN decoded and stringified = " + JSON.stringify(jwt.decode(token)));
+            console.log("app.js, auth: TOKEN USERNAME = " + jwt.decode(token).username);
+
+            console.log("app.js, auth: TOKEN decoded and stringified = " + JSON.stringify(jwt.decode(token)));
+            // const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(token).username);
+            // console.log("app.js, auth: USER = " + user.ID);
+            if (token) {
+                console.log("BOOAAAAAAA alder");
+                jwt.verify(token, 'secret', (err, decode) => {
+                    try {
+                        console.log("JAAA FUCK THAD ERROR = ", err);
+                        if (err) {
+                            // return res.send({
+                            //     success: false,
+                            //     msg: 'Unauthorized access!'
+                            // });
+                            throw 'There is a problem right here, Z. 66.'
+                        }
+                    } catch (err) {
+                        console.log("app.js, auth: KOMICHER ERR = " + err);
+                    }
+                    console.log("app.js, auth: DECODE = " + JSON.stringify(decode));
+                    req.decode = decode;
+                    next();
+                })
+            } else {
+                console.log("Kein Token gefunden!!!");
+                res.send({
+                    success: false,
+                    msg: 'No token available.'
+                })
+            }
+
+        } catch
+            (err) {
+            console.log("app.js, Auth, Z.58: ERROR = : ", err.toString());
+            res.send({
+                success: false,
+                msg: "ERROR: You are not authorized for this action!",
+                err: err
+            })
+        }
     }
-};
+;
 
 async function userInit(req) {
     try {
         const standardPlaylistName = 'Your 1. Playlist';
         const standardSongId = 1;
-        console.log('WAS GEEEEHT????');
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
         await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
-        console.log('WAS JJOOOOOOOOOOOOOOOOOOOOO????   ', userID.ID);
         const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
         console.log('playlistID = ', playlistID);
-        console.log('BLABLABLBL');
         await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
-        console.log('WAS sakjfdlfd????');
-        console.log("HURENSOHN ===== ", err);
-
-        console.log('WAS sakjfdlfd????');
     } catch (err) {
         console.log("ERROR ===== ", err);
     }
 }
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 
 // ----------------------------GET section----------------------------
 /**
@@ -175,7 +143,7 @@ app.get('/init', (req, res) => {
 /**
  * get all users
  */
-app.get('/users', async (req, res) => {
+app.get('/users', auth, async (req, res) => {
     const user = jwt.decode(req.get('Authorization')).username;
     console.log("app.js, app.get/users: USER = ", user);
     const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
@@ -189,18 +157,18 @@ app.get('/users', async (req, res) => {
             console.log("app.js, app.get/users: USERS = ", rows);
             if (!rows)
                 throw 'users not found';
-            res.send({
-                success: true,
-                data: rows
-            });
+            // res.send({
+            //     success: true,
+            //     data: rows
+            // });
         })
         .catch(err => {
             console.log("app.js, app.get/users: ERROR = ", err);
-            res.send({
-                success: false,
-                msg: 'access users failed',
-                err: err
-            });
+            // res.send({
+            //     success: false,
+            //     msg: 'access users failed',
+            //     err: err
+            // });
         });
 });
 
@@ -236,29 +204,28 @@ app.post('/login', (req, res) => {
             if (!user)
                 throw 'user does not exist';
 
-            // console.log("eingabe password = ", req.body.password);
-            // console.log("database password = ", user.PASSWORD);
             if (user.PASSWORD !== req.body.password) {
                 throw 'wrong password'
             }
 
             //token generator
             const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "10s"});
-
             console.log("das ist tooooooken!!!: ", token);
+            // const tokenRefresh = jwt.sign({username: req.body.name}, 'newSecretKey', {expiresIn: "30s"});
 
             res.send({
                 success: true,
+                msg: 'Token setup.',
                 data: token
             });
         })
         .catch(err => {
+            console.log("Login, Uncatched Error = ", err);
             res.send({
                 success: false,
                 msg: 'access user failed',
                 err: err
             });
-            console.log("blbalbl");
         });
 });
 
@@ -420,7 +387,7 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         });
 });
 
-app.get('/playlistMates', async (req, res) => {
+app.get('/playlistMates', auth, async (req, res) => {
     try {
         console.log("app.js, app.get/playlistMates, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
@@ -464,7 +431,7 @@ app.get('/playlistMates', async (req, res) => {
 
 });
 
-app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
+app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
     console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
     const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
     console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.388: USER.ID = ", user.ID);
@@ -497,7 +464,7 @@ app.get('/playlistMates/sharedPlaylists/:mate', async (req, res) => {
         })
 });
 
-app.get('/playlistMates/request', async (req, res) => {
+app.get('/playlistMates/request', auth, async (req, res) => {
     try {
         console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
@@ -604,7 +571,7 @@ app.post('/user', async (req, res) => {
 /**
  * create new playlist
  */
-app.post('/playlist', async (req, res) => {
+app.post('/playlist', auth, async (req, res) => {
     try {
         console.log("app.js, app.post/playlist: body.name = ", req.body.name);
         console.log("app.js, app.post/playlist: token = ", req.get('Authorization'));
@@ -636,7 +603,7 @@ app.post('/playlist', async (req, res) => {
     }
 });
 
-app.post('/song/:playlistID', async (req, res) => {
+app.post('/song/:playlistID', auth, async (req, res) => {
     try {
         // console.log("DOCUMENT WRITE = ", navigator);
 
@@ -687,8 +654,9 @@ app.post('/song/:playlistID', async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */                                                                     // , {name: 'nextInput', maxCount: 2}
-app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 1}, {
-    name: 'token', maxCount: 1}, {name: 'artist'}]), async (req, res) => {
+app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 1}, {
+    name: 'token', maxCount: 1
+}, {name: 'artist'}]), async (req, res) => {
     try {
         console.log("app.js, app.post/song: HUHUUUUUU = ", jwt.decode(req.get('Authorization')));
         console.log("app.js, app.post/song: PARAMS = ", req.params);
@@ -806,7 +774,7 @@ app.post('/song/global/:playlistID', upload.fields([{name: 'audioFile'}, {name: 
     }
 });
 
-app.post('/playlistMate', async (req, res) => {
+app.post('/playlistMate', auth, async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
         console.log('app.js, app.post/playlistMate: USER = ', user);
@@ -856,7 +824,7 @@ app.post('/playlistMate', async (req, res) => {
     }
 });
 
-app.post('/collabs/:playlistID', async (req, res) => {
+app.post('/collabs/:playlistID', auth, async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
         console.log('app.js, app.post/collabs: USER = ', user);
@@ -888,7 +856,7 @@ app.post('/collabs/:playlistID', async (req, res) => {
     }
 });
 
-app.post('/playlistMates/request', async (req, res) => {
+app.post('/playlistMates/request', auth, async (req, res) => {
     try {
         console.log("app.js, app.post/playlistMates/request, Z.844: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
