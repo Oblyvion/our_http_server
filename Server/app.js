@@ -719,13 +719,16 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             //     // TODO UPDATE USER AND ADD 15 SCORE POINTS
             await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
-            //
-            //     // TODO FILETRANSFER: UPLOAD FILES FROM CLIENT TO SERVER
-            res.send({
-                success: true,
-                msg: 'File uploaded successfully',
-                path: filePath
-            });
+            const xmlhttp = new XMLHttpRequest();
+            xmlhttp.setRequestHeader('Content-Type', 'application/json');
+            const json = {success: true, msg: 'File uploaded successfully', path: filePath};
+            xmlhttp.send(json);
+
+            // res.send({
+            //     success: true,
+            //     msg: 'File uploaded successfully',
+            //     path: filePath
+            // });
             console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
         } catch (err) {
             console.log("app.js, app.post/song: ERROR OCCURRED = ", err.message);
