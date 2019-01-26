@@ -446,6 +446,8 @@ button:hover, .form button:active {
   line-height: 40px;
   background-color: rgba(70, 70 ,70, 0.6);
   border: 1px black solid;
+  //position: fixed;
+  //width: 100%;
 }
 
 
@@ -461,6 +463,7 @@ button:hover, .form button:active {
   //height: ;
   background-color: rgba(204, 204, 204, 0.29);
   cursor: pointer;
+  //overflow-y: scroll;
 }
 
 .PlaylistTablePlaylistHeaderButtons {
@@ -569,6 +572,7 @@ grid-template-areas:
 .AddNewSongDialogButton {
   grid-area: upload;
   margin-bottom: 10px;
+
 }
 
 .AddNewSongTitle {

@@ -187,6 +187,8 @@ export class AudioPlayer {
         console.log("hallllo");
         console.log("song = ", curSong);
         console.log("JSADLFJSA: ", this.songs[clicked].ID);
+        console.log("NAME: ", this.songs[clicked]);
+        this.dom_player_songTitle = this.songs[clicked].NAME;
         curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
         // song.src();
         console.log("ID = ", this.songs[clicked].ID);

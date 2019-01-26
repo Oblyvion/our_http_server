@@ -1,22 +1,19 @@
-
-
-
 export class NewPlaylistMate {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
 
-    private dom_root:HTMLElement;
-    private dom_content:HTMLElement;
-    private dom_divNewPlaylistMate:HTMLDivElement;
-    private dom_divNewMateHeader:HTMLDivElement;
-    private dom_Table:HTMLTableElement;
-    private dom_TableHeader:HTMLTableRowElement;
-    private dom_TableHeaderName1:HTMLTableCaptionElement;
-    private dom_TableHeaderName2:HTMLTableCaptionElement;
-    private dom_TableHeaderName3:HTMLTableCaptionElement;
-    private dom_divMatesHeaderButtons:HTMLElement;
-    private dom_MatesHeaderAddBtn:HTMLImageElement;
-    private dom_divNewMateHeaderName:HTMLDivElement;
-    private dom_NewPlaylistMateContainer:HTMLDivElement;
+    private dom_root: HTMLElement;
+    private dom_content: HTMLElement;
+    private dom_divNewPlaylistMate: HTMLDivElement;
+    private dom_divNewMateHeader: HTMLDivElement;
+    private dom_Table: HTMLTableElement;
+    private dom_TableHeader: HTMLTableRowElement;
+    private dom_TableHeaderName1: HTMLTableCaptionElement;
+    private dom_TableHeaderName2: HTMLTableCaptionElement;
+    private dom_TableHeaderName3: HTMLTableCaptionElement;
+    private dom_divMatesHeaderButtons: HTMLElement;
+    private dom_MatesHeaderAddBtn: HTMLImageElement;
+    private dom_divNewMateHeaderName: HTMLDivElement;
+    private dom_NewPlaylistMateContainer: HTMLDivElement;
 
     private Users;
     private randomIndex = [];
@@ -86,6 +83,15 @@ export class NewPlaylistMate {
                     this.dom_NewMatesSearchMenuData.classList.add('NewMatesSearchMenuData');
                     this.dom_NewMatesSearchMenuData.setAttribute('href', '#');
                     this.dom_NewMatesSearchMenuData.addEventListener('click', () => {
+                        this.fetchRequest(j).then( result => {
+                            console.log("result:  ", result);
+                            const antwort = result.data;
+                            console.log("Das ist request result: ", antwort);
+                            alert("User "+this.Users[j].NAME+" has been asked to become your Playlist mate!");
+                        }).catch(err => {
+                            alert("Playlist mate request failed!");
+                            console.log(err);
+                        });
                     });
                     this.dom_NewMatesSearchMenuContent.appendChild(this.dom_NewMatesSearchMenuData);
                 } else {
@@ -164,54 +170,65 @@ export class NewPlaylistMate {
 
         console.log("Users length: ", this.Users.length);
         for (let i = 0; i < this.Users.length; i++) {
-                random = Math.floor(Math.random() * (this.Users.length - 1));
-                console.log("random: ", random);
+            random = Math.floor(Math.random() * (this.Users.length));
+            console.log("random: ", random);
+            console.log("das ist i in der for schleife: ", i);
 
-                if (i === 0) {
-                    this.randomIndex.push(random);
-                    console.log("i === 0 added");
-                }
-
-                if (this.randomIndex.includes(random) && i !== 0) {
-                    while (this.randomIndex.includes(random)) {
-                        let a = 0;
-                        random = Math.floor(Math.random() * (this.Users.length - 1));
-                        // console.log("random new: ", newrandom);
-                        if (!this.randomIndex.includes(random)) {
-                            console.log("crazy added");
-                            this.randomIndex.push(random);
-                            break;
-                        }
-                        if (a > 15) {
-                            break;
-                        }
-                        a++;
+            if (!this.randomIndex.includes(random)) {
+                this.randomIndex.push(random);
+            } else {
+                while (this.randomIndex.includes(random)) {
+                    random = Math.floor(Math.random() * (this.Users.length));
+                    console.log("new random: ", random);
+                    console.log("das ist i in der while: ", i);
+                    if (!this.randomIndex.includes(random)) {
+                        this.randomIndex.push(random);
+                        break;
                     }
                 }
-                if (!this.randomIndex.includes(random) && i !== 0) {
-                    console.log("normal added");
-                    this.randomIndex.push(random);
-                }
+            }
 
-                console.log("randomarray: ", this.randomIndex);
 
-                dom_NewRandomMate = document.createElement('a');
-                this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
-                dom_NewRandomMate.classList.add("NewRandomMate");
-                dom_NewRandomMate.textContent = this.Users[this.randomIndex[i]].NAME;
+            // if (i === 0) {
+            //     this.randomIndex.push(random);
+            //     console.log("i === 0 added");
+            // }
+            //
+            // if (this.randomIndex.includes(random) && i !== 0) {
+            //     while (this.randomIndex.includes(random)) {
+            //         random = Math.floor(Math.random() * (this.Users.length - 1));
+            //         // console.log("random new: ", newrandom);
+            //         if (!this.randomIndex.includes(random)) {
+            //             console.log("crazy added");
+            //             this.randomIndex.push(random);
+            //             break;
+            //         }
+            //     }
+            // }
+            // if (!this.randomIndex.includes(random) && i !== 0) {
+            //     console.log("normal added");
+            //     this.randomIndex.push(random);
+            // }
 
-                let randomMarginWidth = Math.floor(Math.random() * (90));
+            console.log("randomarray: ", this.randomIndex);
 
-                this.checkIfRandomInArray(this.leftWerte, randomMarginWidth, i);
+            dom_NewRandomMate = document.createElement('a');
+            this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
+            dom_NewRandomMate.classList.add("NewRandomMate");
+            dom_NewRandomMate.textContent = this.Users[this.randomIndex[i]].NAME;
 
-                let randomMarginHeight = Math.floor(Math.random() * (90));
+            let randomMarginWidth = Math.floor(Math.random() * (90));
 
-                this.checkIfRandomInArray(this.topWerte, randomMarginHeight, i);
+            this.checkIfRandomInArray(this.leftWerte, randomMarginWidth, i);
 
-                console.log("margintop: und marginleft; ", this.topWerte[i].toString() + "%", this.leftWerte[i].toString() + "%");
+            let randomMarginHeight = Math.floor(Math.random() * (90));
 
-                dom_NewRandomMate.style.top = this.topWerte[i].toString() + "%";
-                dom_NewRandomMate.style.left = this.leftWerte[i].toString() + "%";
+            this.checkIfRandomInArray(this.topWerte, randomMarginHeight, i);
+
+            console.log("margintop: und marginleft; ", this.topWerte[i].toString() + "%", this.leftWerte[i].toString() + "%");
+
+            dom_NewRandomMate.style.top = this.topWerte[i].toString() + "%";
+            dom_NewRandomMate.style.left = this.leftWerte[i].toString() + "%";
         }
     }
 
@@ -235,7 +252,35 @@ export class NewPlaylistMate {
 
             return data;
         } catch (err) {
-            console.log("Error fetching Users!: ",err);
+            console.log("Error fetching Users!: ", err);
+        }
+    }
+
+    async fetchRequest(clicked) {
+        try {
+            console.log("hallo hoffentlich hier ned bla ",this.Users[clicked].NAME);
+            let response = await fetch(this.API_URL + "/playlistMate/", {
+                body: JSON.stringify({
+                    mate: this.Users[clicked].NAME,
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'POST',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            return data;
+        } catch (err) {
+            console.log("Error fetching Request for Mate!: ", err);
         }
     }
 
@@ -246,21 +291,21 @@ export class NewPlaylistMate {
     }
 
     private checkIfRandomInArray(array, random, i) {
-        if(i === 0) {
+        if (i === 0) {
             array.push(random);
         }
 
-        if(array.includes(random) && i !== 0) {
-            while(array.includes(random)) {
+        if (array.includes(random) && i !== 0) {
+            while (array.includes(random)) {
                 random = Math.floor(Math.random() * (80));
                 // console.log("random new: ", random);
-                if(!array.includes(random)) {
+                if (!array.includes(random)) {
                     array.push(random);
                     break;
                 }
             }
         }
-        if(!array.includes(random) && i !== 0) {
+        if (!array.includes(random) && i !== 0) {
             array.push(random);
         }
     }

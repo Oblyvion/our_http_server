@@ -893,10 +893,11 @@ app.post('/playlistMates/request', async (req, res) => {
         console.log("app.js, app.post/playlistMates/request, Z.844: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
         console.log("app.js, app.post/playlistMates/request: USER.ID = ", user.ID);
+        console.log("MATE! ", req.body.mate);
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
 
         const answer = req.body.answer;
-        if (!answer) {
+        if (!answer && answer !== undefined) {
             try {
                 await db.cmd('DELETE FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID);
                 console.log("app.js, app.post/playlistMates/request, Z.853: ERROR = ");
