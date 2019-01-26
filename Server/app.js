@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+const xmlHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 // const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');
 // const fileUpload = require('express-fileupload');
@@ -32,6 +33,7 @@ let UserData = null;
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(xmlHttpRequest);
 
 // SQLite DB Handler
 const db = new DB();
@@ -179,7 +181,7 @@ app.get('/user/:id', (req, res) => {
     db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE ID = ?', +req.params.id)
         .then(row => {
             if (!row)
-                throw 'user does not exist';
+                throw 'access user failed';
             res.send({
                 success: true,
                 data: row
@@ -188,7 +190,7 @@ app.get('/user/:id', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access user failed',
+                msg: 'user does not exist',
                 err: err
             });
         });
@@ -209,7 +211,7 @@ app.post('/login', (req, res) => {
             }
 
             //token generator
-            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "10s"});
+            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "180s"});
             console.log("das ist tooooooken!!!: ", token);
             // const tokenRefresh = jwt.sign({username: req.body.name}, 'newSecretKey', {expiresIn: "30s"});
 
@@ -719,10 +721,10 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             //     // TODO UPDATE USER AND ADD 15 SCORE POINTS
             await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
-            const xmlhttp = new XMLHttpRequest();
-            xmlhttp.setRequestHeader('Content-Type', 'application/json');
+            const xmlHttp = new XMLHttpRequest();
+            xmlHttp.setRequestHeader('Content-Type', 'application/json');
             const json = {success: true, msg: 'File uploaded successfully', path: filePath};
-            xmlhttp.send(json);
+            xmlHttp.send(json);
 
             // res.send({
             //     success: true,
@@ -763,7 +765,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             res.send({
                 success: false,
                 msg: 'Song exists already. Do you want this song instead?',
-                // data: req.files.fileSong.name,
+                data: req.files.audioFile[0].originalname,
                 err: err
             });
         } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
