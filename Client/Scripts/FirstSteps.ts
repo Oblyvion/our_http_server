@@ -17,7 +17,7 @@ export class FirstSteps {
 
         this.dom_content = dom;
         this.dom_content.classList.add('FirstSteps');
-        this.audioPlayer = new AudioPlayer(this.dom_content);
+        this.audioPlayer = new AudioPlayer(this.dom_content, null);
         // console.log("FirstSteps.ts, constructor: HALLO PLEASE");
         this.navBar = new NavBar(this.dom_root, this.dom_content);
         this.dom_root.appendChild(this.dom_content);

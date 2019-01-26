@@ -2,7 +2,7 @@ import { NewPlaylistMate } from "./NewPlaylistMate.js";
 import { manager } from "./app.js";
 export class MyPlaylistMates {
     constructor(dom_root, dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://192.168.178.44:' + localStorage.getItem("port");
         this.sharedPlaylists = [];
         this.dom_root = dom_root;
         this.dom_content = dom_content;

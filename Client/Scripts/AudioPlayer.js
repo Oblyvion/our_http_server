@@ -1,4 +1,4 @@
-let song;
+// let song;
 let dom_player_slider;
 let dom_player_current;
 let dom_player_duration;
@@ -6,7 +6,9 @@ let dom_volume_slider;
 let currentSong;
 export class AudioPlayer {
     constructor(dom, Songs) {
+        // public Songs = [
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.curSong = new Audio();
         this.songs = Songs;
         this.dom_root = dom;
         this.dom = document.createElement('div');
@@ -126,14 +128,20 @@ export class AudioPlayer {
         this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
         //this.loadSong(0);
     }
+    // } else
     loadSong(clicked) {
         console.log("hallllo");
+        console.log("song = ", this.curSong);
+        console.log("JSADLFJSA: ", this.songs[clicked].ID);
+        this.curSong.remove();
+        this.curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
+        // song.src();
         console.log("ID = ", this.songs[clicked].ID);
-        song = new Audio(this.API_URL + '/song/' + this.songs[clicked].ID);
-        song.addEventListener('loadedmetadata', () => {
+        // song(this.API_URL + '/song/' + this.songs[clicked].ID);
+        this.curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-        // song.play();
+        this.curSong.play();
         // this.fetchSong(clicked)
         //     .then( data => {
         //         console.log(data);
@@ -150,7 +158,7 @@ export class AudioPlayer {
                 headers: {
                     // 'content-type': 'application/octet-stream',
                     'content-type': 'audio/mpeg',
-                    'content-disposition': 'inline',
+                    // 'content-disposition': 'inline',
                     'crossDomain': 'true',
                     'Authorization': localStorage.getItem("token")
                 },
@@ -167,7 +175,7 @@ export class AudioPlayer {
         }
     }
     updateSongSlider() {
-        let c = Math.round(song.currentTime);
+        let c = Math.round(this.curSong.currentTime);
         dom_player_slider.value = c.toString();
         dom_player_current.textContent = AudioPlayer.convertTime(c);
     }
@@ -179,26 +187,26 @@ export class AudioPlayer {
         return (min + ":" + sec);
     }
     showDuration() {
-        let d = Math.floor(song.duration);
+        let d = Math.floor(this.curSong.duration);
         //console.log(d);
         dom_player_slider.setAttribute("max", d.toString());
         dom_player_duration.textContent = AudioPlayer.convertTime(d);
     }
     playorpauseSong() {
-        if (song.paused) {
+        if (this.curSong.paused) {
             console.log("hier wurde play aufgereufen ");
-            song.play();
+            this.curSong.play();
             this.dom_play.src = "./Images/pause.png";
         }
         else {
-            song.pause();
+            this.curSong.pause();
             this.dom_play.src = "./Images/play.png";
         }
     }
     next() {
         currentSong = (currentSong + 1) % this.songs.length;
         this.loadSong(currentSong);
-        song.play();
+        this.curSong.play();
     }
     previous() {
         currentSong--;
@@ -206,21 +214,21 @@ export class AudioPlayer {
             currentSong = this.songs.length - 1;
         }
         this.loadSong(currentSong);
-        song.play();
+        this.curSong.play();
     }
     forward() {
-        song.currentTime = song.currentTime + 10;
+        this.curSong.currentTime = this.curSong.currentTime + 10;
     }
     backward() {
-        song.currentTime = song.currentTime - 10;
+        this.curSong.currentTime = this.curSong.currentTime - 10;
     }
     seekSong() {
-        song.currentTime = dom_player_slider.value;
-        dom_player_current.textContent = AudioPlayer.convertTime(song.currentTime);
+        this.curSong.currentTime = dom_player_slider.valueAsNumber;
+        dom_player_current.textContent = AudioPlayer.convertTime(this.curSong.currentTime);
     }
     adjustVolume() {
-        song.volume = dom_volume_slider.value;
-        if (song.volume === 0) {
+        this.curSong.volume = dom_volume_slider.valueAsNumber;
+        if (this.curSong.volume === 0) {
             this.dom_volume_down.src = "./Images/volume_silent.png";
         }
         else

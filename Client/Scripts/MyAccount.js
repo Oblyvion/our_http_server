@@ -2,13 +2,13 @@ import { AudioPlayer } from "./AudioPlayer.js";
 import { NavBar } from "./NavBar.js";
 export class MyAccount {
     constructor(dom) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://192.168.178.44:' + localStorage.getItem("port");
         this.Playlists = this.getPlaylists();
         this.dom_root = document.getElementById('app');
         this.dom_ContentMyAccount = dom;
         this.dom_ContentMyAccount.classList.add('ContentMyAccount');
         this.dom_root.appendChild(this.dom_ContentMyAccount);
-        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount);
+        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null);
         this.navBar = new NavBar(this.dom_root, this.dom_ContentMyAccount);
         this.dom_MyAccountContainer = document.createElement('div');
         this.dom_MyAccountContainer.classList.add('MyAccountContainer');

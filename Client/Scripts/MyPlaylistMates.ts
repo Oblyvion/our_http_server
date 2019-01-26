@@ -2,7 +2,7 @@ import {NewPlaylistMate} from "./NewPlaylistMate.js";
 import {manager} from "./app.js";
 
 export class MyPlaylistMates {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
+    private API_URL = 'http://192.168.178.44:'+localStorage.getItem("port");
     private dom_root:HTMLElement;
     private dom_content:HTMLElement;
     private dom_divPlaylistMates:HTMLDivElement;

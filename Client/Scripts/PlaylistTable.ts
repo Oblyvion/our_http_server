@@ -424,7 +424,7 @@ export class PlaylistTable {
             dom_TableData.classList.add('TableDataRow');
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
-                let clicked = dom_TableData.rowIndex;
+                let clicked = dom_TableData.rowIndex-1;
                 console.log(clicked);
                 console.log(this.Playlist.songs[clicked].ID);
                 this.audioPlayer.loadSong(clicked);
