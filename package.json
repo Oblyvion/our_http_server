@@ -39,6 +39,7 @@
     "opener": "^1.5.1",
     "path": "^0.12.7",
     "request": "latest",
-    "sqlite3": "^4.0.4"
+    "sqlite3": "^4.0.4",
+    "xmlhttprequest": "^1.8.0"
   }
 }

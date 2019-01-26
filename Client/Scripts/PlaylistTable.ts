@@ -296,6 +296,7 @@ export class PlaylistTable {
             const formData = new FormData(formElement);
             const request = new XMLHttpRequest();
             request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
+            request.setRequestHeader("Authorization", localStorage.getItem("token"));
             request.responseType = "json";
 
             request.onload = function(e) {

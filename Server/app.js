@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 // const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');
 // const fileUpload = require('express-fileupload');
@@ -209,7 +210,7 @@ app.post('/login', (req, res) => {
             }
 
             //token generator
-            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "10s"});
+            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "180s"});
             console.log("das ist tooooooken!!!: ", token);
             // const tokenRefresh = jwt.sign({username: req.body.name}, 'newSecretKey', {expiresIn: "30s"});
 
