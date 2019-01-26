@@ -132,8 +132,7 @@ export class AudioPlayer {
         song.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-        song.pause();
-        song.play();
+        song.playorpauseSong();
         // this.fetchSong(clicked)
         //     .then( data => {
         //         console.log(data);
@@ -148,8 +147,8 @@ export class AudioPlayer {
             let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
                 cache: 'no-cache',
                 headers: {
-                    // 'content-type': 'application/javascript',
-                    'content-type': 'audio/mpeg',
+                    'content-type': 'application/octed-stream',
+                    // 'content-type': 'audio/mpeg',
                     'crossDomain': 'true',
                     'Authorization': localStorage.getItem("token")
                 },

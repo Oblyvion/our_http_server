@@ -328,10 +328,22 @@ app.get('/songsuser/:playlistID', auth, async (req, res) => {
  * get song by id
  */
 app.get('/song/:id', async (req, res) => {
-    const path = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id);
-    console.log("Path = ", path);
-    const src = fs.createReadStream(path.PATH);
-    src.pipe(res);
+    try {
+        const path = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id);
+        console.log("Path = ", path);
+        const src = fs.createReadStream(path.PATH);
+        src.pipe(res);
+    }catch (err) {
+        console.log("ERROR bei /song/:id: ERROR = ", err);
+        if (err.message.match('ENOENT: no such file or directory')) {
+            console.log("ERROR bei /song/:id: CATCHED ERROR = ", err);
+        }
+    }
+    try {
+
+    }catch (err) {
+        console.log("ERROR Z.346 bei /song/:id: CATCHED ERROR = ", err);
+    }
 
 
     // .then(row => {
