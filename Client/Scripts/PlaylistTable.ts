@@ -23,6 +23,7 @@ export class PlaylistTable {
     private dom_DropdownMenuInput: HTMLInputElement;
     private dom_DropdownMenuData;
     private dom_divPlaylistHeaderPlaylistName: HTMLDivElement;
+    private playlistData;
     private PlaylistID;
     private dom_AddNewSongForm: HTMLFormElement;
     private dom_AddNewSong: HTMLDivElement;
@@ -46,6 +47,7 @@ export class PlaylistTable {
     constructor(dom_root, dom_content, PlaylistData) {
         this.dom_root = dom_root;
         this.dom_content = dom_content;
+        this.playlistData = PlaylistData;
         this.PlaylistID = PlaylistData.ID;
         console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
         this.Playlist.name = PlaylistData.NAME;
@@ -234,6 +236,7 @@ export class PlaylistTable {
         this.dom_AddNewSongForm.setAttribute("data-rel", "back");
         //this.dom_AddNewSongForm.onsubmit = new manager("page-first-steps");
         this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_AddNewSongForm.autocomplete = "off";
         console.log("ADDNEWSONGFORM = ", this.dom_AddNewSongForm);
         this.dom_divTable.appendChild(this.dom_AddNewSongForm);
 
@@ -292,21 +295,41 @@ export class PlaylistTable {
             const formElement = document.querySelector("form");
             const formData = new FormData(formElement);
             const request = new XMLHttpRequest();
-            request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID);
-            request.send(formData);
+            request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
+            request.setRequestHeader("Authorization", localStorage.getItem("token"));
+            request.responseType = "json";
 
-            console.log("Das ist die response vom server: " + request.responseText);
+            request.onload = function(e) {
+                let obj = request.response;
+                console.log("Das ist das objekt !!!!! ",obj);
+            };
 
-            this.fetchPlaylistSongs().then((result) => {
-                this.Playlist.songs = result.data;
-                this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
-                console.log("das sind die songs nach dem hinzufügen eines songs: ", this.Playlist.songs);
-                this.addPlaylistSongs();
-            }).catch(err => {
-                console.log(err);
-            });
+            await request.send(formData);
 
-            this.dom_AddNewSongForm.style.display = "none";
+            if (request.UNSENT) {
+                alert("Failed to upload Song!");
+            }
+
+            if (request.DONE) {
+
+                console.log("Das ist die response vom server: " + request.response);
+                alert("Song successfully uploaded!");
+                this.close();
+                new PlaylistTable(this.dom_root, this.dom_content, this.playlistData);
+
+                // this.fetchPlaylistSongs().then((result) => {
+                //     console.log("das ist das result: ", result);
+                //     this.Playlist.songs = result.data;
+                //     this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
+                //     console.log("das sind die songs nach dem hinzufügen eines songs: ", this.Playlist.songs);
+                //     this.addPlaylistSongs();
+                // }).catch(err => {
+                //     console.log(err);
+                // });
+
+                this.dom_AddNewSongForm.style.display = "none";
+
+            }
         });
 
     }
@@ -370,8 +393,8 @@ export class PlaylistTable {
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
                 let clicked = dom_TableData.rowIndex - 1;
-                console.log(clicked);
-                console.log(this.Playlist.songs[clicked].ID);
+                console.log("clicked: "+clicked);
+                console.log("Playlist id: "+this.Playlist.songs[clicked].ID);
                 this.audioPlayer.loadSong(clicked);
             });
 
@@ -395,6 +418,10 @@ export class PlaylistTable {
     }
 
     close() {
-        this.dom_divTable.remove();
+        console.log("close wurde aufgerufen");
+        while (this.dom_content.childNodes.length > 2) {
+            console.log("las child ", this.dom_content.lastChild);
+            this.dom_content.removeChild(this.dom_content.lastChild);
+        }
     }
 }

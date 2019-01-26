@@ -184,12 +184,8 @@ export class NavBar {
                 this.dom_ListElement.classList.add("NavBarListElement");
                 this.dom_UList.appendChild(this.dom_ListElement);
                 this.dom_ListElement.addEventListener('click', () => {
-                    if (this.playlistTable) {
-                        this.playlistTable.close();
-                    }
-                    for (let i = 2; i < this.dom_content.childNodes.length; i++) {
-                        this.dom_content.childNodes[i].remove();
-                    }
+                    console.log(this.dom_content);
+                    this.clearContent();
                     const header = document.getElementById("header");
                     header.textContent = "Music Playlist";
                     this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.OwnlistofPlaylists[i]);
@@ -203,12 +199,7 @@ export class NavBar {
                 this.dom_ListElement.classList.add("NavBarListElement");
                 this.dom_UList2.appendChild(this.dom_ListElement);
                 this.dom_ListElement.addEventListener('click', () => {
-                    if (this.playlistTable) {
-                        this.playlistTable.close();
-                    }
-                    for (let i = 2; i < this.dom_content.childNodes.length; i++) {
-                        this.dom_content.childNodes[i].remove();
-                    }
+                    this.clearContent();
                     const header = document.getElementById("header");
                     header.textContent = "Music Playlist";
                     this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.CollaboratedPlaylists[i]);
@@ -290,6 +281,13 @@ export class NavBar {
         this.dom_span_array.forEach((elem) => {
             elem.classList.toggle('active');
         });
+    }
+
+    clearContent() {
+        while (this.dom_content.childNodes.length > 2) {
+            console.log("last child ", this.dom_content.lastChild);
+            this.dom_content.removeChild(this.dom_content.lastChild);
+        }
     }
 
     close() {

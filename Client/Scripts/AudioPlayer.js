@@ -11,6 +11,7 @@ export class AudioPlayer {
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.songs = Songs;
         this.dom_root = dom;
+        //this.loadSong(0);
         this.dom = document.createElement('div');
         this.dom.classList.add('AudioPlayer_Container');
         this.dom_root.appendChild(this.dom);
@@ -27,7 +28,7 @@ export class AudioPlayer {
         this.dom_player_songTitle = document.createElement('div');
         this.dom_player_songTitle.classList.add('AudioPlayer_SongTitle');
         this.dom_player.appendChild(this.dom_player_songTitle);
-        this.dom_player_songTitle.textContent = "My song title will go in here";
+        this.dom_player_songTitle.textContent = "Song Title goes in here...";
         dom_player_slider = document.createElement('input');
         dom_player_slider.classList.add('AudioPlayer_Slider');
         this.dom_player.appendChild(dom_player_slider);
@@ -132,11 +133,14 @@ export class AudioPlayer {
     loadSong(clicked) {
         console.log("hallllo");
         console.log("song = ", curSong);
-        console.log("JSADLFJSA: ", this.songs[clicked].ID);
+        console.log("song.id: ", this.songs[clicked].ID);
+        console.log("song element: ", this.songs[clicked]);
         curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
-        console.log("JSADLFJSA: ", this.songs[clicked].TITLE);
+        console.log("Title: ", this.songs[clicked].TITLE);
         // song.src();
+        console.log("das ist dom song title ", this.dom_player_songTitle);
         this.dom_player_songTitle.textContent = this.songs[clicked].TITLE;
+        this.dom_nextSong.textContent = "\bNext song: " + this.songs[clicked + 1].TITLE;
         console.log("ID = ", this.songs[clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
         curSong.addEventListener('loadedmetadata', () => {
@@ -144,8 +148,6 @@ export class AudioPlayer {
         });
         curSong.play();
         this.dom_play.src = "./Images/pause.png";
-        console.log("TITLE = ", curSong);
-        this.dom_player_songTitle.textContent = curSong.title;
         setInterval(this.updateSongSlider, 100);
         // this.fetchSong(clicked)
         //     .then( data => {

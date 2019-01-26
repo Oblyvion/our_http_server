@@ -51,6 +51,15 @@ export class NewPlaylistMate {
                     this.dom_NewMatesSearchMenuData.classList.add('NewMatesSearchMenuData');
                     this.dom_NewMatesSearchMenuData.setAttribute('href', '#');
                     this.dom_NewMatesSearchMenuData.addEventListener('click', () => {
+                        this.fetchRequest(j).then(result => {
+                            console.log("result:  ", result);
+                            const antwort = result.data;
+                            console.log("Das ist request result: ", antwort);
+                            alert("User " + this.Users[j].NAME + " has been asked to become your Playlist mate!");
+                        }).catch(err => {
+                            alert("Playlist mate request failed!");
+                            console.log(err);
+                        });
                     });
                     this.dom_NewMatesSearchMenuContent.appendChild(this.dom_NewMatesSearchMenuData);
                 }
@@ -119,32 +128,43 @@ export class NewPlaylistMate {
         let random;
         console.log("Users length: ", this.Users.length);
         for (let i = 0; i < this.Users.length; i++) {
-            random = Math.floor(Math.random() * (this.Users.length - 1));
+            random = Math.floor(Math.random() * (this.Users.length));
             console.log("random: ", random);
-            if (i === 0) {
+            console.log("das ist i in der for schleife: ", i);
+            if (!this.randomIndex.includes(random)) {
                 this.randomIndex.push(random);
-                console.log("i === 0 added");
             }
-            if (this.randomIndex.includes(random) && i !== 0) {
+            else {
                 while (this.randomIndex.includes(random)) {
-                    let a = 0;
-                    random = Math.floor(Math.random() * (this.Users.length - 1));
-                    // console.log("random new: ", newrandom);
+                    random = Math.floor(Math.random() * (this.Users.length));
+                    console.log("new random: ", random);
+                    console.log("das ist i in der while: ", i);
                     if (!this.randomIndex.includes(random)) {
-                        console.log("crazy added");
                         this.randomIndex.push(random);
                         break;
                     }
-                    if (a > 15) {
-                        break;
-                    }
-                    a++;
                 }
             }
-            if (!this.randomIndex.includes(random) && i !== 0) {
-                console.log("normal added");
-                this.randomIndex.push(random);
-            }
+            // if (i === 0) {
+            //     this.randomIndex.push(random);
+            //     console.log("i === 0 added");
+            // }
+            //
+            // if (this.randomIndex.includes(random) && i !== 0) {
+            //     while (this.randomIndex.includes(random)) {
+            //         random = Math.floor(Math.random() * (this.Users.length - 1));
+            //         // console.log("random new: ", newrandom);
+            //         if (!this.randomIndex.includes(random)) {
+            //             console.log("crazy added");
+            //             this.randomIndex.push(random);
+            //             break;
+            //         }
+            //     }
+            // }
+            // if (!this.randomIndex.includes(random) && i !== 0) {
+            //     console.log("normal added");
+            //     this.randomIndex.push(random);
+            // }
             console.log("randomarray: ", this.randomIndex);
             dom_NewRandomMate = document.createElement('a');
             this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
@@ -176,6 +196,29 @@ export class NewPlaylistMate {
         }
         catch (err) {
             console.log("Error fetching Users!: ", err);
+        }
+    }
+    async fetchRequest(clicked) {
+        try {
+            console.log("hallo hoffentlich hier ned bla ", this.Users[clicked].NAME);
+            let response = await fetch(this.API_URL + "/playlistMate/", {
+                body: JSON.stringify({
+                    mate: this.Users[clicked].NAME,
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'POST',
+                mode: 'cors',
+            });
+            const data = await response.json();
+            return data;
+        }
+        catch (err) {
+            console.log("Error fetching Request for Mate!: ", err);
         }
     }
     close() {
