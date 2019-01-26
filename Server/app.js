@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 // const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');
@@ -34,7 +33,6 @@ let UserData = null;
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(xmlHttpRequest);
 
 // SQLite DB Handler
 const db = new DB();
@@ -97,15 +95,16 @@ const auth = async (req, res, next) => {
 
 async function userInit(req) {
     try {
-        const standardPlaylistName = 'Your 1. Playlist';
+        const standardPlaylistName = 'Your own 1. Playlist';
         const standardSongId = 1;
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
         await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
         const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
         console.log('playlistID = ', playlistID);
-        await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+        await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)',
+            standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
     } catch (err) {
-        console.log("ERROR ===== ", err);
+        console.log("ERROR @userInit = ", err);
     }
 }
 
@@ -182,7 +181,7 @@ app.get('/user/:id', (req, res) => {
     db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE ID = ?', +req.params.id)
         .then(row => {
             if (!row)
-                throw 'access user failed';
+                throw 'user does not exist';
             res.send({
                 success: true,
                 data: row
@@ -191,7 +190,7 @@ app.get('/user/:id', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'user does not exist',
+                msg: 'access user failed',
                 err: err
             });
         });
@@ -542,18 +541,14 @@ app.post('/user', async (req, res) => {
         console.log("HALLO");
         console.log("req.body.name = ", req.body.name);
         const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5);
-        await userInit(req).then(() => {
-            console.log("userINIT(req) hat funktioniert");
-        });
-        // res.header(`Access-Control-Allow-Origin:`, `*`);
+        await userInit(req);
+
         res.send({
             success: true,
             msg: 'User registered successfully.',
             data: user
         });
-
     } catch (err) {
-
         if (err.message.match('SQLITE_CONSTRAINT')) {
             console.log(err);
             res.send({
@@ -571,6 +566,7 @@ app.post('/user', async (req, res) => {
         }
     }
 });
+
 /**
  * create new playlist
  */
@@ -625,7 +621,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
         await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
         res.send({
             success: true,
-            msg: 'File uploaded successfully',
+            msg: 'File uploaded successfully ;)',
             path: filePath
         });
         console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
@@ -722,16 +718,12 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             //     // TODO UPDATE USER AND ADD 15 SCORE POINTS
             await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
-            const xmlHttp = new XMLHttpRequest();
-            xmlHttp.setRequestHeader('Content-Type', 'application/json');
-            const json = {success: true, msg: 'File uploaded successfully', path: filePath};
-            xmlHttp.send(json);
 
-            // res.send({
-            //     success: true,
-            //     msg: 'File uploaded successfully',
-            //     path: filePath
-            // });
+            res.send({
+                success: true,
+                msg: 'File uploaded successfully ;)',
+                path: filePath
+            });
             console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
         } catch (err) {
             console.log("app.js, app.post/song: ERROR OCCURRED = ", err.message);
@@ -753,7 +745,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
                     console.log("app.js, app.post/song: ERROR PLAYLIST VON MATE KONNTE NICHT IN COLLABORATORS GEFUNDEN WERDEN!", err);
                     return res.status(500).send({
                         success: false,
-                        msg: 'Playlist von Mate konnte nicht in COLLABORATORS gefunden werden',
+                        msg: 'Mates Playlist could not found.',
                         err: err
                     });
                 }

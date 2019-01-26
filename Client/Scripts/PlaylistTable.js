@@ -227,17 +227,28 @@ export class PlaylistTable {
             request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
             request.setRequestHeader("Authorization", localStorage.getItem("token"));
             request.responseType = "json";
+            console.log("RESPONSE  1 = ", request.response);
             request.onload = function (e) {
-                let obj = request.response;
+                console.log("hallo @ onload");
+                const obj = request.response;
                 console.log("Das ist das objekt !!!!! ", obj);
+                if (obj.success === true) {
+                    console.log("Das ist das objekt msg  = ", obj.msg);
+                    alert(obj.msg);
+                }
+                else
+                    alert(obj.msg);
             };
+            console.log("RESPONSE  2 = ", request.response);
             await request.send(formData);
+            console.log("RESPONSE  3 = ", request.response);
             if (request.UNSENT) {
                 alert("Failed to upload Song!");
             }
+            console.log("RESPONSE  4 = ", request.response);
             if (request.DONE) {
-                console.log("Das ist die response vom server: " + request.response);
-                alert("Song successfully uploaded!");
+                console.log("Das ist die response vom server: " + request.statusText);
+                // alert("Song successfully uploaded!");
                 this.close();
                 new PlaylistTable(this.dom_root, this.dom_content, this.playlistData);
                 // this.fetchPlaylistSongs().then((result) => {
