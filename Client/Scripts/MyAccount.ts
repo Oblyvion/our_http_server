@@ -4,7 +4,7 @@ import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
 
 export class MyAccount {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
+    private API_URL = 'http://192.168.178.44:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_ContentMyAccount: HTMLElement;
     private dom_MyAccountContainer: HTMLDivElement;
@@ -23,7 +23,7 @@ export class MyAccount {
         this.dom_ContentMyAccount.classList.add('ContentMyAccount');
         this.dom_root.appendChild(this.dom_ContentMyAccount);
 
-        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount);
+        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null);
         this.navBar = new NavBar(this.dom_root, this.dom_ContentMyAccount);
 
         this.dom_MyAccountContainer = document.createElement('div');
