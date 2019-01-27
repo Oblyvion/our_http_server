@@ -198,10 +198,12 @@ export class AudioPlayer {
         console.log("Title: ", this.songs[this.clicked].TITLE);
 // song.src();
         console.log("das ist dom song title ", this.dom_player_songTitle);
+
         this.dom_player_songTitle.textContent = this.songs[this.clicked].TITLE;
         this.dom_player_songTitle.style.fontWeight = "bold";
         this.dom_nextSong.textContent = "Next song: " + this.songs[(this.clicked+1)%this.songs.length].TITLE;
         this.dom_nextSong.style.fontWeight = "bold";
+
 
         console.log("ID = ", this.songs[this.clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);

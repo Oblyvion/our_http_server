@@ -9,21 +9,23 @@ class DB {
 
     adminInit() {
         // TODO auskommentiert für Testzwecke
-        // try {
-        //     const adminName = "admin";
-        //     // CREATE STANDARD USERS -> ADMINS
-        //     this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
-        //     console.log("jldsafjlsadjö");
-        //     // CREATE STANDARD SONGS
-        //     this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, PATH) VALUES ("Bad Habit Terrasound", "Free Artist", "./Songs/Bad_Habit_Terrasound.mp3")');
-        //     this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
-        //
-        //     // TODO DO NOT INSERT SONG INTO PLAYLIST_CONTAINS MULTIPLE
-        //     this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', 1, 1, 'Welcome ' + adminName);
-        //     console.log("hallooijsadfo");
-        // } catch (err) {
-        //     console.log("db.js, Z.87: CATCHED ERROR = ", err);
-        // }
+        try {
+            const adminName = "admin";
+            // TODO DAS HIER IST DER PATH FÜR WINDOWS!!! FÜR LINUX => __dirname + "/Songs"
+            const path = __dirname + "/Songs";
+            console.log("__dirname = ", __dirname );
+            console.log("path = ", path);
+            // CREATE STANDARD USERS -> ADMINS
+            this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
+            console.log("jldsafjlsadjö");
+            // CREATE STANDARD SONGS
+            this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, PATH) ' +
+                'VALUES ("Canon in D Major", "Johann Pachelbel", ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
+            this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
+                'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
+        } catch (err) {
+            console.log("db.js, Z.87: CATCHED ERROR = ", err);
+        }
     }
 
     create() {

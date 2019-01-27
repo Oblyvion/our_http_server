@@ -9,7 +9,8 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+// const ProgressBar = require('progressbar.js');
+
 // const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');
 // const fileUpload = require('express-fileupload');
@@ -95,15 +96,16 @@ const auth = async (req, res, next) => {
 
 async function userInit(req) {
     try {
-        const standardPlaylistName = 'Your 1. Playlist';
+        const standardPlaylistName = 'Your own 1. Playlist';
         const standardSongId = 1;
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.name);
         await db.cmd('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES (?, ?)', standardPlaylistName, userID.ID);
         const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
         console.log('playlistID = ', playlistID);
-        await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+        await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)',
+            standardSongId, playlistID.ID, 'Admin');
     } catch (err) {
-        console.log("ERROR ===== ", err);
+        console.log("ERROR @userInit = ", err);
     }
 }
 
@@ -540,18 +542,14 @@ app.post('/user', async (req, res) => {
         console.log("HALLO");
         console.log("req.body.name = ", req.body.name);
         const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5);
-        await userInit(req).then(() => {
-            console.log("userINIT(req) hat funktioniert");
-        });
-        // res.header(`Access-Control-Allow-Origin:`, `*`);
+        await userInit(req);
+
         res.send({
             success: true,
             msg: 'User registered successfully.',
             data: user
         });
-
     } catch (err) {
-
         if (err.message.match('SQLITE_CONSTRAINT')) {
             console.log(err);
             res.send({
@@ -569,6 +567,7 @@ app.post('/user', async (req, res) => {
         }
     }
 });
+
 /**
  * create new playlist
  */
@@ -623,7 +622,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
         await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
         res.send({
             success: true,
-            msg: 'File uploaded successfully',
+            msg: 'File uploaded successfully ;)',
             path: filePath
         });
         console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
@@ -720,16 +719,12 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             //     // TODO UPDATE USER AND ADD 15 SCORE POINTS
             await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
-            const xmlhttp = new XMLHttpRequest();
-            xmlhttp.setRequestHeader('Content-Type', 'application/json');
-            const json = {success: true, msg: 'File uploaded successfully', path: filePath};
-            xmlhttp.send(json);
 
-            // res.send({
-            //     success: true,
-            //     msg: 'File uploaded successfully',
-            //     path: filePath
-            // });
+            res.send({
+                success: true,
+                msg: 'File uploaded successfully ;)',
+                path: filePath
+            });
             console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
         } catch (err) {
             console.log("app.js, app.post/song: ERROR OCCURRED = ", err.message);
@@ -751,7 +746,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
                     console.log("app.js, app.post/song: ERROR PLAYLIST VON MATE KONNTE NICHT IN COLLABORATORS GEFUNDEN WERDEN!", err);
                     return res.status(500).send({
                         success: false,
-                        msg: 'Playlist von Mate konnte nicht in COLLABORATORS gefunden werden',
+                        msg: 'Mates Playlist could not found.',
                         err: err
                     });
                 }
@@ -764,7 +759,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             res.send({
                 success: false,
                 msg: 'Song exists already. Do you want this song instead?',
-                // data: req.files.fileSong.name,
+                data: req.files.audioFile[0].originalname,
                 err: err
             });
         } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
