@@ -8,22 +8,22 @@ class DB {
     }
 
     adminInit() {
-        try {
-            const adminName = "admin";
-            const path = "./Server/Songs";
-            console.log("__dirname = ", __dirname );
-            console.log("path = ", path);
-            // CREATE STANDARD USERS -> ADMINS
-            this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
-            console.log("jldsafjlsadjö");
-            // CREATE STANDARD SONGS
-            this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) ' +
-                'VALUES ("Canon in D Major", "Johann Pachelbel", 1, ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
-            this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
-                'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
-        } catch (err) {
-            console.log("db.js, Z.87: CATCHED ERROR = ", err);
-        }
+        // try {
+        //     const adminName = "admin";
+        //     const path = "./Server/Songs";
+        //     console.log("__dirname = ", __dirname );
+        //     console.log("path = ", path);
+        //     // CREATE STANDARD USERS -> ADMINS
+        //     this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
+        //     console.log("jldsafjlsadjö");
+        //     // CREATE STANDARD SONGS
+        //     this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) ' +
+        //         'VALUES ("Canon in D Major", "Johann Pachelbel", 1, ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
+        //     this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
+        //         'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
+        // } catch (err) {
+        //     console.log("db.js, Z.87: CATCHED ERROR = ", err);
+        // }
     }
 
     create() {

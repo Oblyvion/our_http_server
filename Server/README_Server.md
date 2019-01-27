@@ -37,7 +37,213 @@ WAS GENAU NOCHMA?
 ![Bild ORM](./Database/ORM.png "ORM")
 
 #### Definition der API
-HIER FÄNGT DIE ERSTE ROUTE AN...
+Bei Aufruf von http://www.127.0.0.1:3000
+
+```
+ GET /init
+```
+Datenbank wird initialisiert.
+
+**Responses:** 
+
+_Akzeptiert_
+
+{success: true, msg: 'db ready to use'}
+
+_Abgelehnt_
+
+{success: false, msg: 'db ready to use'}
+
+```
+ GET /users
+```
+Gibt alle User zurück, welche nicht der aktuelle User und nicht seine Playlist Mates sind.
+
+**Responses:** 
+
+_Akzeptiert_
+
+{success: true, data: rows}
+
+_Abgelehnt_
+
+{success: false, msg: 'No other users found.', err: err}
+
+**Headers:**
+
+ Authorization: token
+
+```
+ GET /user/:id
+```
+Gibt den User mit der angegebenen ID zurück.
+
+**Responses:** 
+
+_Akzeptiert_
+
+{success: true, data: row}
+
+_Abgelehnt_
+
+{success: false, msg: 'No user found.', err: err}
+
+**Headers:**
+
+ Authorization: token
+ 
+ **Params:**
+ 
+ :id = USERS.ID
+
+```
+ GET /songs
+```
+Gibt alle Songs zurück.
+
+**Responses:** 
+
+_Akzeptiert_
+
+{success: true, data: rows}
+
+_Abgelehnt_
+
+{success: false, msg: 'No songs available.', err: err}
+
+```
+ GET /songsuser/:playlistID
+```
+Gibt die selbst hinzugefügten Songs des Users aus der Playlist mit der angegebenen playlistID zurück.
+
+**Responses:** 
+
+_Akzeptiert_
+
+{success: true, data: row}
+
+_Abgelehnt_
+
+{success: false, msg: 'No songs available in this playlist.', err: err}
+
+**Headers:**
+
+ Authorization: token
+ 
+ **Params:**
+ 
+ :playlistID = PLAYLISTS.ID
+ 
+ ```
+  GET /song/:id
+ ```
+ Gibt den Song mit der angegebenen ID als ReadStream zurück.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ Starte ReadStream von gefundenem SONG.PATH mit Clienten.
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'No such file or directory.', err: err} 
+ 
+ {success: false, msg: 'You are not authorized for this action or playlist ist not available.', err: err}
+
+ **Headers:**
+ 
+  Authorization: token
+  
+  **Params:**
+  
+  :id = SONGS.ID
+
+ ```
+  GET /playlists
+ ```
+ Gibt die Playlists vom aktuellen User zurück.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ {success: true, msg: data: rows} 
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'Found no playlists.', err: err} 
+ 
+ **Headers:**
+ 
+  Authorization: token
+  
+ ```
+  GET /playlists/collabs
+ ```
+ Gibt die Playlists von den Collaborators des aktuellen Users zurück.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ {success: true, msg: data: rows} 
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'Found no collaborator playlists.', err: err} 
+ 
+ **Headers:**
+ 
+  Authorization: token
+
+```
+  GET /playlistMates
+ ```
+ Gibt die Playlist Mates vom aktuellen User zurück.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ {success: true, msg: data: rows} 
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'Nothing in there, yet.', err: err}  
+ 
+ {success: false, msg: 'You are not authorized for this action.', err: err} 
+
+ {success: false, msg: 'UNCATCHED error', err: err} 
+
+ **Headers:**
+ 
+  Authorization: token
+
+ ```
+  GET /playlistMates/sharedPlaylists/:mate
+ ```
+ Gibt den Song mit der angegebenen ID als ReadStream zurück.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ Starte ReadStream von gefundenem SONG.PATH mit Clienten.
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'No such file or directory.', err: err} 
+ 
+ {success: false, msg: 'You are not authorized for this action or playlist ist not available.', err: err}
+
+ **Headers:**
+ 
+  Authorization: token
+  
+  **Params:**
+  
+  :id = SONGS.ID
 
 #### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
