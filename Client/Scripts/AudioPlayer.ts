@@ -210,7 +210,6 @@ export class AudioPlayer {
         curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
-
         curSong.play();
         this.dom_play.src = "./Images/pause.png";
 

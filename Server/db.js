@@ -8,19 +8,17 @@ class DB {
     }
 
     adminInit() {
-        // TODO auskommentiert für Testzwecke
         try {
             const adminName = "admin";
-            // TODO DAS HIER IST DER PATH FÜR WINDOWS!!! FÜR LINUX => __dirname + "/Songs"
-            const path = __dirname + "/Songs";
+            const path = "./Server/Songs";
             console.log("__dirname = ", __dirname );
             console.log("path = ", path);
             // CREATE STANDARD USERS -> ADMINS
             this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
             console.log("jldsafjlsadjö");
             // CREATE STANDARD SONGS
-            this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, PATH) ' +
-                'VALUES ("Canon in D Major", "Johann Pachelbel", ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
+            this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) ' +
+                'VALUES ("Canon in D Major", "Johann Pachelbel", 1, ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
             this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
                 'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
         } catch (err) {
@@ -34,8 +32,8 @@ class DB {
                     this.db.run(`CREATE TABLE IF NOT EXISTS USERS
                     (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    NAME TEXT NOT NULL UNIQUE,
-                    PASSWORD TEXT,
+                    NAME VARCHAR(30) NOT NULL UNIQUE,
+                    PASSWORD VARCHAR(30) NOT NULL,
                     SCORE INTEGER
                     )`, err => {
                         if (err !== null) reject(err);
@@ -54,26 +52,17 @@ class DB {
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     TITLE VARCHAR(30) NOT NULL,
                     ARTIST VARCHAR(30),
-                    ADDED_BY INTEGER,
+                    ADDED_BY INTEGER NOT NULL,
                     PATH TEXT UNIQUE,
                     FOREIGN KEY (ADDED_BY) REFERENCES USERS(ID)
                     )`, err => {
                         if (err !== null) reject(err);
                     });
-                    // this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_FROM
-                    // (
-                    // PLAYLIST_ID INTEGER,
-                    // USER_ID INTEGER,
-                    // FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),
-                    // FOREIGN KEY (USER_ID) REFERENCES USERS(ID)
-                    // )`, err => {
-                    //     if (err !== null) reject(err);
-                    // });
                     this.db.run(`CREATE TABLE IF NOT EXISTS PLAYLIST_CONTAINS
                     (
-                    SONG_ID INTEGER(2),
-                    PLAYLIST_ID INTEGER(2),
-                    SUPPORTED_BY TEXT,
+                    SONG_ID INTEGER NOT NULL,
+                    PLAYLIST_ID INTEGER NOT NULL,
+                    SUPPORTED_BY VARCHAR(30),
                     FOREIGN KEY (SONG_ID) REFERENCES SONGS(ID),
                     FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID)
                     )`, err => {
@@ -92,9 +81,9 @@ class DB {
                     });
                     this.db.run('CREATE TABLE IF NOT EXISTS COLLABORATORS ' +
                         '(' +
-                        'USER_ID INTEGER(2) NOT NULL,' +
-                        'MATE_ID INTEGER(2) NOT NULL,' +
-                        'PLAYLIST_ID INTEGER(2) NOT NULL,' +
+                        'USER_ID INTEGER NOT NULL,' +
+                        'MATE_ID INTEGER NOT NULL,' +
+                        'PLAYLIST_ID INTEGER NOT NULL,' +
                         'FOREIGN KEY (USER_ID) REFERENCES USERS(ID),' +
                         'FOREIGN KEY (MATE_ID) REFERENCES USERS(ID),' +
                         'FOREIGN KEY (PLAYLIST_ID) REFERENCES PLAYLISTS(ID),' +

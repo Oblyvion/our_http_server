@@ -1,6 +1,23 @@
 ## Abstract Server
-Verantwortlicher: Franz Johannes Weber
+Verantwortlicher: Franz-Johannes Weber
 
+1. Allgemein
+...
+2. Server
+Auf dem Server werden alle vorhandenen User, Playlists und Songs in einer SQLITE-Datenbank gespeichert, 
+verwaltet und auch wieder an den Client, den Anforderungen entsprechend zurückgeliefert.
+Beim ersten Start des Servers, wird zunächst die Datenbank aufgebaut und anschließend ein User mit Benutzername "admin"
+und Passwort "admin" erstellt. Zusätzlich erhält der User admin eine Playlist, worin er Songs hochladen und einspeichern
+kann. Außerdem wird nach jeder erfolgreichen Registrierung eines Users, eine Standard-Playlist mit einem lizenzfreien 
+Standard-Song erzeugt und 5 Score-Punkte auf seinen User-Account gutgeschrieben.
+
+Der Server selbst ist in Javascript mit den Frameworks node.js und express.js implementiert und ist über
+den Port 3000 erreichbar. Desweiteren wurden alle benötigten Routen in einer API zusammengefasst und dem
+Client zur Verfügung gestellt, um mit dem Server eine einwandfreie Kommunikation zu gewährleisten. Damit die Kommunikation
+auch für jeden User eindeutig ist, wurde eine Authentifizierung mittels JWT-Token realisiert.
+Das Datenbankmodell sowie die API werden im Folgenden näher beschrieben.
+
+Datenbankmodell implementiert worden:
    - Auf dem Server muss eine Datenbank vorhanden sein, die:
       - (lizensfreie) Musik in einer Tabelle Songs beinhaltet
       - die Playlists der einzelnen User beinhaltet
@@ -9,16 +26,19 @@ Verantwortlicher: Franz Johannes Weber
    - Der Server liefert dem Client abspielbare Musik in Form eines Streams
    - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
 
-### Datenbankmodell
-Im folgenden Bild ist das vorläufige Datenbankmodell zu sehen.
-
+## Entwicklungsplan
+### Entwurf
+#### Datenbankmodell
+NEUES KOMMT SOFORT!
 ![Bild DatenbankModell](./Database/DatenbankModell.png "DatenbankModell")
 
-### ORM 
-
+#### ORM 
+WAS GENAU NOCHMA?
 ![Bild ORM](./Database/ORM.png "ORM")
 
-### API-Beschreibung
+#### Definition der API
+HIER FÄNGT DIE ERSTE ROUTE AN...
+
 #### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
 ##### Client kann sich anmelden, falls user in der Datenbank vorhanden.
@@ -200,3 +220,50 @@ Folgendermaßen sieht ein Template Object unserer Datenbank aus:
 ```
 
 ## Aufwandsschaetzung
+
+### Backend
+Verantwortlicher: Franz-Johannes Weber
+
+#### Projektvorbereitung
+
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Wireframes Desktop  | 5 
+| Wireframes Mobil | 5
+| Desktop Wireframes beschreiben | 5 
+| Datenbank Modell entwerfen | 3
+| Server Abstract | 1
+| ORM entwerfen | 4
+| API Beschreibung | 5
+| Projektvorschlag strukturieren | 2
+| SUMME | 30 
+
+#### Implementierung
+
+| Aufgabe | Zeit in Stunden |
+|----------|:-------------:|
+| Datenbank aufbauen und verwalten | 10 
+| API aufbauen | 30
+| Filestreaming konfigurieren | 20 
+| User-Suche und Rankingsystem implementieren | 10 
+| Zufälliger User Screen erstellen | 2
+| About us, Contact und Impressum anfertigen und designen | 10 
+| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 5 
+| SUMME | 50 
+
+#### Dokumentation und Tests
+
+| Aufgabe | Zeit in Stunden 
+|----------|:-------------:
+| Projektdokumentation | 15
+| API Tests | 5 
+| SUMME | 20 
+
+#### Zusammenfassung
+
+| Teil | Zeit in Stunden 
+|----------|:-------------:
+| Projektvorbereitung | 30 
+| Implementierung | 50 
+| Dokumentation und Tests | 20 
+| SUMME  | 100 
