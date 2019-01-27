@@ -298,9 +298,9 @@ export class PlaylistTable {
 
         // PROGRESS-BAR
         this.dom_AddNewSongProgressBar = document.createElement("div");
-        this.dom_AddNewSongProgress.classList.add("AddNewSongProgressBar");
+        this.dom_AddNewSongProgressBar.classList.add("AddNewSongProgressBar");
         this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);
-        this.dom_AddNewSongProgress.setAttribute("id", "progressBar");
+        this.dom_AddNewSongProgressBar.setAttribute("id", "progressBar");
         // this.dom_AddNewSongProgressBar.setAttribute("align", "center");
         // this.dom_AddNewSongProgress.setAttribute("label", "Hier x %");
         // this.dom_AddNewSongProgress.setAttribute("width", "10");

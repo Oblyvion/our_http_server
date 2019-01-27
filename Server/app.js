@@ -758,11 +758,10 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
             res.send({
                 success: false,
-                msg: 'Song exists already. Do you want this song instead?',
-                data: req.files.audioFile[0].originalname,
+                msg: 'Song exists already. Search for the following song to get it ;)\n\n' + req.files.audioFile[0].originalname,
                 err: err
             });
-        } else {                // ERROR MESSAGE, die ich durch Fehler bei INSERT bekam: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed
+        } else {
             console.log("UNCATCHED ERROR = ", err);
             res.send({
                 success: false,

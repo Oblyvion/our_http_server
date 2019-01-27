@@ -139,12 +139,17 @@ export class AudioPlayer {
         console.log("Title: ", this.songs[clicked].TITLE);
         // song.src();
         console.log("das ist dom song title ", this.dom_player_songTitle);
+        console.log("das ist clicked + 1 ", clicked + 1);
         this.dom_player_songTitle.textContent = this.songs[clicked].TITLE;
         try {
-            this.dom_nextSong.textContent = "\bNext song: " + this.songs[clicked + 1].TITLE;
+            if (([clicked + 1]) === undefined) {
+                this.dom_nextSong.textContent = "\bNext song:";
+            }
+            else
+                this.dom_nextSong.textContent = "\bNext song: " + this.songs[clicked + 1].TITLE;
         }
         catch (err) {
-            this.dom_nextSong.textContent = "\bNext song:";
+            console.log("eoroeroreoroo = ", err);
         }
         console.log("ID = ", this.songs[clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
