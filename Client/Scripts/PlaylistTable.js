@@ -14,7 +14,7 @@ export class PlaylistTable {
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
             this.Playlist.songs = result.data;
-            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
+            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
             console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
             this.addPlaylistSongs();
         }).catch(err => {
@@ -303,7 +303,9 @@ export class PlaylistTable {
                 let clicked = dom_TableData.rowIndex - 1;
                 console.log("clicked: " + clicked);
                 console.log("Playlist id: " + this.Playlist.songs[clicked].ID);
-                this.audioPlayer.loadSong(clicked);
+                this.audioPlayer.close();
+                this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, clicked);
+                this.audioPlayer.loadSong();
             });
             console.log("PlaylistTable.ts: this.Playlist[i].Title = ", this.Playlist.songs[i].TITLE);
             const dom_TableDataTitle = document.createElement('td');
