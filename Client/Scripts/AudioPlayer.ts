@@ -287,9 +287,9 @@ export class AudioPlayer {
     }
 
     next() {
-        currentSong = (currentSong + 1) % this.songs.length;
-        this.loadSong();
-        curSong.play();
+        // curSong.pause();
+        // curSong.src = this.API_URL + '/song/' + this.songs[(this.clicked+1)%this.songs.length];
+        // curSong.play();
     }
 
     previous() {

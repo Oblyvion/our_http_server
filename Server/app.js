@@ -160,18 +160,18 @@ app.get('/users', auth, async (req, res) => {
             console.log("app.js, app.get/users: USERS = ", rows);
             if (!rows)
                 throw 'users not found';
-            // res.send({
-            //     success: true,
-            //     data: rows
-            // });
+            res.send({
+                success: true,
+                data: rows
+            });
         })
         .catch(err => {
             console.log("app.js, app.get/users: ERROR = ", err);
-            // res.send({
-            //     success: false,
-            //     msg: 'access users failed',
-            //     err: err
-            // });
+            res.send({
+                success: false,
+                msg: 'access users failed',
+                err: err
+            });
         });
 });
 
@@ -500,7 +500,6 @@ app.get('/playlistMates/request', auth, async (req, res) => {
     } catch (err) {
         console.log('app.js, app.post/request Catch: ERR = ', err);
     }
-
 });
 
 /**

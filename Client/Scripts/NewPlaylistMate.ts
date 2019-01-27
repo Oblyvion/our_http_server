@@ -5,13 +5,6 @@ export class NewPlaylistMate {
     private dom_content: HTMLElement;
     private dom_divNewPlaylistMate: HTMLDivElement;
     private dom_divNewMateHeader: HTMLDivElement;
-    private dom_Table: HTMLTableElement;
-    private dom_TableHeader: HTMLTableRowElement;
-    private dom_TableHeaderName1: HTMLTableCaptionElement;
-    private dom_TableHeaderName2: HTMLTableCaptionElement;
-    private dom_TableHeaderName3: HTMLTableCaptionElement;
-    private dom_divMatesHeaderButtons: HTMLElement;
-    private dom_MatesHeaderAddBtn: HTMLImageElement;
     private dom_divNewMateHeaderName: HTMLDivElement;
     private dom_NewPlaylistMateContainer: HTMLDivElement;
 
@@ -249,6 +242,8 @@ export class NewPlaylistMate {
             });
 
             const data = await response.json();
+
+            console.log("das ist die antwort des Servers auf fetch /users : ", data);
 
             return data;
         } catch (err) {

@@ -1,6 +1,7 @@
 import {manager} from "./app.js";
 import {MyPlaylistMates} from "./MyPlaylistMates.js";
 import {NewPlaylistMate} from "./NewPlaylistMate.js";
+import {RequestPage} from "./RequestPage.js";
 
 export class Header {
     private dom_root: HTMLElement;
@@ -20,6 +21,7 @@ export class Header {
     private dom_DropdownMenuData2: HTMLElement;
     private dom_DropdownMenuData3: HTMLElement;
     private MyPlaylistMates:MyPlaylistMates;
+    private Requests: RequestPage;
 
     constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
         this.dom_root = dom_body;
@@ -162,6 +164,14 @@ export class Header {
         this.dom_HeaderMessageBttn.src = "./Images/letter.png";
         this.dom_ButtonContainer.appendChild(this.dom_HeaderMessageBttn);
         this.dom_HeaderMessageBttn.style.width = "30px";
+        this.dom_HeaderMessageBttn.addEventListener('click', () => {
+            for (let i = 2; i < this.dom_content.childNodes.length; i++) {
+                this.dom_content.childNodes[i].remove();
+            }
+            new manager("page_first_steps");
+            this.set("Requests");
+            this.Requests = new RequestPage(this.dom_root, this.dom_content)
+        });
     }
 
 }
