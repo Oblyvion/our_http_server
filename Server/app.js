@@ -103,7 +103,7 @@ async function userInit(req) {
         const playlistID = await db.get_row('SELECT ID FROM PLAYLISTS WHERE USER_ID = ?', userID.ID);
         console.log('playlistID = ', playlistID);
         await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)',
-            standardSongId, playlistID.ID, 'Welcome ' + req.body.name);
+            standardSongId, playlistID.ID, 'Admin');
     } catch (err) {
         console.log("ERROR @userInit = ", err);
     }

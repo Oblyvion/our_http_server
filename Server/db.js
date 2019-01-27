@@ -23,14 +23,6 @@ class DB {
                 'VALUES ("Canon in D Major", "Johann Pachelbel", ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
             this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
                 'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
-
-            // verhindert, dass mehrfach der standard song der admin playlist hinzugefügt wird
-            //     this.db.run('SELECT SUPPORTED_BY FROM PLAYLIST_CONTAINS WHERE SONG_ID = ? AND PLAYLIST_ID = ?', 1, 1);
-                // console.log('X-ter DB Aufruf: Standard Song in DB schreiben wird abgefangen');
-                // TODO nur EINMAL beim ersten start laden, hinterher nicht mehr!
-                // this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', 1, 1, 'Welcome ' + adminName);
-                console.log('Erster DB Aufruf: Standard Song wird in DB geschrieben');
-            // }
         } catch (err) {
             console.log("db.js, Z.87: CATCHED ERROR = ", err);
         }

@@ -242,7 +242,6 @@ export class PlaylistTable {
             request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
             request.setRequestHeader("Authorization", localStorage.getItem("token"));
             request.responseType = "json";
-            console.log("RESPONSE  1 = ", request.response);
             request.onload = function (e) {
                 console.log("hallo @ onload");
                 const obj = request.response;
@@ -257,10 +256,27 @@ export class PlaylistTable {
             request.onloadstart = function (e) {
                 console.log("@ onLoadSTART");
             };
+            // request.onprogress = function (e) {
+            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
+            //     if (e.lengthComputable) {
+            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
+            //
+            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+            //         // element wo der progress wert reingeschrieben werden soll
+            //         const elem = document.getElementById("progressBar");
+            //         // anfangswert
+            //         let width = 0;
+            //         // aktuellwert
+            //         width = Math.round(e.loaded  / e.total * 100);
+            //         // show result
+            //         elem.style.width = width + '%';
+            //         elem.innerHTML = width + '%';
+            //
+            //     }};
             request.upload.addEventListener("progress", function (e) {
+                console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
                 if (e.lengthComputable) {
                     console.log("add upload event-listener: " + Math.round(e.loaded / e.total * 100));
-                    console.log("MOOOOOVEEEE");
                     // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
                     // element wo der progress wert reingeschrieben werden soll
                     const elem = document.getElementById("progressBar");
@@ -293,18 +309,58 @@ export class PlaylistTable {
                     //     }
                     // });
                     // bar.animate(1.0);  // Number from 0.0 to 1.0
+                    //
                     // progressBar.animate(1);
                 }
             }, false);
-            // };
-            console.log("RESPONSE  2 = ", request.response);
             request.send(formData);
-            console.log("RESPONSE  3 = ", request.response);
+            // request.upload.addEventListener("progress", function (e) {
+            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
+            //     if (e.lengthComputable) {
+            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
+            //
+            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+            //         // element wo der progress wert reingeschrieben werden soll
+            //         const elem = document.getElementById("progressBar");
+            //         // anfangswert
+            //         let width = 0;
+            //         // aktuellwert
+            //         width = Math.round(e.loaded  / e.total * 100);
+            //         // show result
+            //         elem.style.width = width + '%';
+            //         elem.innerHTML = width + '%';
+            //
+            //         // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
+            // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
+            //         style: {
+            //             // Text color.
+            //             // Default: same as stroke color (options.color)
+            //             color: '#999',
+            //             position: 'absolute',
+            //             right: '0',
+            //             top: '30px',
+            //             padding: 0,
+            //             margin: 0,
+            //             transform: null
+            //         },
+            //         autoStyleContainer: false
+            //     },
+            //     from: {color: '#FFEA82'},
+            //     to: {color: '#ED6A5A'},
+            //     step: (state, bar) => {
+            //         bar.setText(Math.round(bar.value() * 100) + ' %');
+            //     }
+            // });
+            // bar.animate(1.0);  // Number from 0.0 to 1.0
+            // progressBar.animate(1);
+            //     }
+            // }, false);
+            // };
             if (request.UNSENT) {
                 alert("Failed to upload Song!");
             }
-            console.log("RESPONSE  4 = ", request.response);
             if (request.DONE) {
+                console.log("Das ist die request DONE: " + request.DONE);
                 console.log("Das ist die response vom server: " + request.statusText);
                 // alert("Song successfully uploaded!");
                 this.close();
