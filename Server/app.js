@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+// const ProgressBar = require('progressbar.js');
 
 // const basic_auth = require('basic-auth');
 // const bodyParser = require('body-parser');

@@ -38,6 +38,7 @@
     "nodemon": "^1.18.9",
     "opener": "^1.5.1",
     "path": "^0.12.7",
+    "progressbar.js": "^1.0.1",
     "request": "latest",
     "sqlite3": "^4.0.4",
     "xmlhttprequest": "^1.8.0"

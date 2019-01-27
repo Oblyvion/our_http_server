@@ -215,6 +215,21 @@ export class PlaylistTable {
         this.dom_AddNewSongArtist.setAttribute("type", "text");
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongArtist);
         this.dom_AddNewSongArtist.placeholder = "Song artist...";
+        // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+        // PROGRESS
+        this.dom_AddNewSongProgress = document.createElement("div");
+        this.dom_AddNewSongProgress.classList.add("AddNewSongProgress");
+        this.dom_divTable.appendChild(this.dom_AddNewSongProgress);
+        this.dom_AddNewSongProgress.setAttribute("id", "progress");
+        // this.dom_AddNewSongProgress.setAttribute("align", "center");
+        // PROGRESS-BAR
+        this.dom_AddNewSongProgressBar = document.createElement("div");
+        this.dom_AddNewSongProgress.classList.add("AddNewSongProgressBar");
+        this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);
+        this.dom_AddNewSongProgress.setAttribute("id", "progressBar");
+        // this.dom_AddNewSongProgressBar.setAttribute("align", "center");
+        // this.dom_AddNewSongProgress.setAttribute("label", "Hier x %");
+        // this.dom_AddNewSongProgress.setAttribute("width", "10");
         this.dom_AddNewSongSubmit = document.createElement("button");
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
@@ -239,8 +254,51 @@ export class PlaylistTable {
                 else
                     alert(obj.msg);
             };
+            request.onloadstart = function (e) {
+                console.log("@ onLoadSTART");
+            };
+            request.upload.addEventListener("progress", function (e) {
+                if (e.lengthComputable) {
+                    console.log("add upload event-listener: " + Math.round(e.loaded / e.total * 100));
+                    console.log("MOOOOOVEEEE");
+                    // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+                    // element wo der progress wert reingeschrieben werden soll
+                    const elem = document.getElementById("progressBar");
+                    // anfangswert
+                    let width = 0;
+                    // aktuellwert
+                    width = Math.round(e.loaded / e.total * 100);
+                    // show result
+                    elem.style.width = width + '%';
+                    elem.innerHTML = width + '%';
+                    // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
+                    // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
+                    //         style: {
+                    //             // Text color.
+                    //             // Default: same as stroke color (options.color)
+                    //             color: '#999',
+                    //             position: 'absolute',
+                    //             right: '0',
+                    //             top: '30px',
+                    //             padding: 0,
+                    //             margin: 0,
+                    //             transform: null
+                    //         },
+                    //         autoStyleContainer: false
+                    //     },
+                    //     from: {color: '#FFEA82'},
+                    //     to: {color: '#ED6A5A'},
+                    //     step: (state, bar) => {
+                    //         bar.setText(Math.round(bar.value() * 100) + ' %');
+                    //     }
+                    // });
+                    // bar.animate(1.0);  // Number from 0.0 to 1.0
+                    // progressBar.animate(1);
+                }
+            }, false);
+            // };
             console.log("RESPONSE  2 = ", request.response);
-            await request.send(formData);
+            request.send(formData);
             console.log("RESPONSE  3 = ", request.response);
             if (request.UNSENT) {
                 alert("Failed to upload Song!");
