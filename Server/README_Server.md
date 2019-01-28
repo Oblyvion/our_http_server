@@ -287,24 +287,145 @@ _Abgelehnt_
   
   ```
     POST /playlist
-   ```
+  ```
    Überprüft den Benutzernamen und Passwort in der Datenbank.
    
    **Responses:** 
    
    _Akzeptiert_
    
-   {success: true, msg: 'Login was successful.', data: token}
+   {success: true, msg: 'Playlist created successfully.', data: playlist}
    
    _Abgelehnt_
    
-   {success: false, msg: 'Access declined!.', err: err} 
+   {success: false, msg: 'Cannot insert playlists at this time.', err: err} 
    
-    **Params:**
+   {success: false, msg: 'You are not authorized for this action.', err: err}
+   
+   **Headers:**
     
-    req.body.name = USERS.NAME
+   Authorization: token
      
+   **Params:**
+    
+   req.body.name = PLAYLISTS.NAME
+ 
+  ```
   
+    POST /song/:playlistID
+  ```
+   Fügt einen bereits in der Datenbank vorhandenen Song einer seiner eigenen Playlists
+   oder einer Collaborator Playlist hinzu.
+   
+   **Responses:** 
+   
+   _Akzeptiert_ (Playlist muss von User selbst sein!)
+   
+   {success: true, msg: 'Song added to playlist successfully.', path: filePath}
+   
+   _Abgelehnt_
+   
+   (Playlist muss von Collaborator selbst sein!)
+   {success: true, msg: 'Recognized that playlist is from collaborator. Song added successfully.', path: filePath} 
+   
+   (Sonst error)   
+   {success: false, msg: 'Playlist of Mate could not be found.', err: err}
+   
+   **Headers:**
+    
+   Authorization: token
+     
+   **Params:**
+    
+   :playlistID = PLAYLIST.ID  
+   req.body.songID = SONGS.ID
+     
+  ```
+    POST /song/global/:playlistID
+  ```
+   Fügt einen neuen Song der Datenbank sowie der übergebenen (aktuellen) Playlist hinzu.
+   
+   **Responses:** 
+   
+   _Akzeptiert_ (Playlist muss von User selbst sein!)
+   
+   {success: true, msg: 'File uploaded successfully ;)', path: filePath}
+   
+   _Abgelehnt_
+   
+   (Playlist muss von Collaborator selbst sein!)
+   {success: true, msg: 'Recognized that playlist is from collaborator. Song uploaded and added successfully.', path: filePath} 
+   
+   (Sonst error)   
+   {success: false, msg: 'Playlist of Mate could not be found.', err: err}
+   
+   {success: false, msg: 'Song exists already. Search for the following song to get it ;)\n\n' + 
+   req.files.audioFile[0].originalname', err: err}
+
+   {success: false, msg: 'Access failed.', err: err}
+
+   **Headers:**
+    
+   Authorization: token
+     
+   **Params:**
+    
+   :playlistID = PLAYLIST.ID   
+   req.files = {lot of file data}   
+   req.body.title = SONGS.TITLE  
+   req.body.artist = SONGS.ARTIST
+
+  ```
+    POST /playlistMate
+  ```
+   Fügt einen neuen Playlist Mate seinem User-Account hinzu.
+   
+   **Responses:** 
+   
+   _Akzeptiert_
+   
+   {success: true, msg: 'Playlist Mate request send to ' + req.body.mate + ' successfully.'}
+   
+   _Abgelehnt_
+   
+   {success: false, msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'}
+   
+   {success: false, msg: 'You are not authorized to add new Playlist Mate.', err: err}
+
+   **Headers:**
+    
+   Authorization: token
+     
+   **Params:**
+    
+   req.body.mate = USERS.NAME
+   
+```
+    POST /collabs/:playlistID
+  ```
+   Fügt einen neuen Collaborator für die Playlist mit der angegebenen ID hinzu.
+   
+   **Responses:** 
+   
+   _Akzeptiert_
+   
+   {success: true, msg: 'Playlist Mate request send to ' + req.body.mate + ' successfully.'}
+   
+   _Abgelehnt_
+   
+   {success: false, msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'}
+   
+   {success: false, msg: 'You are not authorized to add new Playlist Mate.', err: err}
+
+   **Headers:**
+    
+   Authorization: token
+     
+   **Params:**
+    
+   req.body.mate = USERS.NAME
+      
+
 #### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
 ##### Client kann sich anmelden, falls user in der Datenbank vorhanden.
