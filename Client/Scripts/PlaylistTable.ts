@@ -295,16 +295,13 @@ export class PlaylistTable {
         this.dom_AddNewSongProgress.classList.add("AddNewSongProgress");
         this.dom_divTable.appendChild(this.dom_AddNewSongProgress);
         this.dom_AddNewSongProgress.setAttribute("id", "progress");
-        // this.dom_AddNewSongProgress.setAttribute("align", "center");
+        this.dom_AddNewSongProgress.style.visibility = 'hidden';
 
         // PROGRESS-BAR
         this.dom_AddNewSongProgressBar = document.createElement("div");
         this.dom_AddNewSongProgressBar.classList.add("AddNewSongProgressBar");
         this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);
         this.dom_AddNewSongProgressBar.setAttribute("id", "progressBar");
-        // this.dom_AddNewSongProgressBar.setAttribute("align", "center");
-        // this.dom_AddNewSongProgress.setAttribute("label", "Hier x %");
-        // this.dom_AddNewSongProgress.setAttribute("width", "10");
 
         this.dom_AddNewSongSubmit = document.createElement("button");
         this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
@@ -319,138 +316,41 @@ export class PlaylistTable {
             request.setRequestHeader("Authorization", localStorage.getItem("token"));
             request.responseType = "json";
 
+            this.dom_AddNewSongForm.style.display = "none";
+
             request.onload = function (e) {
                 console.log("hallo @ onload");
                 const obj = request.response;
                 console.log("Das ist das objekt !!!!! ", obj);
+                const progress = document.getElementById("progress");
                 if (obj.success === true) {
                     console.log("Das ist das objekt msg  = ", obj.msg);
                     alert(obj.msg);
                 } else
                     alert(obj.msg);
+                progress.style.visibility = 'hidden';
             };
 
-            this.dom_AddNewSongForm.style.display = "none";
-
             request.onloadstart = function (e) {
-                console.log("@ onLoadSTART")
+                const progress = document.getElementById("progress");
+                progress.style.visibility = 'visible';
             };
 
             request.upload.addEventListener("progress", function (e) {
+                const bar = document.getElementById("progressBar");
+
                 if (e.lengthComputable) {
-                    console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
-
-                    // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-                    // element wo der progress wert reingeschrieben werden soll
-                    const elem = document.getElementById("progressBar");
-                    // anfangswert
+                    // start value
                     let width = 0;
-                    // aktuellwert
-                    width = Math.round(e.loaded  / e.total * 100);
+                    // current value
+                    width = Math.round(e.loaded / e.total * 100);
                     // show result
-                    elem.style.width = width + '%';
-                    elem.innerHTML = width + '%';
-
-                    // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
-            // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
-            //         style: {
-            //             // Text color.
-            //             // Default: same as stroke color (options.color)
-            //             color: '#999',
-            //             position: 'absolute',
-            //             right: '0',
-            //             top: '30px',
-            //             padding: 0,
-            //             margin: 0,
-            //             transform: null
-            //         },
-            //         autoStyleContainer: false
-            //     },
-            //     from: {color: '#FFEA82'},
-            //     to: {color: '#ED6A5A'},
-            //     step: (state, bar) => {
-            //         bar.setText(Math.round(bar.value() * 100) + ' %');
-            //     }
-            // });
-            // bar.animate(1.0);  // Number from 0.0 to 1.0
-            //
-            // progressBar.animate(1);
+                    bar.style.width = width + '%';
+                    bar.innerHTML = width + '%';
                 }
             }, false);
-
-
             request.send(formData);
-
-
-            // request.upload.addEventListener("progress", function (e) {
-            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
-            //     if (e.lengthComputable) {
-            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
-            //
-            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-            //         // element wo der progress wert reingeschrieben werden soll
-            //         const elem = document.getElementById("progressBar");
-            //         // anfangswert
-            //         let width = 0;
-            //         // aktuellwert
-            //         width = Math.round(e.loaded  / e.total * 100);
-            //         // show result
-            //         elem.style.width = width + '%';
-            //         elem.innerHTML = width + '%';
-            //
-            //         // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
-                    // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
-                    //         style: {
-                    //             // Text color.
-                    //             // Default: same as stroke color (options.color)
-                    //             color: '#999',
-                    //             position: 'absolute',
-                    //             right: '0',
-                    //             top: '30px',
-                    //             padding: 0,
-                    //             margin: 0,
-                    //             transform: null
-                    //         },
-                    //         autoStyleContainer: false
-                    //     },
-                    //     from: {color: '#FFEA82'},
-                    //     to: {color: '#ED6A5A'},
-                    //     step: (state, bar) => {
-                    //         bar.setText(Math.round(bar.value() * 100) + ' %');
-                    //     }
-                    // });
-                    // bar.animate(1.0);  // Number from 0.0 to 1.0
-
-                    // progressBar.animate(1);
-            //     }
-            // }, false);
-
-            // };
-
-            if (request.UNSENT) {
-                alert("Failed to upload Song!");
-            }
-
-            if (request.DONE) {
-                console.log("Das ist die request DONE: " + request.DONE);
-
-                console.log("Das ist die response vom server: " + request.statusText);
-                // alert("Song successfully uploaded!");
-
-                // this.fetchPlaylistSongs().then((result) => {
-                //     console.log("das ist das result: ", result);
-                //     this.Playlist.songs = result.data;
-                //     this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
-                //     console.log("das sind die songs nach dem hinzufügen eines songs: ", this.Playlist.songs);
-                //     this.addPlaylistSongs();
-                // }).catch(err => {
-                //     console.log(err);
-                // });
-
-
-            }
         });
-
     }
 
     async fetchPlaylistMates() {
@@ -513,8 +413,8 @@ export class PlaylistTable {
             dom_TableData.addEventListener('click', () => {
                 let clicked = dom_TableData.rowIndex - 1;
 
-                console.log("clicked: "+clicked);
-                console.log("Playlist id: "+this.Playlist.songs[clicked].ID);
+                console.log("clicked: " + clicked);
+                console.log("Playlist id: " + this.Playlist.songs[clicked].ID);
                 this.audioPlayer.close();
                 this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, clicked);
                 this.audioPlayer.loadSong();

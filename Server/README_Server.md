@@ -74,9 +74,9 @@ _Abgelehnt_
  Authorization: token
 
 ```
- GET /user/:id
+ GET /user
 ```
-Gibt den User mit der angegebenen ID zurück.
+Gibt den User SCORE des aktuellen Users zurück.
 
 **Responses:** 
 
@@ -87,6 +87,8 @@ _Akzeptiert_
 _Abgelehnt_
 
 {success: false, msg: 'No user found.', err: err}
+
+{success: false, msg: 'You are not authorized for this action!', err: err}
 
 **Headers:**
 
@@ -146,6 +148,8 @@ _Abgelehnt_
  Starte ReadStream von gefundenem SONG.PATH mit Clienten.
  
  _Abgelehnt_
+ 
+ // TODO EVENTUELL RAUSNEHMEN BEIDE FALSE ANFRAGEN
  
  {success: false, msg: 'No such file or directory.', err: err} 
  
@@ -403,19 +407,24 @@ _Abgelehnt_
 ```
     POST /collabs/:playlistID
   ```
-   Fügt einen neuen Collaborator für die Playlist mit der angegebenen ID hinzu.
+   Fügt einen neuen Collaborator zu der Playlist mit der angegebenen ID hinzu.
    
    **Responses:** 
    
    _Akzeptiert_
    
-   {success: true, msg: 'Playlist Mate request send to ' + req.body.mate + ' successfully.'}
+   {success: true, msg: 'Collaborator ' + req.body.mate + ' has been added to your account successfully.'}
    
    _Abgelehnt_
    
-   {success: false, msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'}
+   {success: false, msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already.
+   Invite another Playlist Mate.'}
    
-   {success: false, msg: 'You are not authorized to add new Playlist Mate.', err: err}
+   {success: false, msg: 'There is a problem with you or your collaborator.', err: err}
+
+   {success: false, msg: 'Your mate called -> ' + req.body.mate + ' <- has not accept your Playlist Mate request.', err: err}
+
+   {success: false, msg: 'You are not authorized for this action.', err: err}
 
    **Headers:**
     
@@ -423,186 +432,66 @@ _Abgelehnt_
      
    **Params:**
     
+   :playlistID = PLAYLISTS.ID
+   
    req.body.mate = USERS.NAME
       
-
-#### Page Login
-Bei Aufruf von https://www.127.0.0.1:3000/login:
-##### Client kann sich anmelden, falls user in der Datenbank vorhanden.
 ```
- GET /login/user
-```
-In dieser Route nimmt der Server einen user entgegen.
-Als Antwort liefert er den user.
+    POST /playlistMates/request
+  ```
+   Akzeptiert oder verweigert einen Playlist Mate Request.
+   
+   **Responses:** 
+   
+   _Akzeptiert_
+   
+   {success: true, msg: 'Decline Playlist Mate Request: Playlist Mates deleted!'}
+   
+   {success: true, msg: 'User ' + req.body.mate + ' and you are Playlist Mates now.'}
 
-#### Page Registration
-Bei Aufruf von https://www.127.0.0.1:3000/registration:
-##### Dem Client muss ermöglicht werden, einen neuen user der Datenbank hinzuzufügen.
-```
- POST /registration/user
-```
-In dieser Route nimmt der Server einen user entgegen.
-Als Anweisung legt er den neuen user an.
+   _Abgelehnt_
+   
+   {success: false, msg: 'Delete from Playlist Mates failed.', err: err}
+   
+   {success: false, msg: 'Cannot find such Playlist Mate. Add user as Playlist Mate first!', err: err}
 
-#### Page Main
-Bei Aufruf von https://www.127.0.0.1:3000/user/pageMain:
-##### Der Client kann eine neue playlist erstellen.
-````
- POST /user/pageMain/playlist
-````
-In dieser Route nimmt der Server eine playlist entgegen.
-Als Anweisung legt er die neue playlist an.
-##### Der Client bekommt alle songs aus der jeweiligen playlist.
-```
- GET /user/pageMain/playlist/id
-```
-In dieser Route nimmt der Server eine playlist id entgegen.
-Als Antwort liefert er die playlist mit der entsprechenden id.
-##### Der Client kann den song ändern.
-````
- PUT /user/pageMain/song
-````
-In dieser Route nimmt der Server einen song entgegen.
-Als Anweisung verändert er den song.
-##### Der Client kann einen song anfordern.
-````
- GET /user/pageMain/song/id
-````
-In dieser Route nimmt der Server eine song id entgegen.
-Als Antwort liefert er den song mit der entsprechenden id.
-##### Client kann song löschen.
-````
- DELETE /user/pageMain/song/id
-````
-In dieser Route nimmt der Server eine song id entgegen.
-Als Anweisung löscht er den song mit der entsprechenden id.
+   {success: false, msg: 'You are not authorized for this action.', err: err}
 
-##### Client bekommt nach Interaktion mit Eingabefeld, passende songs je nach eingegebener Zeichenkette angezeigt.
-````
- GET /user/pageMain/add/song
-````
-In dieser Route nimmt der Server einen song entgegen.
-Als Antwort liefert er eine Liste passender songs.
-##### Client kann einen song seiner playlist hinzufügen
-````
- POST /user/pageMain/add/song
-````
-In dieser Route nimmt der Server einen song entgegen.
-Als Anweisung legt er den neuen song an.
-
-#### Page My Playlist Mates
-Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMates:
-##### Der Client kann alle seine playlist mates einsehen.
-````
- GET /user/myPlaylistMates/playlistMates
-````
-Der Server liefert als Antwort alle playlist mates des users.
-##### Der Client kann einen playlist mate löschen.
-````
- DELETE /user/myPlaylistMates/playlistMate
-````
-In dieser Route nimmt der Server einen playlist mate entgegen.
-Als Anweisung löscht er diesen playlist mate aus seiner playlist mate Liste.
-
-#### Page Search for new playlist mate
-Bei Aufruf von https://www.127.0.0.1:3000/user/newPlaylistMate:
-##### Der Client kann einen neuen playlist mate hinzufügen.
-````
- POST /user/newPlaylistMate/playlistMate
-````
-In dieser Route nimmt der Server einen playlist mate entgegen.
-Als Anweisung legt er einen neuen playlist mate an.
-##### Der Client bekommt alle user.
-````
- GET /user/newPlaylistMate/users
-````
-Der Server liefert als Antwort alle user.
-
-#### Page My Account
-Bei Aufruf von https://www.127.0.0.1:3000/user/myAccount:
-##### User Account Informationen werden abgerufen.
-````
- GET /user/myAccount
-````
-In dieser Route liefert der Server alle Daten des aktuell angemeldeten users.
-##### User Account kann gelöscht werden.
-````
- DELETE /user/myAccount/deleteAccount
-````
-In dieser Route löscht der Server den aktuell angemeldeten user.
-##### User Account Passwort kann verändert werden.
-````
- POST /user/myAccount/changePassword/newPassword
-````
-In dieser Route nimmt der Server eine Zeichenkette entgegen.
-Als Anweisung ändert er das Passwort des aktuell angemeldeten users.
-
-#### Page My Playlist Mate Request
-Bei Aufruf von https://www.127.0.0.1:3000/user/myPlaylistMateRequests:
-##### Playlist Mate Requests können abgefragt werden.
-````
- GET /user/myPlaylistMateRequests/
-````
-In dieser Route liefert der Server alle offenen playlist mate Anfragen des aktuell angemeldeten users.
-##### Playlist Mates können dem User Acoount hinzugefügt werden.
-````
- POST /user/myPlaylistMateRequests/user
-````
-In dieser Route nimmt der Server einen user entgegen.
-Als Anweisung fügt er diesen user den playlist mates vom aktuell angemeldeten user hinzu.
-##### Playlist Mate Requests können gelöscht/abgelehnt werden.
-````
- DELETE /user/myPlaylistMateRequests/user
-````
-In dieser Route nimmt der Server einen user entgegen.
-Als Anweisung löscht er den playlist mate request.
-
-#### Page About us
-Bei Aufruf von https://www.127.0.0.1:3000/aboutUs:
-##### About us Informationen können angefordert werden.
-````
- GET /aboutUs/
-````
-In dieser Route liefert der Server die allgemeinen Informationen über die Entwickler.
-
-#### Page Contact
-Bei Aufruf von https://www.127.0.0.1:3000/contact:
-##### User kann Text an Entwicklern senden.
-````
- POST /user/contact/sendIt
-````
-In dieser Route nimmt der Server eine Zeichenkette entgegen.
-Als Anweisung sendet er diese Zeichenkette an die hinterlegte E-Mail Adresse.
-
-#### Page Impressum
-Bei Aufruf von https://www.127.0.0.1:3000/impressum:
-##### Impressum Informationen können angefordert werden.
-````
- GET /impressum/
-````
-In dieser Route liefert der Server die genauen Informationen über die Entwickler.
-
+   **Headers:**
+    
+   Authorization: token
+     
+   **Params:**
+    
+   :playlistID = PLAYLISTS.ID
+   
+   req.body.mate = USERS.NAME
+      
 ### Template Object
 
 Folgendermaßen sieht ein Template Object unserer Datenbank aus:
 
+Beispiel anhang von GET/ http://127.0.0.1:3000/playlistMates
 ```json5
 {
-  success: true,
-  username: "fliesentischklaus25",
-  passwordHashSha2: "ba9b353684f9ae6badc6e11a2f534d3a0a6cd4d625174b2e6b216ba32498c524",
-  playlistsAdded: 5,
-  songsAdded: 30,
-  score: 100,
-  playlistMates: ["user21", "user55"],
-  playlistIDs: [1, 53]
+    "success": true,
+    "data": [
+        {
+            "NAME": "test",
+            "SCORE": 10,
+            "REQUEST": 1
+        }
+    ]
 }
 ```
 
+Beispiel anhang von GET/ http://127.0.0.1:3000/playlistMates/sharedPlaylists/test
 ```json5
 {
-  success: false,
-  msg: "ERROR: Username does not exist"
+    "success": true,
+    "data": {
+        "countSharedPlaylists": 0
+    }
 }
 ```
 
