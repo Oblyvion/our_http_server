@@ -154,8 +154,10 @@ export class RequestPage {
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataSend);
                 this.dom_RequestContainerDataSend.textContent = "Send Answer";
                 this.dom_RequestContainerDataSend.addEventListener('click', (event) => {
-                    console.log(document.getElementById("Form").elements);
-                    if(document.getElementById("Form").elements[0].checked) {
+                    //console.log(document.getElementById("Form").elements);
+                    const form = <HTMLFormElement>document.getElementById("Form");
+                    // @ts-ignore
+                    if(form.elements[0].checked) {
                         console.log("radio button accept 1");
                         this.sendRequestResponse(i, 1).then((result) => {
                             console.log("Das ist /playlistmate/request: ", result);
