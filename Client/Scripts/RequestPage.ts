@@ -7,8 +7,16 @@ export class RequestPage {
     private dom_divRequestHeader: HTMLDivElement;
     private dom_divRequestHeaderName: HTMLDivElement;
     private dom_RequestContainer: HTMLDivElement;
+    private dom_RequestContainerData: HTMLDivElement;
+    private dom_RequestContainerDataName: HTMLDivElement;
+    private dom_RequestContainerDataScore: HTMLDivElement;
+    private dom_RequestContainerDataAccept: HTMLInputElement;
+    private dom_RequestContainerDataDecline: HTMLInputElement;
+    private dom_RequestContainerDataSend: HTMLButtonElement;
 
     private Requests;
+    private dom_RequestContainerDataForm: HTMLFormElement;
+
 
     constructor(dom_root, dom_content) {
         this.dom_root = dom_root;
@@ -16,6 +24,7 @@ export class RequestPage {
         this.fetchRequests().then((result) => {
             this.Requests = result.data;
             console.log("Das sind die Requests: ", this.Requests);
+            this.addRequestContainers();
         }).catch(err => {
             console.log(err);
         });
@@ -36,7 +45,6 @@ export class RequestPage {
         this.dom_RequestContainer = document.createElement('div');
         this.dom_RequestContainer.classList.add('RequestContainer');
         this.dom_divRequestPage.appendChild(this.dom_RequestContainer);
-
 
 
     }
@@ -73,4 +81,127 @@ export class RequestPage {
             this.dom_content.removeChild(this.dom_content.firstChild);
         }
     }
+
+    private addRequestContainers() {
+        for(let i = 0; i < this.Requests.length; i++) {
+            if(this.Requests[i].REQUEST === 0) {
+                this.dom_RequestContainerData = document.createElement('div');
+                this.dom_RequestContainerData.classList.add('RequestContainerData');
+                this.dom_RequestContainer.appendChild(this.dom_RequestContainerData);
+
+                this.dom_RequestContainerDataName = document.createElement('div');
+                this.dom_RequestContainerDataName.classList.add('RequestContainerDataName');
+                this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataName);
+                this.dom_RequestContainerDataName.textContent = this.Requests[i].NAME;
+
+                this.dom_RequestContainerDataScore = document.createElement('div');
+                this.dom_RequestContainerDataScore.classList.add('RequestContainerDataScore');
+                this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataScore);
+                this.dom_RequestContainerDataScore.textContent = this.Requests[i].SCORE;
+
+                this.dom_RequestContainerDataForm = document.createElement('Form');
+                this.dom_RequestContainerDataForm.classList.add('RequestContainerDataForm');
+                this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataForm);
+                this.dom_RequestContainerDataForm.setAttribute("id", "Form");
+                this.dom_RequestContainerDataForm.addEventListener("submit", this.processForm);
+                this.dom_RequestContainerDataForm.addEventListener("onSubmit", event => {
+                    event.preventDefault();
+                    return false;
+                });
+
+                this.dom_RequestContainerDataAccept = document.createElement('input');
+                this.dom_RequestContainerDataAccept.setAttribute("type", "radio");
+                this.dom_RequestContainerDataAccept.setAttribute("name", "radiobtn");
+                this.dom_RequestContainerDataAccept.setAttribute("value", "1");
+                this.dom_RequestContainerDataAccept.classList.add('RequestContainerDataAccept');
+                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataAccept);
+
+                this.dom_RequestContainerDataDecline = document.createElement('input');
+                this.dom_RequestContainerDataDecline.setAttribute("type", "radio");
+                this.dom_RequestContainerDataDecline.setAttribute("name", "radiobtn");
+                this.dom_RequestContainerDataDecline.setAttribute("value", "0");
+                this.dom_RequestContainerDataDecline.classList.add('RequestContainerDataDecline');
+                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataDecline);
+
+                this.dom_RequestContainerDataSend = document.createElement('button');
+                this.dom_RequestContainerDataSend.classList.add('RequestContainerDataSend');
+                this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataSend);
+                this.dom_RequestContainerDataSend.addEventListener('click', (event) => {
+                    console.log(document.getElementById("Form").elements);
+                    if(document.getElementById("Form").elements[0].checked) {
+                        console.log("radio button accept 1");
+                        this.sendRequestResponse(i, 1).then((result) => {
+                            console.log("Das ist /playlistmate/request: ", result);
+                            alert("You accepted the Request!");
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    } else {
+                        console.log("radio button decline 0");
+                        this.sendRequestResponse(i, 0).then((result) => {
+                            console.log("Das ist /playlistmate/request: ", result);
+                            alert("You declined the Request!");
+
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    }
+                })
+            }
+        }
+    }
+
+    processForm(e) {
+        if (e.preventDefault()) e.preventDefault();
+
+        // const radios = document.getElementsByName('radiobtn');
+        //
+        // for (let i = 0, length = radios.length; i < length; i++)
+        // {
+        //     if (radios[i].checked)
+        //     {
+        //         // do whatever you want with the checked radio
+        //         alert(radios[i].value);
+        //
+        //         // only one radio can be logically checked, don't check the rest
+        //         break;
+        //     }
+        // }
+        /* do what you want with the form */
+
+        // You must return false to prevent the default form behavior
+        return false;
+    }
+
+    private async sendRequestResponse(index, value) {
+        console.log("Mates Name! ",this.Requests[index].NAME);
+        try {
+            let response = await fetch(this.API_URL + "/playlistMates/request", {
+                body: JSON.stringify({
+                    mate: this.Requests[index].NAME,
+                    answer: value
+                }),
+                cache: 'no-cache',
+                    headers: {
+                        'content-type': 'application/json',
+                        'crossDomain': 'true',
+                        'Authorization': localStorage.getItem("token")
+                    },
+                    method: 'POST',
+                    mode: 'cors',
+                    // todo REST POST redirect
+                    // redirect: 'follow',
+                    // credentials: 'include',
+                });
+
+                const data = await response.json();
+
+                console.log("das ist die antwort des Servers auf fetch /playlistmate/request : ", data);
+
+                return data;
+        } catch (err) {
+            console.log("Error fetching /playlistMates/request!: ", err);
+        }
+    }
+
 }

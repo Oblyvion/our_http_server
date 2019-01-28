@@ -7,9 +7,9 @@ import {Contact} from "./Contact.js";
 import {Impressum} from "./Impressum.js";
 import {MyAccount} from "./MyAccount.js";
 
-window.onbeforeunload = function(e) {
-    return 'Dialog text here.';
-};
+// window.onbeforeunload = function(e) {
+//     return 'Dialog text here.';
+// };
 
 const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');

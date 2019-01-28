@@ -754,4 +754,31 @@ button:hover, .form button:active {
   grid-area: content;
   background-color: #c0b8ff; }
 
+.RequestContainerData {
+  width: 100%;
+  height: 40px;
+  border: 1px black solid;
+  background-color: #c0b8ff;
+  display: grid;
+  grid-template-areas: '. name . score . form . send .';
+  grid-template-columns: minmax(5%, 5%) minmax(20%, 20%) minmax(5%, 5%) minmax(10%, 10%) minmax(5%, 5%) minmax(25%, 25%) minmax(5%, 5%) minmax(20%, 20%) minmax(5%, 5%); }
+
+.RequestContainerDataName {
+  grid-area: name; }
+
+.RequestContainerDataScore {
+  grid-area: score; }
+
+.RequestContainerDataForm {
+  grid-area: form; }
+
+.RequestContainerDataAccept {
+  float: right; }
+
+.RequestContainerDataDecline {
+  float: left; }
+
+.RequestContainerDataSend {
+  grid-area: send; }
+
 /*# sourceMappingURL=style.css.map */

@@ -396,7 +396,7 @@ app.get('/playlistMates', auth, async (req, res) => {
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
         console.log("app.js, app.get/playlistMates, Z.356: USER.ID = ", user.ID);
 
-        await db.get_rows('SELECT USERS.NAME, USERS.SCORE FROM USERS ' +
+        await db.get_rows('SELECT USERS.NAME, USERS.SCORE, PLAYLIST_MATES.REQUEST FROM USERS ' +
             'JOIN PLAYLIST_MATES ' +
             'ON PLAYLIST_MATES.USER_ID = ? AND PLAYLIST_MATES.MATE_ID = USERS.ID ORDER BY USERS.NAME ASC', user.ID)
             .then((rows) => {
