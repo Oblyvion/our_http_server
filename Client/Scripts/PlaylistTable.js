@@ -13,6 +13,7 @@ export class PlaylistTable {
         console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
+            this.addTable();
             this.Playlist.songs = result.data;
             this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
             console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
@@ -80,14 +81,14 @@ export class PlaylistTable {
                     this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
                     this.dom_DropdownMenuData.setAttribute('href', '#');
                     this.dom_DropdownMenuData.addEventListener('click', () => {
-                        this.fetchNewCollab(j)
-                            .then(data => {
-                            console.log("data: ", data);
-                            alert("Successfully shared playlist!");
-                        })
-                            .catch(err => {
-                            console.log("err: ", err);
-                        });
+                        // this.fetchNewCollab(j)
+                        //     .then(data => {
+                        //         console.log("data: ", data);
+                        //         alert("Successfully shared playlist!")
+                        // })
+                        //     .catch(err => {
+                        //         console.log("err: ", err);
+                        // })
                     });
                     this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
                 }
@@ -106,233 +107,221 @@ export class PlaylistTable {
                     }
                 }
             }
-            this.dom_PlaylistHeaderAddBtn = document.createElement('img');
-            this.dom_PlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
-            this.dom_divPlaylistHeaderButtons.appendChild(this.dom_PlaylistHeaderAddBtn);
-            this.dom_PlaylistHeaderAddBtn.src = "./Images/add_button.png";
-            this.dom_PlaylistHeaderAddBtn.addEventListener('click', () => {
-                if (this.dom_AddNewSong.style.display == "grid") {
-                    this.dom_AddNewSong.style.display = "none";
-                }
-                else {
-                    this.dom_AddNewSong.style.display = "grid";
-                }
-            });
-            this.dom_PlaylistHeaderAddBtn.style.width = "20px";
-            // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
-            this.dom_Table = document.createElement('table');
-            this.dom_Table.classList.add('PlaylistTable');
-            this.dom_divTable.appendChild(this.dom_Table);
-            this.dom_Table.cellSpacing = "0";
-            this.dom_Table.cellPadding = "0";
-            this.dom_TableHeader = document.createElement('tr');
-            this.dom_TableHeader.classList.add('TableHeaderRow');
-            this.dom_Table.appendChild(this.dom_TableHeader);
-            this.dom_TableHeaderName1 = document.createElement('th');
-            this.dom_TableHeaderName1.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName1);
-            this.dom_TableHeaderName1.textContent = "Title";
-            this.dom_TableHeaderName2 = document.createElement('th');
-            this.dom_TableHeaderName2.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName2);
-            this.dom_TableHeaderName2.textContent = "Artist";
-            this.dom_TableHeaderName3 = document.createElement('th');
-            this.dom_TableHeaderName3.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
-            this.dom_TableHeaderName3.textContent = "Added By";
-            this.dom_AddNewSongForm = document.createElement("form");
-            this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
-            //this.dom_AddNewSongForm.setAttribute("action", this.API_URL + "/song/global/" + this.PlaylistID);
-            this.dom_AddNewSongForm.setAttribute("method", "POST");
-            this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
-            this.dom_AddNewSongForm.setAttribute("data-rel", "back");
-            //this.dom_AddNewSongForm.onsubmit = new manager("page-first-steps");
-            this.dom_AddNewSongForm.classList.add('AddNewSongForm');
-            this.dom_AddNewSongForm.autocomplete = "off";
-            console.log("ADDNEWSONGFORM = ", this.dom_AddNewSongForm);
-            this.dom_divTable.appendChild(this.dom_AddNewSongForm);
-            this.dom_AddNewSong = document.createElement("div");
-            this.dom_AddNewSong.classList.add('AddNewSongDiv');
-            this.dom_AddNewSongForm.appendChild(this.dom_AddNewSong);
-            this.dom_AddNewSongHeader = document.createElement("div");
-            this.dom_AddNewSongHeader.classList.add('AddNewSongHeader');
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongHeader);
-            this.dom_AddNewSongHeader.textContent = "Add a song from database or from your files";
-            this.dom_AddNewSongInput = document.createElement("input");
-            this.dom_AddNewSongInput.classList.add('AddNewSongInput');
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
-            this.dom_AddNewSongDialogButton = document.createElement("input");
-            this.dom_AddNewSongDialogButton.setAttribute("id", "file");
-            this.dom_AddNewSongDialogButton.setAttribute("name", "audioFile");
-            this.dom_AddNewSongDialogButton.setAttribute("type", "file");
-            // this.dom_AddNewSongDialogButton.type = "file";
-            this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
-            this.dom_InputToken = document.createElement("input");
-            this.dom_InputToken.classList.add("token");
-            this.dom_InputToken.setAttribute("id", "token");
-            this.dom_InputToken.setAttribute("name", "token");
-            this.dom_InputToken.setAttribute("type", "text");
-            this.dom_AddNewSong.appendChild(this.dom_InputToken);
-            this.dom_InputToken.value = localStorage.getItem("token");
-            this.dom_InputToken.style.display = "none";
-            this.dom_AddNewSongTitle = document.createElement("input");
-            this.dom_AddNewSongTitle.classList.add("AddNewSongTitle");
-            this.dom_AddNewSongTitle.setAttribute("id", "title");
-            this.dom_AddNewSongTitle.setAttribute("name", "title");
-            this.dom_AddNewSongTitle.setAttribute("type", "text");
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongTitle);
-            this.dom_AddNewSongTitle.placeholder = "Song title...";
-            this.dom_AddNewSongArtist = document.createElement("input");
-            this.dom_AddNewSongArtist.classList.add("AddNewSongArtist");
-            this.dom_AddNewSongArtist.setAttribute("id", "artist");
-            this.dom_AddNewSongArtist.setAttribute("name", "artist");
-            this.dom_AddNewSongArtist.setAttribute("type", "text");
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongArtist);
-            this.dom_AddNewSongArtist.placeholder = "Song artist...";
-            // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-            // PROGRESS
-            this.dom_AddNewSongProgress = document.createElement("div");
-            this.dom_AddNewSongProgress.classList.add("AddNewSongProgress");
-            this.dom_divTable.appendChild(this.dom_AddNewSongProgress);
-            this.dom_AddNewSongProgress.setAttribute("id", "progress");
-            // this.dom_AddNewSongProgress.setAttribute("align", "center");
-            // PROGRESS-BAR
-            this.dom_AddNewSongProgressBar = document.createElement("div");
-            this.dom_AddNewSongProgressBar.classList.add("AddNewSongProgressBar");
-            this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);
-            this.dom_AddNewSongProgressBar.setAttribute("id", "progressBar");
-            // this.dom_AddNewSongProgressBar.setAttribute("align", "center");
-            // this.dom_AddNewSongProgress.setAttribute("label", "Hier x %");
-            // this.dom_AddNewSongProgress.setAttribute("width", "10");
-            this.dom_AddNewSongSubmit = document.createElement("button");
-            this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
-            this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
-            this.dom_AddNewSongSubmit.textContent = "Submit";
-            this.dom_AddNewSongSubmit.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const formElement = document.querySelector("form");
-                const formData = new FormData(formElement);
-                const request = new XMLHttpRequest();
-                request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
-                request.setRequestHeader("Authorization", localStorage.getItem("token"));
-                request.responseType = "json";
-                request.onload = function (e) {
-                    console.log("hallo @ onload");
-                    const obj = request.response;
-                    console.log("Das ist das objekt !!!!! ", obj);
-                    if (obj.success === true) {
-                        console.log("Das ist das objekt msg  = ", obj.msg);
-                        alert(obj.msg);
-                    }
-                    else
-                        alert(obj.msg);
-                };
-                this.dom_AddNewSongForm.style.display = "none";
-                request.onloadstart = function (e) {
-                    console.log("@ onLoadSTART");
-                };
-                request.upload.addEventListener("progress", function (e) {
-                    if (e.lengthComputable) {
-                        console.log("add upload event-listener: " + Math.round(e.loaded / e.total * 100));
-                        // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-                        // element wo der progress wert reingeschrieben werden soll
-                        const elem = document.getElementById("progressBar");
-                        // anfangswert
-                        let width = 0;
-                        // aktuellwert
-                        width = Math.round(e.loaded / e.total * 100);
-                        // show result
-                        elem.style.width = width + '%';
-                        elem.innerHTML = width + '%';
-                        // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
-                        // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
-                        //         style: {
-                        //             // Text color.
-                        //             // Default: same as stroke color (options.color)
-                        //             color: '#999',
-                        //             position: 'absolute',
-                        //             right: '0',
-                        //             top: '30px',
-                        //             padding: 0,
-                        //             margin: 0,
-                        //             transform: null
-                        //         },
-                        //         autoStyleContainer: false
-                        //     },
-                        //     from: {color: '#FFEA82'},
-                        //     to: {color: '#ED6A5A'},
-                        //     step: (state, bar) => {
-                        //         bar.setText(Math.round(bar.value() * 100) + ' %');
-                        //     }
-                        // });
-                        // bar.animate(1.0);  // Number from 0.0 to 1.0
-                        //
-                        // progressBar.animate(1);
-                    }
-                }, false);
-                request.send(formData);
-                // request.upload.addEventListener("progress", function (e) {
-                //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
-                //     if (e.lengthComputable) {
-                //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
-                //
-                //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-                //         // element wo der progress wert reingeschrieben werden soll
-                //         const elem = document.getElementById("progressBar");
-                //         // anfangswert
-                //         let width = 0;
-                //         // aktuellwert
-                //         width = Math.round(e.loaded  / e.total * 100);
-                //         // show result
-                //         elem.style.width = width + '%';
-                //         elem.innerHTML = width + '%';
-                //
-                //         // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
-                // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
-                //         style: {
-                //             // Text color.
-                //             // Default: same as stroke color (options.color)
-                //             color: '#999',
-                //             position: 'absolute',
-                //             right: '0',
-                //             top: '30px',
-                //             padding: 0,
-                //             margin: 0,
-                //             transform: null
-                //         },
-                //         autoStyleContainer: false
-                //     },
-                //     from: {color: '#FFEA82'},
-                //     to: {color: '#ED6A5A'},
-                //     step: (state, bar) => {
-                //         bar.setText(Math.round(bar.value() * 100) + ' %');
-                //     }
-                // });
-                // bar.animate(1.0);  // Number from 0.0 to 1.0
-                // progressBar.animate(1);
-                //     }
-                // }, false);
-                // };
-                if (request.UNSENT) {
-                    alert("Failed to upload Song!");
-                }
-                if (request.DONE) {
-                    console.log("Das ist die request DONE: " + request.DONE);
-                    console.log("Das ist die response vom server: " + request.statusText);
-                    // alert("Song successfully uploaded!");
-                    // this.fetchPlaylistSongs().then((result) => {
-                    //     console.log("das ist das result: ", result);
-                    //     this.Playlist.songs = result.data;
-                    //     this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
-                    //     console.log("das sind die songs nach dem hinzufügen eines songs: ", this.Playlist.songs);
-                    //     this.addPlaylistSongs();
-                    // }).catch(err => {
-                    //     console.log(err);
-                    // });
-                }
-            });
         };
+        this.dom_PlaylistHeaderAddBtn = document.createElement('img');
+        this.dom_PlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
+        this.dom_divPlaylistHeaderButtons.appendChild(this.dom_PlaylistHeaderAddBtn);
+        this.dom_PlaylistHeaderAddBtn.src = "./Images/add_button.png";
+        this.dom_PlaylistHeaderAddBtn.addEventListener('click', () => {
+            if (this.dom_AddNewSong.style.display == "grid") {
+                this.dom_AddNewSong.style.display = "none";
+            }
+            else {
+                this.dom_AddNewSong.style.display = "grid";
+            }
+        });
+        this.dom_PlaylistHeaderAddBtn.style.width = "20px";
+        this.dom_AddNewSongForm = document.createElement("form");
+        this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
+        //this.dom_AddNewSongForm.setAttribute("action", this.API_URL + "/song/global/" + this.PlaylistID);
+        this.dom_AddNewSongForm.setAttribute("method", "POST");
+        this.dom_AddNewSongForm.setAttribute("enctype", "multipart/form-data");
+        this.dom_AddNewSongForm.setAttribute("data-rel", "back");
+        //this.dom_AddNewSongForm.onsubmit = new manager("page-first-steps");
+        this.dom_AddNewSongForm.classList.add('AddNewSongForm');
+        this.dom_AddNewSongForm.autocomplete = "off";
+        console.log("ADDNEWSONGFORM = ", this.dom_AddNewSongForm);
+        this.dom_divTable.appendChild(this.dom_AddNewSongForm);
+        this.dom_AddNewSong = document.createElement("div");
+        this.dom_AddNewSong.classList.add('AddNewSongDiv');
+        this.dom_AddNewSongForm.appendChild(this.dom_AddNewSong);
+        this.dom_AddNewSongHeader = document.createElement("div");
+        this.dom_AddNewSongHeader.classList.add('AddNewSongHeader');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongHeader);
+        this.dom_AddNewSongHeader.textContent = "Add a song from database or from your files";
+        this.dom_AddNewSongInput = document.createElement("input");
+        this.dom_AddNewSongInput.classList.add('AddNewSongInput');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
+        this.dom_AddNewSongInput.style.display = "none";
+        this.dom_AddNewSongDialogButton = document.createElement("input");
+        this.dom_AddNewSongDialogButton.setAttribute("id", "file");
+        this.dom_AddNewSongDialogButton.setAttribute("name", "audioFile");
+        this.dom_AddNewSongDialogButton.setAttribute("type", "file");
+        // this.dom_AddNewSongDialogButton.type = "file";
+        this.dom_AddNewSongDialogButton.classList.add('AddNewSongDialogButton');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongDialogButton);
+        this.dom_InputToken = document.createElement("input");
+        this.dom_InputToken.classList.add("token");
+        this.dom_InputToken.setAttribute("id", "token");
+        this.dom_InputToken.setAttribute("name", "token");
+        this.dom_InputToken.setAttribute("type", "text");
+        this.dom_AddNewSong.appendChild(this.dom_InputToken);
+        this.dom_InputToken.value = localStorage.getItem("token");
+        this.dom_InputToken.style.display = "none";
+        this.dom_AddNewSongTitle = document.createElement("input");
+        this.dom_AddNewSongTitle.classList.add("AddNewSongTitle");
+        this.dom_AddNewSongTitle.setAttribute("id", "title");
+        this.dom_AddNewSongTitle.setAttribute("name", "title");
+        this.dom_AddNewSongTitle.setAttribute("type", "text");
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongTitle);
+        this.dom_AddNewSongTitle.placeholder = "Song title...";
+        this.dom_AddNewSongArtist = document.createElement("input");
+        this.dom_AddNewSongArtist.classList.add("AddNewSongArtist");
+        this.dom_AddNewSongArtist.setAttribute("id", "artist");
+        this.dom_AddNewSongArtist.setAttribute("name", "artist");
+        this.dom_AddNewSongArtist.setAttribute("type", "text");
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongArtist);
+        this.dom_AddNewSongArtist.placeholder = "Song artist...";
+        // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+        // PROGRESS
+        this.dom_AddNewSongProgress = document.createElement("div");
+        this.dom_AddNewSongProgress.classList.add("AddNewSongProgress");
+        this.dom_divTable.appendChild(this.dom_AddNewSongProgress);
+        this.dom_AddNewSongProgress.setAttribute("id", "progress");
+        // this.dom_AddNewSongProgress.setAttribute("align", "center");
+        // PROGRESS-BAR
+        this.dom_AddNewSongProgressBar = document.createElement("div");
+        this.dom_AddNewSongProgressBar.classList.add("AddNewSongProgressBar");
+        this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);
+        this.dom_AddNewSongProgressBar.setAttribute("id", "progressBar");
+        // this.dom_AddNewSongProgressBar.setAttribute("align", "center");
+        // this.dom_AddNewSongProgress.setAttribute("label", "Hier x %");
+        // this.dom_AddNewSongProgress.setAttribute("width", "10");
+        this.dom_AddNewSongSubmit = document.createElement("button");
+        this.dom_AddNewSongSubmit.classList.add('AddNewSongSubmit');
+        this.dom_AddNewSong.appendChild(this.dom_AddNewSongSubmit);
+        this.dom_AddNewSongSubmit.textContent = "Submit";
+        this.dom_AddNewSongSubmit.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const formElement = document.querySelector("form");
+            const formData = new FormData(formElement);
+            const request = new XMLHttpRequest();
+            request.open("POST", this.API_URL + "/song/global/" + this.PlaylistID, true);
+            request.setRequestHeader("Authorization", localStorage.getItem("token"));
+            request.responseType = "json";
+            request.onload = function (e) {
+                console.log("hallo @ onload");
+                const obj = request.response;
+                console.log("Das ist das objekt !!!!! ", obj);
+                if (obj.success === true) {
+                    console.log("Das ist das objekt msg  = ", obj.msg);
+                    alert(obj.msg);
+                }
+                else
+                    alert(obj.msg);
+            };
+            this.dom_AddNewSongForm.style.display = "none";
+            this.fetchPlaylistSongs().then((result) => {
+                this.Playlist.songs = result.data;
+                this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
+                console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
+                this.addPlaylistSongs();
+            }).catch(err => {
+                console.log(err);
+            });
+            request.onloadstart = function (e) {
+                console.log("@ onLoadSTART");
+            };
+            request.upload.addEventListener("progress", function (e) {
+                if (e.lengthComputable) {
+                    console.log("add upload event-listener: " + Math.round(e.loaded / e.total * 100));
+                    // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+                    // element wo der progress wert reingeschrieben werden soll
+                    const elem = document.getElementById("progressBar");
+                    // anfangswert
+                    let width = 0;
+                    // aktuellwert
+                    width = Math.round(e.loaded / e.total * 100);
+                    // show result
+                    elem.style.width = width + '%';
+                    elem.innerHTML = width + '%';
+                    // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
+                    // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
+                    //         style: {
+                    //             // Text color.
+                    //             // Default: same as stroke color (options.color)
+                    //             color: '#999',
+                    //             position: 'absolute',
+                    //             right: '0',
+                    //             top: '30px',
+                    //             padding: 0,
+                    //             margin: 0,
+                    //             transform: null
+                    //         },
+                    //         autoStyleContainer: false
+                    //     },
+                    //     from: {color: '#FFEA82'},
+                    //     to: {color: '#ED6A5A'},
+                    //     step: (state, bar) => {
+                    //         bar.setText(Math.round(bar.value() * 100) + ' %');
+                    //     }
+                    // });
+                    // bar.animate(1.0);  // Number from 0.0 to 1.0
+                    //
+                    // progressBar.animate(1);
+                }
+            }, false);
+            request.send(formData);
+            // request.upload.addEventListener("progress", function (e) {
+            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
+            //     if (e.lengthComputable) {
+            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
+            //
+            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
+            //         // element wo der progress wert reingeschrieben werden soll
+            //         const elem = document.getElementById("progressBar");
+            //         // anfangswert
+            //         let width = 0;
+            //         // aktuellwert
+            //         width = Math.round(e.loaded  / e.total * 100);
+            //         // show result
+            //         elem.style.width = width + '%';
+            //         elem.innerHTML = width + '%';
+            //
+            //         // const bar = new ProgressBar.Line('progressBar', {strokeWidth: 4, easing: 'easeInOut', duration: 1400, color: '#FFEA82', trailColor: '#eee',
+            // trailWidth: 1, svgStyle: {width: '100%', height: '100%'}, text: {
+            //         style: {
+            //             // Text color.
+            //             // Default: same as stroke color (options.color)
+            //             color: '#999',
+            //             position: 'absolute',
+            //             right: '0',
+            //             top: '30px',
+            //             padding: 0,
+            //             margin: 0,
+            //             transform: null
+            //         },
+            //         autoStyleContainer: false
+            //     },
+            //     from: {color: '#FFEA82'},
+            //     to: {color: '#ED6A5A'},
+            //     step: (state, bar) => {
+            //         bar.setText(Math.round(bar.value() * 100) + ' %');
+            //     }
+            // });
+            // bar.animate(1.0);  // Number from 0.0 to 1.0
+            // progressBar.animate(1);
+            //     }
+            // }, false);
+            // };
+            if (request.UNSENT) {
+                alert("Failed to upload Song!");
+            }
+            if (request.DONE) {
+                console.log("Das ist die request DONE: " + request.DONE);
+                console.log("Das ist die response vom server: " + request.statusText);
+                // alert("Song successfully uploaded!");
+                // this.fetchPlaylistSongs().then((result) => {
+                //     console.log("das ist das result: ", result);
+                //     this.Playlist.songs = result.data;
+                //     this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
+                //     console.log("das sind die songs nach dem hinzufügen eines songs: ", this.Playlist.songs);
+                //     this.addPlaylistSongs();
+                // }).catch(err => {
+                //     console.log(err);
+                // });
+            }
+        });
     }
     async fetchPlaylistMates() {
         try {
@@ -397,8 +386,10 @@ export class PlaylistTable {
         }
     }
     addPlaylistSongs() {
-        while (this.dom_Table.childNodes.length > 1) {
-            this.dom_Table.removeChild(this.dom_Table.lastChild);
+        if (this.dom_Table) {
+            while (this.dom_Table.childNodes.length > 1) {
+                this.dom_Table.removeChild(this.dom_Table.lastChild);
+            }
         }
         for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
@@ -433,6 +424,29 @@ export class PlaylistTable {
             console.log("last child ", this.dom_content.lastChild);
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
+    }
+    addTable() {
+        this.dom_Table = document.createElement('table');
+        this.dom_Table.classList.add('PlaylistTable');
+        console.log("hallo append");
+        this.dom_divTable.appendChild(this.dom_Table);
+        this.dom_Table.cellSpacing = "0";
+        this.dom_Table.cellPadding = "0";
+        this.dom_TableHeader = document.createElement('tr');
+        this.dom_TableHeader.classList.add('TableHeaderRow');
+        this.dom_Table.appendChild(this.dom_TableHeader);
+        this.dom_TableHeaderName1 = document.createElement('th');
+        this.dom_TableHeaderName1.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName1);
+        this.dom_TableHeaderName1.textContent = "Title";
+        this.dom_TableHeaderName2 = document.createElement('th');
+        this.dom_TableHeaderName2.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName2);
+        this.dom_TableHeaderName2.textContent = "Artist";
+        this.dom_TableHeaderName3 = document.createElement('th');
+        this.dom_TableHeaderName3.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
+        this.dom_TableHeaderName3.textContent = "Added By";
     }
 }
 //# sourceMappingURL=PlaylistTable.js.map

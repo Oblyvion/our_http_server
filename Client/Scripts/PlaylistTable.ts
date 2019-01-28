@@ -55,6 +55,7 @@ export class PlaylistTable {
         console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
+            this.addTable();
             this.Playlist.songs = result.data;
             this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
             console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
@@ -134,14 +135,14 @@ export class PlaylistTable {
                     this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
                     this.dom_DropdownMenuData.setAttribute('href', '#');
                     this.dom_DropdownMenuData.addEventListener('click', () => {
-                        this.fetchNewCollab(j)
-                            .then(data => {
-                                console.log("data: ", data)
-                                alert("Successfully shared playlist!")
-                        })
-                            .catch(err => {
-                                console.log("err: ", err);
-                        })
+                        // this.fetchNewCollab(j)
+                        //     .then(data => {
+                        //         console.log("data: ", data);
+                        //         alert("Successfully shared playlist!")
+                        // })
+                        //     .catch(err => {
+                        //         console.log("err: ", err);
+                        // })
                     });
                     this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
                 } else {
@@ -161,6 +162,7 @@ export class PlaylistTable {
                 }
 
             }
+        };
 
             this.dom_PlaylistHeaderAddBtn = document.createElement('img');
             this.dom_PlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
@@ -173,35 +175,8 @@ export class PlaylistTable {
                     this.dom_AddNewSong.style.display = "grid";
                 }
             });
-
             this.dom_PlaylistHeaderAddBtn.style.width = "20px";
-            // this.dom_divPlaylistHeaderAddBtn.addEventListener('click', this.uploadNewSong);
 
-
-            this.dom_Table = document.createElement('table');
-            this.dom_Table.classList.add('PlaylistTable');
-            this.dom_divTable.appendChild(this.dom_Table);
-            this.dom_Table.cellSpacing = "0";
-            this.dom_Table.cellPadding = "0";
-
-            this.dom_TableHeader = document.createElement('tr');
-            this.dom_TableHeader.classList.add('TableHeaderRow');
-            this.dom_Table.appendChild(this.dom_TableHeader);
-
-            this.dom_TableHeaderName1 = document.createElement('th');
-            this.dom_TableHeaderName1.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName1);
-            this.dom_TableHeaderName1.textContent = "Title";
-
-            this.dom_TableHeaderName2 = document.createElement('th');
-            this.dom_TableHeaderName2.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName2);
-            this.dom_TableHeaderName2.textContent = "Artist";
-
-            this.dom_TableHeaderName3 = document.createElement('th');
-            this.dom_TableHeaderName3.classList.add('TableHeader');
-            this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
-            this.dom_TableHeaderName3.textContent = "Added By";
 
             this.dom_AddNewSongForm = document.createElement("form");
             this.dom_AddNewSongForm.setAttribute("id", "INPUTFORM");
@@ -227,6 +202,7 @@ export class PlaylistTable {
             this.dom_AddNewSongInput = document.createElement("input");
             this.dom_AddNewSongInput.classList.add('AddNewSongInput');
             this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
+            this.dom_AddNewSongInput.style.display = "none";
 
             this.dom_AddNewSongDialogButton = document.createElement("input");
             this.dom_AddNewSongDialogButton.setAttribute("id", "file");
@@ -303,6 +279,14 @@ export class PlaylistTable {
                 };
 
                 this.dom_AddNewSongForm.style.display = "none";
+                this.fetchPlaylistSongs().then((result) => {
+                    this.Playlist.songs = result.data;
+                    this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
+                    console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
+                    this.addPlaylistSongs();
+                }).catch(err => {
+                    console.log(err);
+                });
 
                 request.onloadstart = function (e) {
                     console.log("@ onLoadSTART")
@@ -422,8 +406,6 @@ export class PlaylistTable {
 
                 }
             });
-
-        }
     }
 
     async fetchPlaylistMates() {
@@ -502,8 +484,10 @@ export class PlaylistTable {
         }
 
     addPlaylistSongs() {
-        while (this.dom_Table.childNodes.length > 1) {
-            this.dom_Table.removeChild(this.dom_Table.lastChild);
+        if(this.dom_Table) {
+            while (this.dom_Table.childNodes.length > 1) {
+                this.dom_Table.removeChild(this.dom_Table.lastChild);
+            }
         }
         for (let i = 0; i < this.Playlist.songs.length; i++) {
             const dom_TableData = document.createElement('tr');
@@ -545,5 +529,33 @@ export class PlaylistTable {
             console.log("last child ", this.dom_content.lastChild);
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
+    }
+
+    private addTable() {
+        this.dom_Table = document.createElement('table');
+        this.dom_Table.classList.add('PlaylistTable');
+        console.log("hallo append");
+        this.dom_divTable.appendChild(this.dom_Table);
+        this.dom_Table.cellSpacing = "0";
+        this.dom_Table.cellPadding = "0";
+
+        this.dom_TableHeader = document.createElement('tr');
+        this.dom_TableHeader.classList.add('TableHeaderRow');
+        this.dom_Table.appendChild(this.dom_TableHeader);
+
+        this.dom_TableHeaderName1 = document.createElement('th');
+        this.dom_TableHeaderName1.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName1);
+        this.dom_TableHeaderName1.textContent = "Title";
+
+        this.dom_TableHeaderName2 = document.createElement('th');
+        this.dom_TableHeaderName2.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName2);
+        this.dom_TableHeaderName2.textContent = "Artist";
+
+        this.dom_TableHeaderName3 = document.createElement('th');
+        this.dom_TableHeaderName3.classList.add('TableHeader');
+        this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
+        this.dom_TableHeaderName3.textContent = "Added By";
     }
 }
