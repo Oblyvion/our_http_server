@@ -2,7 +2,7 @@ import { NewPlaylistMate } from "./NewPlaylistMate.js";
 import { manager } from "./app.js";
 export class MyPlaylistMates {
     constructor(dom_root, dom_content) {
-        this.API_URL = 'http://192.168.178.44:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.sharedPlaylists = [];
         this.dom_root = dom_root;
         this.dom_content = dom_content;
@@ -98,41 +98,43 @@ export class MyPlaylistMates {
     }
     addMatesToTable() {
         for (let i = 0; i < this.Mates.length; i++) {
-            const dom_TableData = document.createElement('tr');
-            dom_TableData.classList.add('TableDataRow');
-            this.dom_Table.appendChild(dom_TableData);
-            const dom_TableDataName = document.createElement('td');
-            dom_TableDataName.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataName);
-            dom_TableDataName.textContent = this.Mates[i].NAME;
-            const dom_TableDataSharedPlaylists = document.createElement('td');
-            dom_TableDataSharedPlaylists.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataSharedPlaylists);
-            console.log("Das ist i: ", i);
-            this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
-                console.log("Das ist RESUL!: ", result.data);
-                console.log("Das sind die sharedplaylist counts: ", result.data[0].countSharedPlaylists);
-                this.sharedPlaylists.push(result.data[0].countSharedPlaylists);
-                console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
-                if (this.sharedPlaylists[i] > 0) {
-                    dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
+            if (this.Mates[i].REQUEST === 1) {
+                const dom_TableData = document.createElement('tr');
+                dom_TableData.classList.add('TableDataRow');
+                this.dom_Table.appendChild(dom_TableData);
+                const dom_TableDataName = document.createElement('td');
+                dom_TableDataName.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataName);
+                dom_TableDataName.textContent = this.Mates[i].NAME;
+                const dom_TableDataSharedPlaylists = document.createElement('td');
+                dom_TableDataSharedPlaylists.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataSharedPlaylists);
+                console.log("Das ist i: ", i);
+                this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
+                    console.log("Das ist RESUL!: ", result.data);
+                    console.log("Das sind die sharedplaylist counts: ", result.data[0].countSharedPlaylists);
+                    this.sharedPlaylists.push(result.data[0].countSharedPlaylists);
+                    console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
+                    if (this.sharedPlaylists[i] > 0) {
+                        dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
+                    }
+                    else {
+                        dom_TableDataSharedPlaylists.textContent = "-";
+                        dom_TableDataSharedPlaylists.style.fontWeight = "bold";
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+                const dom_TableDataScore = document.createElement('td');
+                dom_TableDataScore.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataScore);
+                if (this.Mates[i].SCORE > 0) {
+                    dom_TableDataScore.textContent = this.Mates[i].SCORE;
                 }
                 else {
-                    dom_TableDataSharedPlaylists.textContent = "-";
-                    dom_TableDataSharedPlaylists.style.fontWeight = "bold";
+                    dom_TableDataScore.textContent = "-";
+                    dom_TableDataScore.style.fontWeight = "bold";
                 }
-            }).catch(err => {
-                console.log(err);
-            });
-            const dom_TableDataScore = document.createElement('td');
-            dom_TableDataScore.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataScore);
-            if (this.Mates[i].SCORE > 0) {
-                dom_TableDataScore.textContent = this.Mates[i].SCORE;
-            }
-            else {
-                dom_TableDataScore.textContent = "-";
-                dom_TableDataScore.style.fontWeight = "bold";
             }
         }
     }

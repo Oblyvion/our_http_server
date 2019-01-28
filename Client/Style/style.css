@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   padding: 0;
   margin: 0;
@@ -756,6 +757,7 @@ button:hover, .form button:active {
 
 .RequestContainerData {
   width: 100%;
+  line-height: 4ß;
   height: 40px;
   border: 1px black solid;
   background-color: #c0b8ff;
@@ -772,10 +774,10 @@ button:hover, .form button:active {
 .RequestContainerDataForm {
   grid-area: form; }
 
-.RequestContainerDataAccept {
+.RequestContainerDataAcceptDiv {
   float: right; }
 
-.RequestContainerDataDecline {
+.RequestContainerDataDeclineDiv {
   float: left; }
 
 .RequestContainerDataSend {

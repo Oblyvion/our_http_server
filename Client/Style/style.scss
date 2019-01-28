@@ -1076,6 +1076,7 @@ grid-template-areas:
 
 .RequestContainerData {
   width: 100%;
+  line-height: 40px;
   height: 40px;
   border: 1px black solid;
   background-color: #c0b8ff;
@@ -1098,11 +1099,15 @@ grid-template-areas:
   grid-area: form;
 }
 
-.RequestContainerDataAccept {
+.RequestContainerDataAcceptDiv {
   float: right;
 }
 
-.RequestContainerDataDecline {
+.RequestContainerDataAccept {
+
+}
+
+.RequestContainerDataDeclineDiv {
   float: left;
 }
 

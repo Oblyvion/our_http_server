@@ -63,7 +63,7 @@ export class RequestPage {
                 this.dom_RequestContainerDataScore.classList.add('RequestContainerDataScore');
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataScore);
                 this.dom_RequestContainerDataScore.textContent = this.Requests[i].SCORE;
-                this.dom_RequestContainerDataForm = document.createElement('Form');
+                this.dom_RequestContainerDataForm = document.createElement('form');
                 this.dom_RequestContainerDataForm.classList.add('RequestContainerDataForm');
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataForm);
                 this.dom_RequestContainerDataForm.setAttribute("id", "Form");
@@ -72,21 +72,40 @@ export class RequestPage {
                     event.preventDefault();
                     return false;
                 });
+                this.dom_RequestContainerDataAcceptDiv = document.createElement('div');
+                this.dom_RequestContainerDataAcceptDiv.classList.add('RequestContainerDataAcceptDiv');
+                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataAcceptDiv);
+                this.dom_RequestContainerDataAcceptLabel = document.createElement('label');
+                this.dom_RequestContainerDataAcceptLabel.setAttribute("for", "accept");
+                this.dom_RequestContainerDataAcceptLabel.classList.add('RequestContainerDataAcceptLabel');
+                this.dom_RequestContainerDataAcceptDiv.appendChild(this.dom_RequestContainerDataAcceptLabel);
+                this.dom_RequestContainerDataAcceptLabel.textContent = "accept";
                 this.dom_RequestContainerDataAccept = document.createElement('input');
                 this.dom_RequestContainerDataAccept.setAttribute("type", "radio");
                 this.dom_RequestContainerDataAccept.setAttribute("name", "radiobtn");
+                this.dom_RequestContainerDataAccept.setAttribute("id", "accept");
                 this.dom_RequestContainerDataAccept.setAttribute("value", "1");
                 this.dom_RequestContainerDataAccept.classList.add('RequestContainerDataAccept');
-                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataAccept);
+                this.dom_RequestContainerDataAcceptDiv.appendChild(this.dom_RequestContainerDataAccept);
+                this.dom_RequestContainerDataDeclineDiv = document.createElement('div');
+                this.dom_RequestContainerDataDeclineDiv.classList.add('RequestContainerDataDeclineDiv');
+                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataDeclineDiv);
+                this.dom_RequestContainerDataDeclineLabel = document.createElement('label');
+                this.dom_RequestContainerDataDeclineLabel.setAttribute("for", "decline");
+                this.dom_RequestContainerDataDeclineLabel.classList.add('RequestContainerDataDeclineLabel');
+                this.dom_RequestContainerDataDeclineDiv.appendChild(this.dom_RequestContainerDataDeclineLabel);
+                this.dom_RequestContainerDataDeclineLabel.textContent = "decline";
                 this.dom_RequestContainerDataDecline = document.createElement('input');
                 this.dom_RequestContainerDataDecline.setAttribute("type", "radio");
                 this.dom_RequestContainerDataDecline.setAttribute("name", "radiobtn");
+                this.dom_RequestContainerDataDecline.setAttribute("id", "decline");
                 this.dom_RequestContainerDataDecline.setAttribute("value", "0");
                 this.dom_RequestContainerDataDecline.classList.add('RequestContainerDataDecline');
-                this.dom_RequestContainerDataForm.appendChild(this.dom_RequestContainerDataDecline);
+                this.dom_RequestContainerDataDeclineDiv.appendChild(this.dom_RequestContainerDataDecline);
                 this.dom_RequestContainerDataSend = document.createElement('button');
                 this.dom_RequestContainerDataSend.classList.add('RequestContainerDataSend');
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataSend);
+                this.dom_RequestContainerDataSend.textContent = "Send Answer";
                 this.dom_RequestContainerDataSend.addEventListener('click', (event) => {
                     console.log(document.getElementById("Form").elements);
                     if (document.getElementById("Form").elements[0].checked) {
@@ -94,6 +113,7 @@ export class RequestPage {
                         this.sendRequestResponse(i, 1).then((result) => {
                             console.log("Das ist /playlistmate/request: ", result);
                             alert("You accepted the Request!");
+                            this.dom_RequestContainerData.remove();
                         }).catch(err => {
                             console.log(err);
                         });
@@ -103,6 +123,7 @@ export class RequestPage {
                         this.sendRequestResponse(i, 0).then((result) => {
                             console.log("Das ist /playlistmate/request: ", result);
                             alert("You declined the Request!");
+                            this.dom_RequestContainerData.remove();
                         }).catch(err => {
                             console.log(err);
                         });
