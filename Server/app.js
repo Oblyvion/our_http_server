@@ -339,7 +339,7 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         'JOIN COLLABORATORS ON PLAYLISTS.ID = COLLABORATORS.PLAYLIST_ID ' +
         'AND MATE_ID = ?', USER.ID)
         .then(rows => {
-            // console.log("Das sind die playlists hoffentlich: ", rows);
+            console.log("Das collabs: ", rows);
             if (!rows)
                 throw 'Access collaborator playlists failed';
             res.send({

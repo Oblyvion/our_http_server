@@ -289,15 +289,14 @@ export class PlaylistTable {
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongArtist);
         this.dom_AddNewSongArtist.placeholder = "Song artist...";
 
-        // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-        // PROGRESS
+        // DIV PROGRESS
         this.dom_AddNewSongProgress = document.createElement("div");
         this.dom_AddNewSongProgress.classList.add("AddNewSongProgress");
         this.dom_divTable.appendChild(this.dom_AddNewSongProgress);
         this.dom_AddNewSongProgress.setAttribute("id", "progress");
         this.dom_AddNewSongProgress.style.visibility = 'hidden';
 
-        // PROGRESS-BAR
+        // DIV PROGRESS-BAR
         this.dom_AddNewSongProgressBar = document.createElement("div");
         this.dom_AddNewSongProgressBar.classList.add("AddNewSongProgressBar");
         this.dom_AddNewSongProgress.appendChild(this.dom_AddNewSongProgressBar);

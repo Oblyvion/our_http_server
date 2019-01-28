@@ -154,8 +154,8 @@ export class MyPlaylistMates {
             console.log("Das ist i: ", i);
             this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
                 console.log("Das ist RESUL!: ", result.data);
-                console.log("Das sind die sharedplaylist counts: ", result.data[0].countSharedPlaylists);
-                this.sharedPlaylists.push(result.data[0].countSharedPlaylists);
+                console.log("Das sind die sharedplaylist counts: ", result.data.countSharedPlaylists);
+                this.sharedPlaylists.push(result.data.countSharedPlaylists);
                 console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
                 if (this.sharedPlaylists[i] > 0) {
                     dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];

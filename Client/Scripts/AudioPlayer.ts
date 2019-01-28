@@ -195,7 +195,13 @@ export class AudioPlayer {
         console.log("song = ", curSong);
         console.log("song.id: ", this.songs[this.clicked].ID);
         console.log("song element: ", this.songs[this.clicked]);
-        curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
+        try {
+            curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
+        }
+        catch (err) {
+            alert("Failed to play song");
+            console.log(err);
+        }
         console.log("Title: ", this.songs[this.clicked].TITLE);
 
         console.log("das ist dom song title ", this.dom_player_songTitle);
