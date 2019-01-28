@@ -88,7 +88,7 @@ const auth = async (req, res, next) => {
             res.send({
                 success: false,
                 msg: "ERROR: You are not authorized for this action!",
-                err: err
+                err: errFa
             })
         }
     }
@@ -301,8 +301,9 @@ app.get('/song/:id', async (req, res) => {
     // TODO TRY KANN RAUS WENN AUTH GEHT
     try {
         // Aktuell angemeldeter Benutzer
-        const user = jwt.decode(req.get('Authorization')).username;
-        console.log("app.js, app.get/songsuser: USER = ", user);
+        // const user = jwt.decode(req.get('Authorization')).username;
+        // console.log("app.js, app.get/song/id: USER = ", user);
+        console.log("app.js  app.get/song/id: ID = ", req.params.id);
 
         await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id)
             .then((path) => {

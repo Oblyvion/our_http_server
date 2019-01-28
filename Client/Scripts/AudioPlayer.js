@@ -138,7 +138,6 @@ export class AudioPlayer {
         console.log("song element: ", this.songs[this.clicked]);
         curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
         console.log("Title: ", this.songs[this.clicked].TITLE);
-        // song.src();
         console.log("das ist dom song title ", this.dom_player_songTitle);
         this.dom_player_songTitle.textContent = this.songs[this.clicked].TITLE;
         this.dom_player_songTitle.style.fontWeight = "bold";
@@ -215,9 +214,9 @@ export class AudioPlayer {
         }
     }
     next() {
-        // curSong.pause();
-        // curSong.src = this.API_URL + '/song/' + this.songs[(this.clicked+1)%this.songs.length];
-        // curSong.play();
+        currentSong = (currentSong + 1) % this.songs.length;
+        this.loadSong();
+        curSong.play();
     }
     previous() {
         currentSong--;

@@ -109,12 +109,11 @@ export class RequestPage {
                 this.dom_RequestContainerDataSend.addEventListener('click', (event) => {
                     //console.log(document.getElementById("Form").elements);
                     const form = document.getElementById("Form");
-                    // @ts-ignore
                     if (form.elements[0].checked) {
                         console.log("radio button accept 1");
                         this.sendRequestResponse(i, 1).then((result) => {
                             console.log("Das ist /playlistmate/request: ", result);
-                            alert("You accepted the Request!");
+                            alert("You have accepted the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
                             console.log(err);
@@ -124,7 +123,7 @@ export class RequestPage {
                         console.log("radio button decline 0");
                         this.sendRequestResponse(i, 0).then((result) => {
                             console.log("Das ist /playlistmate/request: ", result);
-                            alert("You declined the Request!");
+                            alert("You have declined the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
                             console.log(err);

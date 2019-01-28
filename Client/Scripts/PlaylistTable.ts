@@ -330,28 +330,13 @@ export class PlaylistTable {
                     alert(obj.msg);
             };
 
+            this.dom_AddNewSongForm.style.display = "none";
+
             request.onloadstart = function (e) {
                 console.log("@ onLoadSTART")
             };
-            // request.onprogress = function (e) {
-            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
-            //     if (e.lengthComputable) {
-            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
-            //
-            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-            //         // element wo der progress wert reingeschrieben werden soll
-            //         const elem = document.getElementById("progressBar");
-            //         // anfangswert
-            //         let width = 0;
-            //         // aktuellwert
-            //         width = Math.round(e.loaded  / e.total * 100);
-            //         // show result
-            //         elem.style.width = width + '%';
-            //         elem.innerHTML = width + '%';
-            //
-            //     }};
+
             request.upload.addEventListener("progress", function (e) {
-                console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
                 if (e.lengthComputable) {
                     console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
 
@@ -451,8 +436,6 @@ export class PlaylistTable {
 
                 console.log("Das ist die response vom server: " + request.statusText);
                 // alert("Song successfully uploaded!");
-                this.close();
-                new PlaylistTable(this.dom_root, this.dom_content, this.playlistData);
 
                 // this.fetchPlaylistSongs().then((result) => {
                 //     console.log("das ist das result: ", result);
@@ -464,7 +447,6 @@ export class PlaylistTable {
                 //     console.log(err);
                 // });
 
-                this.dom_AddNewSongForm.style.display = "none";
 
             }
         });
