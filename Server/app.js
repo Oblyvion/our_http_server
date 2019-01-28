@@ -87,8 +87,8 @@ const auth = async (req, res, next) => {
             console.log("app.js, Auth, Z.58: ERROR = : ", err.toString());
             res.send({
                 success: false,
-                msg: "ERROR: You are not authorized for this action!",
-                err: errFa
+                msg: "You are not authorized for this action!",
+                err: err
             })
         }
     }
@@ -170,6 +170,42 @@ app.get('/users', auth, async (req, res) => {
                 err: err
             });
         });
+});
+
+/**
+ * get user score
+ */
+app.get('/user', async (req, res) => {
+    try {
+        const user = jwt.decode(req.get('Authorization')).username;
+        console.log("app.js, app.get/users: USER = ", user);
+        const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+        console.log("app.js, app.get/users: ID = ", userID.ID);
+
+        db.get_row('SELECT SCORE FROM USERS WHERE ID = ?', userID.ID)
+            .then(row => {
+                if (!row)
+                    throw 'User does not exist with ID ' + userID.ID + '.';
+                res.send({
+                    success: true,
+                    data: row
+                });
+            })
+            .catch(err => {
+                res.send({
+                    success: false,
+                    msg: 'No user found.',
+                    err: err
+                });
+            });
+    } catch (err) {
+        res.send({
+            success: false,
+            msg: "You are not authorized for this action!",
+            err: err
+        })
+    }
+
 });
 
 /**
@@ -314,18 +350,10 @@ app.get('/song/:id', async (req, res) => {
                 src.pipe(res);
             })
             .catch((err) => {
-                res.send({
-                    success: false,
-                    msg: 'No such file or directory.',
-                    err: err
-                });
+                console.log('No such file or directory. ERROR = ', err);
             });
     } catch (err) {
-        res.send({
-            success: false,
-            msg: 'Music Streaming is not available at this time.',
-            err: err
-        });
+        console.log('Music Streaming is not available at this time.');
     }
 });
 
@@ -474,108 +502,6 @@ app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
     }
 });
 
-// /**
-//  *
-//  */
-// app.get('/playlistMate/request', auth, async (req, res) => {
-//     try {
-//         console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
-//         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-//         console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
-//         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
-//
-//         await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
-//             'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
-//             .then((row) => {
-//                 console.log('app.js, app.post/request Catch: REQUEST = ', row);
-//                 if (row < 1 || row === undefined)
-//                     throw 'Mate not found';
-//                 res.send({
-//                     success: true,
-//                     data: row
-//                 });
-//             })
-//             .catch((err) => {
-//                 console.log('app.js, app.post/request Catch: ERROR = ', err);
-//                 res.send({
-//                     success: false,
-//                     msg: 'Cannot select REQUEST Value of your mate in table Playlist_Mates.',
-//                     err: err
-//                 });
-//             })
-//     } catch (err) {
-//         console.log('app.js, app.post/request Catch: ERR = ', err);
-//     }
-// });
-
-/**
- *
- */
-// app.get('/playlistMates/requests', auth, async (req, res) => {
-//     try {
-//         console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
-//         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-//         // console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
-//         // const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
-//
-//         await db.get_rows('SELECT USERS.NAME FROM USERS ' +
-//             'JOIN PLAYLIST_MATES ' +
-//             'ON PLAYLIST_MATES.MATE_ID = ? AND PLAYLIST_MATES.REQUEST = ?', user.ID, 0)
-//             .then((rows) => {
-//                 console.log('app.js, app.get/playlistMates/requesteS:  NAMES = ', rows);
-//                 if (rows < 1 || rows === undefined)
-//                     throw 'No mate requests found';
-//                 res.send({
-//                     success: true,
-//                     data: rows
-//                 });
-//             })
-//             .catch((err) => {
-//                 console.log('app.js, app.get/playlistMates/requesteS: Catch1: ERROR = ', err);
-//                 res.send({
-//                     success: false,
-//                     msg: 'You should take the first step to ask for new Playlist Mates.',
-//                     err: err
-//                 });
-//             })
-//     } catch (err) {
-//         console.log('app.js, app.get/playlistMates/requesteS: Catch2: ERR = ', err);
-//         res.send({
-//             success: false,
-//             msg: 'You are not allowed.',
-//             err: err
-//         });
-//     }
-// });
-
-/**
- * get playlist songs by playlist id
- */
-// app.get('/playlist/:id', async (req, res) => {
-//     // console.log("hallo: ", req.params.id);
-//     const token = jwt.decode(req.get("Authorization")).username;
-//     const USER = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', token);
-//     const SongsOfPlaylist = await db.get_row("SELECT SONG_ID FROM PLAYLIST_CONTAINS WHERE PLAYLIST_CONTAINS.PLAYLIST_ID = ?", +req.params.id);
-//     console.log("DAS IST SONGS OF PLAYLIST: ", SongsOfPlaylist);
-//     db.get_row("SELECT * FROM SONGS WHERE ID = ?", SongsOfPlaylist.SONG_ID)
-//         .then(row => {
-//             console.log(row);
-//             if (!row)
-//                 throw 'playlist does not exist';
-//             res.send({
-//                 success: true,
-//                 data: row
-//             });
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             res.send({
-//                 success: false,
-//                 msg: 'access playlist failed',
-//                 err: err
-//             });
-//         });
-// });
 
 // ----------------------------POST section----------------------------
 
