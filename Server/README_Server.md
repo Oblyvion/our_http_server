@@ -168,7 +168,7 @@ _Abgelehnt_
  
  _Akzeptiert_
  
- {success: true, msg: data: rows} 
+ {success: true, data: rows} 
  
  _Abgelehnt_
  
@@ -187,7 +187,7 @@ _Abgelehnt_
  
  _Akzeptiert_
  
- {success: true, msg: data: rows} 
+ {success: true, data: rows} 
  
  _Abgelehnt_
  
@@ -206,7 +206,7 @@ _Abgelehnt_
  
  _Akzeptiert_
  
- {success: true, msg: data: rows} 
+ {success: true, data: rows} 
  
  _Abgelehnt_
  
@@ -223,19 +223,19 @@ _Abgelehnt_
  ```
   GET /playlistMates/sharedPlaylists/:mate
  ```
- Gibt den Song mit der angegebenen ID als ReadStream zurück.
+ Gibt die Anzahl an geteilten Playlists mit dem Mate zurück.
  
  **Responses:** 
  
  _Akzeptiert_
  
- Starte ReadStream von gefundenem SONG.PATH mit Clienten.
+ {success: true, data: rows[0]}
  
  _Abgelehnt_
  
- {success: false, msg: 'No such file or directory.', err: err} 
+ {success: false, msg: 'The counter feels tired right now.', err: err} 
  
- {success: false, msg: 'You are not authorized for this action or playlist ist not available.', err: err}
+ {success: false, msg: 'You are not authorized for this action or no mates are available.', err: err}
 
  **Headers:**
  
@@ -243,8 +243,68 @@ _Abgelehnt_
   
   **Params:**
   
-  :id = SONGS.ID
+  :mate = USERS.NAME
 
+```
+  POST /user
+ ```
+ Legt einen neuen User in der Datenbank an.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ {success: true, msg: 'User registered successfully.', data: user}
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'User exists already.', err: err} 
+ 
+ {success: false, msg: 'Access user failed.', err: err}
+
+  **Params:**
+  
+  req.body.name = USERS.NAME
+  
+```
+  POST /login
+ ```
+ Überprüft den Benutzernamen und Passwort in der Datenbank.
+ 
+ **Responses:** 
+ 
+ _Akzeptiert_
+ 
+ {success: true, msg: 'Login was successful.', data: token}
+ 
+ _Abgelehnt_
+ 
+ {success: false, msg: 'Access declined!.', err: err} 
+ 
+  **Params:**
+  
+  req.body.name = USERS.NAME
+  
+  ```
+    POST /playlist
+   ```
+   Überprüft den Benutzernamen und Passwort in der Datenbank.
+   
+   **Responses:** 
+   
+   _Akzeptiert_
+   
+   {success: true, msg: 'Login was successful.', data: token}
+   
+   _Abgelehnt_
+   
+   {success: false, msg: 'Access declined!.', err: err} 
+   
+    **Params:**
+    
+    req.body.name = USERS.NAME
+     
+  
 #### Page Login
 Bei Aufruf von https://www.127.0.0.1:3000/login:
 ##### Client kann sich anmelden, falls user in der Datenbank vorhanden.
