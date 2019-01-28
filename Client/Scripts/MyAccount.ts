@@ -14,6 +14,9 @@ export class MyAccount {
     private dom_MyAccountInfoContainer:HTMLDivElement;
     private dom_divMyAccHeader: HTMLDivElement;
     private dom_divMyAccHeaderUserName: HTMLDivElement;
+    private dom_MyAccountInfoContainerScoreDiv: HTMLDivElement;
+    private dom_MyAccountInfoContainerScore: HTMLDivElement;
+    private Score: any;
 
     constructor(dom: HTMLElement) {
         this.Playlists = this.getPlaylists();
@@ -42,6 +45,23 @@ export class MyAccount {
         this.dom_MyAccountInfoContainer = document.createElement('div');
         this.dom_MyAccountInfoContainer.classList.add('MyAccountInfoContainer');
         this.dom_MyAccountContainer.appendChild(this.dom_MyAccountInfoContainer);
+
+        this.dom_MyAccountInfoContainerScoreDiv = document.createElement('div');
+        this.dom_MyAccountInfoContainerScoreDiv.classList.add('MyAccountInfoContainerScoreDiv');
+        this.dom_MyAccountInfoContainerScoreDiv.textContent = "Your Score: ";
+        this.dom_MyAccountInfoContainerScoreDiv.style.fontSize = "larger";
+        this.dom_MyAccountInfoContainer.appendChild(this.dom_MyAccountInfoContainerScoreDiv);
+
+        this.dom_MyAccountInfoContainerScore = document.createElement('div');
+        this.dom_MyAccountInfoContainerScore.classList.add('MyAccountInfoContainerScore');
+        this.dom_MyAccountInfoContainerScoreDiv.appendChild(this.dom_MyAccountInfoContainerScore);
+
+        this.fetchScore().then( data => {
+            console.log("das ist data bei fetch score: ", data);
+            this.Score = data;
+            this.dom_MyAccountInfoContainerScore.textContent = this.Score;
+        });
+
 
     }
 
@@ -87,5 +107,29 @@ export class MyAccount {
             this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
         }
         this.dom_ContentMyAccount.remove();
+    }
+
+    private async fetchScore() {
+        try {
+            let response = await fetch(this.API_URL + "/user", {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/javascript',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+                // todo REST POST redirect
+                // redirect: 'follow',
+                // credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            return data;
+        } catch (err) {
+            console.log("Error fetching Userscore!: ",err);
+        }
     }
 }

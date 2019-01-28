@@ -1002,6 +1002,18 @@ grid-template-areas:
 .MyAccountInfoContainer {
   grid-area: content;
   background-color: #c0b8ff;
+
+  display: grid;
+  grid-template-areas:
+          '. . .'
+          '. content .'
+          '. . .';
+  grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
+  grid-template-rows: minmax(30%, 10%) minmax(40%, 40%) minmax(30%, 30%);
+}
+
+.MyAccountInfoContainerScoreDiv {
+  grid-area: content;
 }
 
 .MyAccHeader {
