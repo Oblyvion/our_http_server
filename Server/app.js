@@ -637,34 +637,27 @@ app.post('/playlist', auth, async (req, res) => {
 
             })
             .catch((err) => {
-                if (err.message.match('SQLITE_CONSTRAINT')) {
-                    console.log(err);
-                    return res.send({
-                        success: false,
-                        msg: 'Playlist exists already.',
-                        err: err
-                    });
-                }
-                // res.send({
-                //     success: false,
-                //     msg: 'Access playlist failed.',
-                //     err: err
-                // });
+                res.send({
+                    success: false,
+                    msg: 'Cannot insert playlists at this time.',
+                    err: err
+                });
             });
     } catch (err) {
         console.log(err);
         res.send({
             success: false,
-            msg: 'Access playlist failed.',
+            msg: 'You are not authorized for this action.',
             err: err
         });
     }
 });
 
+/**
+ * add song to playlist from database
+ */
 app.post('/song/:playlistID', auth, async (req, res) => {
     try {
-        // console.log("DOCUMENT WRITE = ", navigator);
-
         const user = jwt.decode(req.get('Authorization')).username;
         console.log("app.js, app.post/song: USER = ", user);
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
@@ -680,7 +673,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
         await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
         res.send({
             success: true,
-            msg: 'File uploaded successfully ;)',
+            msg: 'Song added to playlist successfully.',
             path: filePath
         });
         console.log("app.js, app.post/song: KLAPPT AUCH ? = SONG WURDE HINZUGEFÜGT");
@@ -694,7 +687,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
             res.send({
                 success: true,
-                msg: 'Recognized that playlist is from COLLABORATORS and inserted song into PLAYLIST_CONTAINS.',
+                msg: 'Recognized that playlist is from collaborator. Song added successfully.',
                 path: filePath
             });
             console.log("app.js, app.post/song: WÄRE TOLL, WENN ES WIEDER GEKLAPPT HÄTTE. ");
@@ -702,7 +695,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
             console.log("app.js, app.post/song: ERROR PLAYLIST KONNTE ÜBERHAUPT NICHT GEFUNDEN WERDEN!", err);
             return res.status(500).send({
                 success: false,
-                msg: 'Playlist von Mate konnte nicht in COLLABORATORS gefunden werden.',
+                msg: 'Playlist of Mate could not be found.',
                 err: err
             });
         }
@@ -729,28 +722,16 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
 
         console.log("app.js, app.post/song: USER = ", user);
 
-        // console.log("app.js, app.post/song, Z.534: TITLE = ", req.body.title);
-        //
-        // console.log("app.js, app.post/song: BODY FILES = ", req.body.files);
-
-        // File exists?
-        // if (Object.keys(req.files).length === 0) {
-        //     return res.status(400).send('No files were uploaded.');
-        // }
-
         // save the song
         const song = req.files;
         let filePath;
         // path for saving song on server
         console.log("SHOW ME YOUR FILEPATH = ", song.audioFile[0].originalname);
 
-        // if (OSName === "Windows")
-        //     filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
-        // else
         console.log("DirNAME: ", __dirname);
         filePath = "./Server/Songs/" + song.audioFile[0].originalname;
 
-        // DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
+        // TODO DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
         //const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
 
         console.log("app.js, app.post/song: FILEPATH = ", filePath);
@@ -765,16 +746,17 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
         // // find ID from uploaded song
         const songID = await db.get_row('SELECT ID FROM SONGS WHERE PATH = ?', filePath);
         try {
-            //     // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
+            // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
             await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', playlistID, userID.ID);
             console.log("app.js, app.post/song: KLAPPT ?  ");
             console.log("app.js, app.post/song: SONGID = ", songID.ID);
-            //     // insert song into users playlistID
+            // insert song into users playlistID
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
-            //
+
+            // TODO USERSCORE AUCH BEIM ERFOLGREICHEN ADDEN VON COLLABORATOR HINZUFÜGEN
             const userScore = await db.get_row('SELECT SCORE FROM USERS WHERE ID = ?', userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
-            //     // TODO UPDATE USER AND ADD 15 SCORE POINTS
+
             await db.cmd('UPDATE USERS SET SCORE = ? WHERE ID = ?', userScore.SCORE + 15, userID.ID);
             console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
 
@@ -796,7 +778,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
                     await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
                     res.send({
                         success: true,
-                        msg: 'Recognized that playlist is from COLLABORATORS and inserted song into PLAYLIST_CONTAINS.',
+                        msg: 'Recognized that playlist is from collaborator. Song uploaded and added successfully.',
                         path: filePath
                     });
                     console.log("app.js, app.post/song: WÄRE TOLL, WENN ES WIEDER GEKLAPPT HÄTTE. ");
@@ -804,13 +786,12 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
                     console.log("app.js, app.post/song: ERROR PLAYLIST VON MATE KONNTE NICHT IN COLLABORATORS GEFUNDEN WERDEN!", err);
                     return res.status(500).send({
                         success: false,
-                        msg: 'Mates Playlist could not found.',
+                        msg: 'Playlist of Mate could not be found.',
                         err: err
                     });
                 }
             }
         }
-
     } catch (err) {
         if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed: SONGS.PATH')) {
             console.log('app.js, app.post/song: CATCHED ERROR SONG EXISTS ALREADY = ', err);
@@ -823,13 +804,16 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             console.log("UNCATCHED ERROR = ", err);
             res.send({
                 success: false,
-                msg: 'access song failed',
+                msg: 'Access failed.',
                 err: err
             });
         }
     }
 });
 
+/**
+ * add new playlist mate
+ */
 app.post('/playlistMate', auth, async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
@@ -849,21 +833,6 @@ app.post('/playlistMate', auth, async (req, res) => {
         })
     } catch (err) {
         if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
-            // const user = jwt.decode(req.get('Authorization')).username;
-            // console.log('app.js, app.post/playlistMate Catch: USER = ', user);
-            // const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
-            // console.log('app.js, app.post/playlistMate Catch: USERID = ', userID.ID);
-            // const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
-            //
-            // const request = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
-            //     'WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, userID.ID);
-            // console.log('app.js, app.post/playlistMate Catch: REQUEST = ', request);
-
-            // if (mateID.ID === ) {
-            //
-            // }
-
-
             res.send({
                 success: false,
                 msg: 'The user -> ' + req.body.mate + ' <- is your Playlist Mate already. Hire another User.'
@@ -873,13 +842,16 @@ app.post('/playlistMate', auth, async (req, res) => {
 
             res.send({
                 success: false,
-                msg: 'YOU are not authorized for this action.',
+                msg: 'You are not authorized to add new Playlist Mate.',
                 err: err
             })
         }
     }
 });
 
+/**
+ * insert collaborator if both users have accepted the Playlist Mates request
+ */
 app.post('/collabs/:playlistID', auth, async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
@@ -889,29 +861,49 @@ app.post('/collabs/:playlistID', auth, async (req, res) => {
         console.log('app.js, app.post/collabs: USERID = ', req.body.mate);
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
         console.log('app.js, app.post/collabs: MATEID = ', mateID.ID);
-        await db.cmd('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (?, ?, ?)', userID.ID, mateID.ID, req.params.playlistID);
-        res.send({
-            success: true,
-            msg: 'Collaborator ' + req.body.mate + ' has been added to your account successfully.'
-        })
-    } catch (err) {
-        if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed')) {
-            res.send({
-                success: false,
-                msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already. Invite another Playlist Mate.'
-            })
-        } else {
-            console.log('app.js, app.post/playlistMate: UNCATCHED ERROR = ', err);
 
+        const myRequest = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', userID.ID, mateID.ID);
+        const mateResponse = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, userID.ID);
+
+        if (myRequest.REQUEST && mateResponse.REQUEST) {
+            console.log("Fang an und schaff was.");
+            await db.cmd('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (?, ?, ?)', userID.ID, mateID.ID, req.params.playlistID)
+                .then(() => {
+                    res.send({
+                        success: true,
+                        msg: 'Collaborator ' + req.body.mate + ' has been added to your account successfully.'
+                    })
+                })
+                .catch((err) => {
+                    if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed'))
+                        return res.send({
+                            success: false,
+                            msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already. Invite another Playlist Mate.'
+                        });
+                    res.send({
+                        success: false,
+                        msg: 'There is a problem with you or with your collaborator.',
+                        err: err
+                    });
+                });
+
+        } else
             res.send({
                 success: false,
-                msg: 'Maybe the user -> ' + req.body.mate + ' <- does not ka.',
-                err: err
-            })
-        }
+                msg: 'Your mate called -> ' + req.body.mate + ' <- have not accept your Playlist Mate request.'
+            });
+    } catch (err) {
+        res.send({
+            success: false,
+            msg: 'You are not authorized for this action.',
+            err: err
+        });
     }
 });
 
+/**
+ * accept or decline Playlist Mate request
+ */
 app.post('/playlistMates/request', auth, async (req, res) => {
     try {
         console.log("app.js, app.post/playlistMates/request, Z.844: USER = ", jwt.decode(req.get('Authorization')).username);
@@ -968,8 +960,5 @@ app.post('/playlistMates/request', auth, async (req, res) => {
     }
 
 });
-
-// TODO POST COLLABORATOR IF IN PLAYLIST_MATES BOTH USER AND MATE REQUEST = 1
-
 
 module.exports = app;
