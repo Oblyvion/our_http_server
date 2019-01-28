@@ -119,9 +119,6 @@ async function userInit(req) {
 /**
  * get app root
  */
-app.get('/', (req, res) => {
-    res.send('Our Test App');
-});
 
 app.get('/init', (req, res) => {
     Promise.all([
@@ -144,7 +141,7 @@ app.get('/init', (req, res) => {
 });
 
 /**
- * get all users
+ * get all users which are not the current user and not his playlist mates
  */
 app.get('/users', auth, async (req, res) => {
     const user = jwt.decode(req.get('Authorization')).username;
@@ -159,7 +156,7 @@ app.get('/users', auth, async (req, res) => {
         .then(rows => {
             console.log("app.js, app.get/users: USERS = ", rows);
             if (!rows)
-                throw 'users not found';
+                throw 'No other users found.';
             res.send({
                 success: true,
                 data: rows
@@ -169,7 +166,7 @@ app.get('/users', auth, async (req, res) => {
             console.log("app.js, app.get/users: ERROR = ", err);
             res.send({
                 success: false,
-                msg: 'access users failed',
+                msg: 'No other users found',
                 err: err
             });
         });
@@ -182,7 +179,7 @@ app.get('/user/:id', (req, res) => {
     db.get_row('SELECT NAME,PASSWORD FROM USERS WHERE ID = ?', +req.params.id)
         .then(row => {
             if (!row)
-                throw 'user does not exist';
+                throw 'User does not exist with ID ' + req.params.id + '.';
             res.send({
                 success: true,
                 data: row
@@ -191,11 +188,12 @@ app.get('/user/:id', (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access user failed',
+                msg: 'No user found.',
                 err: err
             });
         });
 });
+
 /**
  * get user by name
  */
@@ -205,7 +203,7 @@ app.post('/login', (req, res) => {
     const result = db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
         .then(user => {
             if (!user)
-                throw 'user does not exist';
+                throw 'User does not exist.';
 
             if (user.PASSWORD !== req.body.password) {
                 throw 'wrong password'
@@ -218,7 +216,7 @@ app.post('/login', (req, res) => {
 
             res.send({
                 success: true,
-                msg: 'Token setup.',
+                msg: 'Login was successful.',
                 data: token
             });
         })
@@ -226,7 +224,7 @@ app.post('/login', (req, res) => {
             console.log("Login, Uncatched Error = ", err);
             res.send({
                 success: false,
-                msg: 'access user failed',
+                msg: 'Access declined!',
                 err: err
             });
         });
@@ -239,7 +237,7 @@ app.get('/songs', async (req, res) => {
     db.get_rows('SELECT * FROM SONGS')
         .then(rows => {
             if (!rows)
-                throw 'no songs available';
+                throw 'Access song failed.';
             res.send({
                 success: true,
                 data: rows
@@ -248,7 +246,7 @@ app.get('/songs', async (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access song failed',
+                msg: 'No songs available.',
                 err: err
             });
         });
@@ -259,83 +257,81 @@ app.get('/songs', async (req, res) => {
  * get songs of playlist x from user
  */
 app.get('/songsuser/:playlistID', auth, async (req, res) => {
-    // Aktuell angemeldeter Benutzer
-    const user = jwt.decode(req.get('Authorization')).username;
-    console.log("app.js, app.get/songsuser: USER = ", user);
+    try {
+        // Aktuell angemeldeter Benutzer
+        const user = jwt.decode(req.get('Authorization')).username;
+        console.log("app.js, app.get/songsuser: USER = ", user);
 
-    // Playlist die ausgewählt wurde
-    const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE ID = ?', +req.params.playlistID);
-    // const playlistFrom = await db.get_row('SELECT USER_ID FROM PLAYLISTS WHERE ID = ?', req.params.playlistID);
-    console.log("app.js, app.get/songsuser: PLAYLIST_ID = ", req.params.playlistID);
-    console.log("app.js, app.get/songsuser: PLAYLIST_ID = ", playlist.ID);
-    console.log("app.js, app.get/songsuser: PLAYLIST_NAME = ", playlist.NAME);
-    console.log("app.js, app.get/songsuser: PLAYLIST_USER_ID = ", playlist.USER_ID);
+        // Playlist die ausgewählt wurde
+        const playlist = await db.get_row('SELECT * FROM PLAYLISTS WHERE ID = ?', +req.params.playlistID);
 
-    // Inhaber der Playlist
-    // const playlistFrom = await db.get_row('SELECT NAME FROM USERS JOIN PLAYLISTS ON USERS.ID = ?', );
-
-    // const songs = await db.get_rows('SELECT * FROM SONGS JOIN PLAYLIST_CONTAINS ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID' +
-    //     ' AND PLAYLIST_CONTAINS.PLAYLIST_ID = ?', playlist.ID);
-    const songs = await db.get_rows('SELECT SONGS.ID, SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
-        'FROM SONGS ' +
-        'JOIN PLAYLIST_CONTAINS ' +
-        'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
-    // console.log("app.js, app.get/songsuser: SOOOONGS = ", songs);
-        .then(rows => {
-            if (!rows)
-                throw 'no songs available';
-            res.send({
-                success: true,
-                data: rows, auth
+        await db.get_rows('SELECT SONGS.ID, SONGS.TITLE, SONGS.ARTIST, PLAYLIST_CONTAINS.SUPPORTED_BY ' +
+            'FROM SONGS ' +
+            'JOIN PLAYLIST_CONTAINS ' +
+            'ON SONGS.ID = PLAYLIST_CONTAINS.SONG_ID AND PLAYLIST_CONTAINS.PLAYLIST_ID = ? ', playlist.ID)
+            .then(rows => {
+                if (!rows)
+                    throw 'Access playlist with ID ' + playlist.ID + ' failed.';
+                res.send({
+                    success: true,
+                    data: rows
+                });
+            })
+            .catch(err => {
+                res.send({
+                    success: false,
+                    msg: 'No songs available in this playlist.',
+                    err: err
+                });
             });
-        })
-        .catch(err => {
-            res.send({
-                success: false,
-                msg: 'access song failed',
-                err: err
-            });
+    } catch (err) {
+        res.send({
+            success: false,
+            msg: 'You are not authorized for this action or songs are not available.',
+            err: err
         });
+    }
+
 });
 
 /**
  * get song by id
  */
 app.get('/song/:id', async (req, res) => {
+    // TODO TRY KANN RAUS WENN AUTH GEHT
     try {
-        const path = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id);
-        console.log("Path = ", path);
-        const src = fs.createReadStream(path.PATH);
-        src.pipe(res);
+        // Aktuell angemeldeter Benutzer
+        const user = jwt.decode(req.get('Authorization')).username;
+        console.log("app.js, app.get/songsuser: USER = ", user);
+
+        await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id)
+            .then((path) => {
+                if (!path) {
+                    throw 'No path found for ID ' + req.params.id;
+                }
+                console.log("Path = ", path);
+                const src = fs.createReadStream(path.PATH);
+                src.pipe(res);
+            })
+            .catch((err) => {
+                res.send({
+                    success: false,
+                    msg: 'No such file or directory.',
+                    err: err
+                });
+            });
     } catch (err) {
-        console.log("ERROR bei /song/:id: ERROR = ", err);
-        if (err.message.match('ENOENT: no such file or directory')) {
-            console.log("ERROR bei /song/:id: CATCHED ERROR = ", err);
-        }
+        res.send({
+            success: false,
+            msg: 'You are not authorized for this action or song is not available.',
+            err: err
+        });
     }
-    try {
-
-    } catch (err) {
-        console.log("ERROR Z.346 bei /song/:id: CATCHED ERROR = ", err);
-    }
-
-
-    // .then(row => {
-    //     if (!row)
-    //         throw 'song not found';
-    //     res.send(src)
-    //         .catch(err => {
-    //             res.send({
-    //                 success: false,
-    //                 msg: 'access song failed',
-    //                 err: err
-    //             });
-    //         });
-    // });
 });
+
 // TODO Die Playlists sind entweder privat, für Playlist-Mates offen oder für alle User öffentlich.
 /**
- * get USERS playlists from authorized user
+ * get USERS own playlists
  */
 app.get('/playlists', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
@@ -346,7 +342,7 @@ app.get('/playlists', auth, async (req, res) => {
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
-                throw 'found no playlists';
+                throw 'Access playlists failed';
             res.send({
                 success: true,
                 data: rows
@@ -355,13 +351,13 @@ app.get('/playlists', auth, async (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access playlists failed',
+                msg: 'Found no playlists.',
                 err: err
             });
         });
 });
 /**
- * get MATE playlists from authorized user
+ * get COLLABORATOR playlists
  */
 app.get('/playlists/collabs', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
@@ -375,7 +371,7 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         .then(rows => {
             console.log("Das sind die playlists hoffentlich: ", rows);
             if (!rows)
-                throw 'found no playlists';
+                throw 'Access collaborator playlists failed';
             res.send({
                 success: true,
                 data: rows
@@ -384,12 +380,15 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         .catch(err => {
             res.send({
                 success: false,
-                msg: 'access playlists failed',
+                msg: 'Found no collaborator playlists.',
                 err: err
             });
         });
 });
 
+/**
+ * get playlist mates
+ */
 app.get('/playlistMates', auth, async (req, res) => {
     try {
         console.log("app.js, app.get/playlistMates, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
@@ -412,7 +411,7 @@ app.get('/playlistMates', auth, async (req, res) => {
                 console.log("app.js, app.get/playlistMates, Z.403: ERROR = ", err);
                 res.send({
                     success: false,
-                    msg: 'Nothing in there.',
+                    msg: 'Nothing in there, yet.',
                     err: err
                 });
             })
@@ -421,7 +420,7 @@ app.get('/playlistMates', auth, async (req, res) => {
         if (err.message.match('Cannot read property')) {
             return res.send({
                 success: false,
-                msg: 'YOU are not authorized for this action. Please register first!',
+                msg: 'You are not authorized for this action.',
                 err: err
             });
         }
@@ -434,73 +433,120 @@ app.get('/playlistMates', auth, async (req, res) => {
 
 });
 
+/**
+ * get count of shared playlists with mate
+ */
 app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
-    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
-    const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.388: USER.ID = ", user.ID);
-
-    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.390: MATE = ", req.params.mate);
-    const mate = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.params.mate);
-    console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.391: MATE.ID = ", mate.ID);
-
-    const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS countSharedPlaylists ' +
-        'FROM COLLABORATORS WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mate.ID)
-        .then((rows) => {
-            console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows[0]);
-            if (!rows || rows < 1) {
-                return res.send({
-                    success: false,
-                    data: 'No Collaborators found for Playlist Mate = ' + mate.username
-                });
-            }
-            res.send({
-                success: true,
-                data: rows[0]
-            });
-        }).catch((err) => {
-            console.log("app.js, app.get/playlistMates, Z.408: ERROR = ", err);
-            res.send({
-                success: false,
-                msg: 'UNEXPECTED ERROR Z.411',
-                err: err
-            });
-        })
-});
-
-app.get('/playlistMates/request', auth, async (req, res) => {
     try {
-        console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+        console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.386: USER = ", jwt.decode(req.get('Authorization')).username);
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
-        console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
-        const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+        console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.388: USER.ID = ", user.ID);
 
-        await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
-            'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
-            .then((row) => {
-                console.log('app.js, app.post/request Catch: REQUEST = ', row);
-                if (row < 1 || row === undefined) {
-                    return res.send({
-                        success: false,
-                        msg: 'Cannot find such Playlist Mate. Add User as Playlist Mate first!'
-                    });
+        console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.390: MATE = ", req.params.mate);
+        const mate = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.params.mate);
+        console.log("app.js, app.get/playlistMates/sharedPlaylists, Z.391: MATE.ID = ", mate.ID);
+
+        const countPlaylistsCollabs = await db.get_rows('SELECT COUNT(PLAYLIST_ID) AS countSharedPlaylists ' +
+            'FROM COLLABORATORS WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mate.ID)
+            .then((rows) => {
+                console.log("app.js, app.get/playlistMates, Z.397: RESULT = ", rows[0]);
+                if (!rows || rows < 1) {
+                    throw 'No Collaborators found for Playlist Mate = ' + mate.username;
                 }
                 res.send({
                     success: true,
-                    data: row
+                    data: rows[0]
                 });
-            })
-            .catch((err) => {
-                console.log('app.js, app.post/request Catch: ERROR = ', err);
+            }).catch((err) => {
+                console.log("app.js, app.get/playlistMates, Z.408: ERROR = ", err);
                 res.send({
                     success: false,
-                    msg: 'Cannot select REQUEST Value of your mate in table Playlist_Mates.',
+                    msg: 'The counter feels tired right now.',
                     err: err
                 });
             })
     } catch (err) {
-        console.log('app.js, app.post/request Catch: ERR = ', err);
+        res.send({
+            success: false,
+            msg: 'You are not authorized for this action or no mates are available.',
+            err: err
+        });
     }
 });
+
+// /**
+//  *
+//  */
+// app.get('/playlistMate/request', auth, async (req, res) => {
+//     try {
+//         console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+//         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+//         console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
+//         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+//
+//         await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES ' +
+//             'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
+//             .then((row) => {
+//                 console.log('app.js, app.post/request Catch: REQUEST = ', row);
+//                 if (row < 1 || row === undefined)
+//                     throw 'Mate not found';
+//                 res.send({
+//                     success: true,
+//                     data: row
+//                 });
+//             })
+//             .catch((err) => {
+//                 console.log('app.js, app.post/request Catch: ERROR = ', err);
+//                 res.send({
+//                     success: false,
+//                     msg: 'Cannot select REQUEST Value of your mate in table Playlist_Mates.',
+//                     err: err
+//                 });
+//             })
+//     } catch (err) {
+//         console.log('app.js, app.post/request Catch: ERR = ', err);
+//     }
+// });
+
+/**
+ *
+ */
+// app.get('/playlistMates/requests', auth, async (req, res) => {
+//     try {
+//         console.log("app.js, app.get/playlistMates/request, Z.413: USER = ", jwt.decode(req.get('Authorization')).username);
+//         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
+//         // console.log("app.js, app.get/playlistMates/request: USER.ID = ", user.ID);
+//         // const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
+//
+//         await db.get_rows('SELECT USERS.NAME FROM USERS ' +
+//             'JOIN PLAYLIST_MATES ' +
+//             'ON PLAYLIST_MATES.MATE_ID = ? AND PLAYLIST_MATES.REQUEST = ?', user.ID, 0)
+//             .then((rows) => {
+//                 console.log('app.js, app.get/playlistMates/requesteS:  NAMES = ', rows);
+//                 if (rows < 1 || rows === undefined)
+//                     throw 'No mate requests found';
+//                 res.send({
+//                     success: true,
+//                     data: rows
+//                 });
+//             })
+//             .catch((err) => {
+//                 console.log('app.js, app.get/playlistMates/requesteS: Catch1: ERROR = ', err);
+//                 res.send({
+//                     success: false,
+//                     msg: 'You should take the first step to ask for new Playlist Mates.',
+//                     err: err
+//                 });
+//             })
+//     } catch (err) {
+//         console.log('app.js, app.get/playlistMates/requesteS: Catch2: ERR = ', err);
+//         res.send({
+//             success: false,
+//             msg: 'You are not allowed.',
+//             err: err
+//         });
+//     }
+// });
 
 /**
  * get playlist songs by playlist id
@@ -537,34 +583,36 @@ app.get('/playlistMates/request', auth, async (req, res) => {
  * create new user
  */
 app.post('/user', async (req, res) => {
-    try {
-        console.log("HALLO");
-        console.log("req.body.name = ", req.body.name);
-        const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5);
-        await userInit(req);
-
-        res.send({
-            success: true,
-            msg: 'User registered successfully.',
-            data: user
+    console.log("HALLO");
+    console.log("req.body.name = ", req.body.name);
+    const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5)
+        .then(async (user) => {
+            if (!user) {
+                throw 'Get no user. User = ' + req.body.name;
+            }
+            await userInit(req);
+            res.send({
+                success: true,
+                msg: 'User registered successfully.',
+                data: user
+            });
+        }).catch((err) => {
+            if (err.message.match('SQLITE_CONSTRAINT')) {
+                console.log(err);
+                res.send({
+                    success: false,
+                    msg: 'User exists already.',
+                    err: err
+                });
+            } else {
+                console.log(err);
+                res.send({
+                    success: false,
+                    msg: 'Access user failed.',
+                    err: err
+                });
+            }
         });
-    } catch (err) {
-        if (err.message.match('SQLITE_CONSTRAINT')) {
-            console.log(err);
-            res.send({
-                success: false,
-                msg: 'user exists already',
-                err: err
-            });
-        } else {
-            console.log(err);
-            res.send({
-                success: false,
-                msg: 'access user failed',
-                err: err
-            });
-        }
-    }
 });
 
 /**
@@ -576,29 +624,40 @@ app.post('/playlist', auth, async (req, res) => {
         console.log("app.js, app.post/playlist: token = ", req.get('Authorization'));
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
         console.log("app.js, app.post/playlist: USER ID = ", user.ID);
-        const playlist = await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', req.body.name, user.ID);
-        console.log("app.js, app.post/playlist: playlist = ", playlist);
+        await db.cmd('INSERT INTO PLAYLISTS (NAME,USER_ID) VALUES (?, ?)', req.body.name, user.ID)
+            .then((playlist) => {
+                if (!playlist) {
+                    throw 'Cannot insert playlist.';
+                }
+                res.send({
+                    success: true,
+                    msg: 'Playlist created successfully.',
+                    data: playlist
+                });
 
-        res.send({
-            success: true,
-            data: playlist
-        });
-
+            })
+            .catch((err) => {
+                if (err.message.match('SQLITE_CONSTRAINT')) {
+                    console.log(err);
+                    return res.send({
+                        success: false,
+                        msg: 'Playlist exists already.',
+                        err: err
+                    });
+                }
+                // res.send({
+                //     success: false,
+                //     msg: 'Access playlist failed.',
+                //     err: err
+                // });
+            });
     } catch (err) {
-        if (err.message.match('SQLITE_CONSTRAINT')) {
-            console.log(err);
-            res.send({
-                success: false,
-                msg: 'playlist exists already',
-            });
-        } else {
-            console.log(err);
-            res.send({
-                success: false,
-                msg: 'access playlist failed',
-                err: err
-            });
-        }
+        console.log(err);
+        res.send({
+            success: false,
+            msg: 'Access playlist failed.',
+            err: err
+        });
     }
 });
 
@@ -909,6 +968,8 @@ app.post('/playlistMates/request', auth, async (req, res) => {
     }
 
 });
+
+// TODO POST COLLABORATOR IF IN PLAYLIST_MATES BOTH USER AND MATE REQUEST = 1
 
 
 module.exports = app;
