@@ -6,10 +6,11 @@ let dom_volume_slider;
 let currentSong;
 let curSong = new Audio();
 export class AudioPlayer {
-    constructor(dom, Songs) {
+    constructor(dom, Songs, songclicked) {
         // public Songs = [
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.songs = Songs;
+        this.clicked = songclicked;
         this.dom_root = dom;
         //this.loadSong(0);
         this.dom = document.createElement('div');
@@ -130,28 +131,19 @@ export class AudioPlayer {
         //this.loadSong(0);
     }
     // } else
-    loadSong(clicked) {
+    loadSong() {
         console.log("hallllo");
         console.log("song = ", curSong);
-        console.log("song.id: ", this.songs[clicked].ID);
-        console.log("song element: ", this.songs[clicked]);
-        curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
-        console.log("Title: ", this.songs[clicked].TITLE);
-        // song.src();
+        console.log("song.id: ", this.songs[this.clicked].ID);
+        console.log("song element: ", this.songs[this.clicked]);
+        curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
+        console.log("Title: ", this.songs[this.clicked].TITLE);
         console.log("das ist dom song title ", this.dom_player_songTitle);
-        console.log("das ist clicked + 1 ", clicked + 1);
-        this.dom_player_songTitle.textContent = this.songs[clicked].TITLE;
-        try {
-            if (([clicked + 1]) === undefined) {
-                this.dom_nextSong.textContent = "\bNext song:";
-            }
-            else
-                this.dom_nextSong.textContent = "\bNext song: " + this.songs[clicked + 1].TITLE;
-        }
-        catch (err) {
-            console.log("eoroeroreoroo = ", err);
-        }
-        console.log("ID = ", this.songs[clicked].ID);
+        this.dom_player_songTitle.textContent = this.songs[this.clicked].TITLE;
+        this.dom_player_songTitle.style.fontWeight = "bold";
+        this.dom_nextSong.textContent = "Next song: " + this.songs[(this.clicked + 1) % this.songs.length].TITLE;
+        this.dom_nextSong.style.fontWeight = "bold";
+        console.log("ID = ", this.songs[this.clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
         curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
@@ -223,7 +215,7 @@ export class AudioPlayer {
     }
     next() {
         currentSong = (currentSong + 1) % this.songs.length;
-        this.loadSong(currentSong);
+        this.loadSong();
         curSong.play();
     }
     previous() {
@@ -231,7 +223,7 @@ export class AudioPlayer {
         if (currentSong < 0) {
             currentSong = this.songs.length - 1;
         }
-        this.loadSong(currentSong);
+        this.loadSong();
         curSong.play();
     }
     forward() {
@@ -253,7 +245,11 @@ export class AudioPlayer {
             this.dom_volume_down.src = "./Images/volume_down.png";
     }
     close() {
-        this.dom_root.remove();
+        console.log(this.dom_root);
+        while (this.dom_root.childNodes.length > 4) {
+            console.log("las child ", this.dom_root.lastChild);
+            this.dom_root.removeChild(this.dom_root.lastChild);
+        }
     }
 }
 //# sourceMappingURL=AudioPlayer.js.map

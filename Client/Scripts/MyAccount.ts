@@ -23,7 +23,7 @@ export class MyAccount {
         this.dom_ContentMyAccount.classList.add('ContentMyAccount');
         this.dom_root.appendChild(this.dom_ContentMyAccount);
 
-        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null);
+        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null, null);
         this.navBar = new NavBar(this.dom_root, this.dom_ContentMyAccount);
 
         this.dom_MyAccountContainer = document.createElement('div');

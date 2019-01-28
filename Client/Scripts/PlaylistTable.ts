@@ -1,6 +1,7 @@
 import {AudioPlayer} from "./AudioPlayer.js";
 import {manager} from "./app.js";
 import {response} from "express";
+import {FirstSteps} from "./FirstSteps";
 
 export class PlaylistTable {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
@@ -55,7 +56,7 @@ export class PlaylistTable {
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
             this.Playlist.songs = result.data;
-            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
+            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
             console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
             this.addPlaylistSongs();
         }).catch(err => {
@@ -329,28 +330,13 @@ export class PlaylistTable {
                     alert(obj.msg);
             };
 
+            this.dom_AddNewSongForm.style.display = "none";
+
             request.onloadstart = function (e) {
                 console.log("@ onLoadSTART")
             };
-            // request.onprogress = function (e) {
-            //     console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
-            //     if (e.lengthComputable) {
-            //         console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
-            //
-            //         // TODO PROGRESS BAR WIRD NICHT ANGEZEIGT. HTML Elemente stimmen evtl nicht.
-            //         // element wo der progress wert reingeschrieben werden soll
-            //         const elem = document.getElementById("progressBar");
-            //         // anfangswert
-            //         let width = 0;
-            //         // aktuellwert
-            //         width = Math.round(e.loaded  / e.total * 100);
-            //         // show result
-            //         elem.style.width = width + '%';
-            //         elem.innerHTML = width + '%';
-            //
-            //     }};
+
             request.upload.addEventListener("progress", function (e) {
-                console.log("sadjflsajlvlkvsalkmsafdlkajwlr");
                 if (e.lengthComputable) {
                     console.log("add upload event-listener: " + Math.round(e.loaded  / e.total * 100));
 
@@ -450,8 +436,6 @@ export class PlaylistTable {
 
                 console.log("Das ist die response vom server: " + request.statusText);
                 // alert("Song successfully uploaded!");
-                this.close();
-                new PlaylistTable(this.dom_root, this.dom_content, this.playlistData);
 
                 // this.fetchPlaylistSongs().then((result) => {
                 //     console.log("das ist das result: ", result);
@@ -463,7 +447,6 @@ export class PlaylistTable {
                 //     console.log(err);
                 // });
 
-                this.dom_AddNewSongForm.style.display = "none";
 
             }
         });
@@ -529,9 +512,13 @@ export class PlaylistTable {
             this.dom_Table.appendChild(dom_TableData);
             dom_TableData.addEventListener('click', () => {
                 let clicked = dom_TableData.rowIndex - 1;
-                console.log("clicked: " + clicked);
-                console.log("Playlist id: " + this.Playlist.songs[clicked].ID);
-                this.audioPlayer.loadSong(clicked);
+
+                console.log("clicked: "+clicked);
+                console.log("Playlist id: "+this.Playlist.songs[clicked].ID);
+                this.audioPlayer.close();
+                this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, clicked);
+                this.audioPlayer.loadSong();
+
             });
 
             console.log("PlaylistTable.ts: this.Playlist[i].Title = ", this.Playlist.songs[i].TITLE);
@@ -556,7 +543,7 @@ export class PlaylistTable {
     close() {
         console.log("close wurde aufgerufen");
         while (this.dom_content.childNodes.length > 2) {
-            console.log("las child ", this.dom_content.lastChild);
+            console.log("last child ", this.dom_content.lastChild);
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
     }

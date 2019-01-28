@@ -192,6 +192,7 @@ export class NewPlaylistMate {
                 mode: 'cors',
             });
             const data = await response.json();
+            console.log("das ist die antwort des Servers auf fetch /users : ", data);
             return data;
         }
         catch (err) {

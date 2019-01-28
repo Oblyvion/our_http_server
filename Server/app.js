@@ -88,7 +88,7 @@ const auth = async (req, res, next) => {
             res.send({
                 success: false,
                 msg: "ERROR: You are not authorized for this action!",
-                err: err
+                err: errFa
             })
         }
     }
@@ -302,7 +302,7 @@ app.get('/song/:id', async (req, res) => {
     try {
         // Aktuell angemeldeter Benutzer
         // const user = jwt.decode(req.get('Authorization')).username;
-        // console.log("app.js, app.get/songsuser: USER = ", user);
+        console.log("app.js  app.get/song/id: ID = ", req.params.id);
 
         await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id)
             .then((path) => {
@@ -323,7 +323,7 @@ app.get('/song/:id', async (req, res) => {
     } catch (err) {
         res.send({
             success: false,
-            msg: 'You are not authorized for this action or song is not available.',
+            msg: 'Music Streaming is not available at this time.',
             err: err
         });
     }

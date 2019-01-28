@@ -1,3 +1,4 @@
+
 // let song;
 let dom_player_slider: HTMLInputElement;
 let dom_player_current: HTMLElement;
@@ -34,10 +35,14 @@ export class AudioPlayer {
 
     // ];
     private songs;
+    private clicked;
 
-    constructor(dom: HTMLElement, Songs) {
+    constructor(dom: HTMLElement, Songs, songclicked) {
+
 
         this.songs = Songs;
+
+        this.clicked = songclicked;
 
         this.dom_root = dom;
 
@@ -185,31 +190,26 @@ export class AudioPlayer {
     }
 
     // } else
-    public loadSong(clicked) {
+    public loadSong() {
         console.log("hallllo");
         console.log("song = ", curSong);
-        console.log("song.id: ", this.songs[clicked].ID);
-        console.log("song element: ", this.songs[clicked]);
-        curSong.src = this.API_URL + '/song/' + this.songs[clicked].ID;
-        console.log("Title: ", this.songs[clicked].TITLE);
-// song.src();
-        console.log("das ist dom song title ", this.dom_player_songTitle);
-        console.log("das ist clicked + 1 ", clicked + 1);
-        this.dom_player_songTitle.textContent = this.songs[clicked].TITLE;
-        try {
-            if (([clicked + 1]) === undefined) {
-                this.dom_nextSong.textContent = "\bNext song:";
-            } else
-                this.dom_nextSong.textContent = "\bNext song: " + this.songs[clicked + 1].TITLE;
-        } catch (err) {
-            console.log("eoroeroreoroo = ", err);
-        }
+        console.log("song.id: ", this.songs[this.clicked].ID);
+        console.log("song element: ", this.songs[this.clicked]);
+        curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
+        console.log("Title: ", this.songs[this.clicked].TITLE);
 
-        console.log("ID = ", this.songs[clicked].ID);
+        console.log("das ist dom song title ", this.dom_player_songTitle);
+        this.dom_player_songTitle.textContent = this.songs[this.clicked].TITLE;
+        this.dom_player_songTitle.style.fontWeight = "bold";
+        this.dom_nextSong.textContent = "Next song: " + this.songs[(this.clicked+1)%this.songs.length].TITLE;
+        this.dom_nextSong.style.fontWeight = "bold";
+
+        console.log("ID = ", this.songs[this.clicked].ID);
         // song(this.API_URL + '/song/' + this.songs[clicked].ID);
         curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
+
         curSong.play();
         this.dom_play.src = "./Images/pause.png";
 
@@ -288,7 +288,7 @@ export class AudioPlayer {
 
     next() {
         currentSong = (currentSong + 1) % this.songs.length;
-        this.loadSong(currentSong);
+        this.loadSong();
         curSong.play();
     }
 
@@ -297,7 +297,7 @@ export class AudioPlayer {
         if (currentSong < 0) {
             currentSong = this.songs.length - 1;
         }
-        this.loadSong(currentSong);
+        this.loadSong();
         curSong.play();
     }
 
@@ -322,6 +322,10 @@ export class AudioPlayer {
     }
 
     close() {
-        this.dom_root.remove();
+        console.log(this.dom_root);
+        while (this.dom_root.childNodes.length > 4) {
+            console.log("las child ", this.dom_root.lastChild);
+            this.dom_root.removeChild(this.dom_root.lastChild);
+        }
     }
 }
