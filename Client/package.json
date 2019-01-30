@@ -1,0 +1,25 @@
+{
+  "name": "music-playlist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unser eigener Client zum Musik abspielen von einem Server",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oblyvion/Our-Http-Server.git"
+  },
+  "keywords": [
+    "music",
+    "friends",
+    "playlists"
+  ],
+  "author": "Julian Feß, Franz-Johannes Weber",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Oblyvion/Our-Http-Server/issues"
+  },
+  "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
+  "dependencies": {
+    "jsdoc": "^3.5.5",
+    "opener": "^1.5.1"
+  }
+}

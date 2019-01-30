@@ -2,7 +2,7 @@ import { AudioPlayer } from "./AudioPlayer.js";
 import { NavBar } from "./NavBar.js";
 export class MyAccount {
     constructor(dom) {
-        this.API_URL = 'http://192.168.178.44:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.Playlists = this.getPlaylists();
         this.dom_root = document.getElementById('app');
         this.dom_ContentMyAccount = dom;
@@ -32,7 +32,7 @@ export class MyAccount {
         this.dom_MyAccountInfoContainerScore.classList.add('MyAccountInfoContainerScore');
         this.dom_MyAccountInfoContainerScoreDiv.appendChild(this.dom_MyAccountInfoContainerScore);
         this.fetchScore().then(data => {
-            console.log("das ist data bei fetch score: ", data);
+            //console.log("das ist data bei fetch score: ", data);
             this.Score = data;
             this.dom_MyAccountInfoContainerScore.textContent = this.Score;
         });
@@ -66,13 +66,6 @@ export class MyAccount {
             console.log("Error fetching Playlists!");
         }
     }
-    close() {
-        this.dom_ContentMyAccount.classList.remove("ContentMyAccount");
-        while (this.dom_ContentMyAccount.firstChild) {
-            this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
-        }
-        this.dom_ContentMyAccount.remove();
-    }
     async fetchScore() {
         try {
             let response = await fetch(this.API_URL + "/user", {
@@ -91,6 +84,13 @@ export class MyAccount {
         catch (err) {
             console.log("Error fetching Userscore!: ", err);
         }
+    }
+    close() {
+        this.dom_ContentMyAccount.classList.remove("ContentMyAccount");
+        while (this.dom_ContentMyAccount.firstChild) {
+            this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
+        }
+        this.dom_ContentMyAccount.remove();
     }
 }
 //# sourceMappingURL=MyAccount.js.map

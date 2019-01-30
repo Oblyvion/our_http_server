@@ -1,4 +1,15 @@
+/**
+ * @class Impressum
+ * Repräsentiert die Impressum Seite.
+ */
 export class Impressum {
+    /**
+     * @constructor Impressum
+     * Konstruiert die Impressum Seite, indem alle Elemente erzeugt und appended werden.
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom) {
         this.dom_root = document.getElementById('app');
         this.dom_Impressum = dom;
@@ -16,6 +27,12 @@ export class Impressum {
         dom_ImpressumInformationContainer.appendChild(dom_ImpressumInformation2);
         dom_ImpressumInformation2.textContent = "Franz-Johannes Weber\r\nFriedrich-Ebert-Str. 72\r\nWörrstadt";
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         this.dom_Impressum.classList.remove("ContentImpressum");
         while (this.dom_Impressum.firstChild) {

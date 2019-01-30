@@ -1,9 +1,14 @@
 import {manager} from "./app.js";
+import {Registration} from "./Registration.js";
 
 console.log("port: ", localStorage.getItem("port"));
 
-export class Login implements iAppContainer {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
+/**
+ * @class Login
+ * Erzeugt den Loginscreen damit es Benutzern ermöglicht wird sich anzumelden
+ */
+export class Login implements AppContainer {
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_login: HTMLElement;
@@ -12,8 +17,12 @@ export class Login implements iAppContainer {
     private dom_loginButton;
     private dom_login_notification;
 
-    constructor(dom: HTMLElement) {
-        this.dom_root = document.getElementById("app");//dom;
+    /**
+     *@constructor Login
+     * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
+     */
+    constructor() {
+        this.dom_root = document.getElementById("app");
 
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');
@@ -37,6 +46,11 @@ export class Login implements iAppContainer {
         this.dom_login.appendChild(this.dom_loginInputID);
         this.dom_loginInputID.placeholder = "username";
         this.dom_loginInputID.type = "text";
+        this.dom_loginInputID.addEventListener("keypress", event => {
+            if (event.keyCode === 13) {
+                this.dom_loginButton.click();
+            }
+        });
 
         this.dom_loginInputPW = document.createElement('input');
         this.dom_loginInputPW.classList.add('input');
@@ -44,9 +58,7 @@ export class Login implements iAppContainer {
         this.dom_loginInputPW.placeholder = "password";
         this.dom_loginInputPW.type = "password";
         this.dom_loginInputPW.addEventListener("keypress", event => {
-            // Number 13 is the "Enter" key on the keyboard
             if (event.keyCode === 13) {
-                // Trigger the button element with a click
                 this.dom_loginButton.click();
             }
         });
@@ -63,37 +75,32 @@ export class Login implements iAppContainer {
         const dom_loginLink = document.createElement('div');
         dom_loginLink.classList.add('LinkContainer');
         this.dom_login.appendChild(dom_loginLink);
-            const dom_loginLinkText = document.createElement("p");
-            dom_loginLinkText.classList.add('LinkText');
-            dom_loginLinkText.textContent = "Not registered?";
-            dom_loginLink.appendChild(dom_loginLinkText);
+        const dom_loginLinkText = document.createElement("p");
+        dom_loginLinkText.classList.add('LinkText');
+        dom_loginLinkText.textContent = "Not registered?";
+        dom_loginLink.appendChild(dom_loginLinkText);
 
-            const newlink = document.createElement('a');
-            newlink.textContent = "Register";
-            newlink.classList.add('Link');
-            newlink.setAttribute('href', '#');
-            newlink.addEventListener('click', () => {
-                this.close();
-                new manager("register");
-            });
-            dom_loginLink.appendChild(newlink);
+        const newlink = document.createElement('a');
+        newlink.textContent = "Register";
+        newlink.classList.add('Link');
+        newlink.setAttribute('href', '#');
+        newlink.addEventListener('click', () => {
+            this.close();
+            new manager("register");
+        });
+        dom_loginLink.appendChild(newlink);
 
-        // const dom_registerButton = document.createElement('button');
-        // dom_registerButton.classList.add('button');
-        // dom_login.appendChild(dom_registerButton);
-        // dom_registerButton.textContent = "Not registered? Register";
-        // dom_registerButton.addEventListener('click', (event) => {
-        //     this.close();
-        //     new manager("register");
-        // });
     }
 
+    /**
+     * 
+     */
     private async loginUser() {
         if (this.dom_loginInputID.value !== "" && this.dom_loginInputPW.value !== "") {
-            let password = this.dom_loginInputPW.value; //= Registration.sha256(this.dom_registerPW.value);
+            let password = this.dom_loginInputPW.value; //Registration.sha256(this.dom_loginInputPW.value);
             try {
                 // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-                // console.log(`das ist body pw: ${password.toString()}`);
+                console.log(`das ist body pw: ${password.toString()}`);
                 const response = await fetch(this.API_URL + '/login', {
                     body: JSON.stringify({
                         name: this.dom_loginInputID.value,
@@ -106,29 +113,24 @@ export class Login implements iAppContainer {
                     },
                     method: 'POST',
                     mode: 'cors',
-                    // todo REST POST redirect
-                    // redirect: 'follow',
-                    // credentials: 'include',
                 });
 
                 const result: UserResult = await response.json();
 
                 // console.log("server: "+result.data.PASSWORD);
                 // console.log("client: "+password);
-                
+
                 if (!result.success) {
                     console.error(result);
                     throw "wrong data";
-                }
-                else {
+                } else {
                     this.info(`Login successful!`, '', 'success');
                     // console.log("Login.ts, loginUser: result.data = ", result.data);
-                    // console.log("HALDSAFLAFOIJDSOSJFJSAJSLFLDSAÖJAJFÖ");
                     // console.log("Login.ts, loginUser: 0localStorage = ", localStorage.getItem('token'));
                     localStorage.clear();
                     // console.log("Login.ts, loginUser: 1localStorage = ", localStorage.getItem('token'));
                     localStorage.setItem("token", result.data);
-                    console.log("Login.ts, loginUser: 2localStorage = ", localStorage.getItem('token'));
+                    // console.log("Login.ts, loginUser: 2localStorage = ", localStorage.getItem('token'));
                     this.close();
                     manager("page_first_steps");
                 }
@@ -137,14 +139,13 @@ export class Login implements iAppContainer {
                 console.log(err);
                 this.info("Login Error! Wrong username or password.", err, 'warning');
             }
-        }
-        else {
+        } else {
             this.info("Please type in username and password.", "", 'warning')
         }
     }
 
     info(message: string, headline: string = '', classname: string = 'info') {
-        if(this.dom_login_notification) {
+        if (this.dom_login_notification) {
             this.dom_login_notification.remove();
         }
         //show if registration was successful or not
@@ -154,8 +155,7 @@ export class Login implements iAppContainer {
         this.dom_login_notification.textContent = message;
         if (classname === "warning") {
             this.dom_login_notification.style.backgroundColor = "Red";
-        }
-        else {
+        } else {
             this.dom_login_notification.style.backgroundColor = "Green";
         }
     }
@@ -168,6 +168,7 @@ export class Login implements iAppContainer {
         const elem = this.dom_login;
         let pos = 150;
         const id = setInterval(frame, 5);
+
         function frame() {
             if (pos === -50) {
                 clearInterval(id);

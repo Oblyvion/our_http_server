@@ -1,4 +1,15 @@
+/**
+ * @class Contact
+ * Repräsentiert die Contact Seite.
+ */
 export class Contact {
+    /**
+     * @constructor Contact
+     * Konstruiert die Contact Seite, indem alle Elemente erzeugt und appended werden.
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom) {
         this.dom_root = document.getElementById('app');
         this.dom_Contact = dom;
@@ -16,6 +27,12 @@ export class Contact {
         dom_ContactsInformationContainer.appendChild(dom_ContactInformation);
         dom_ContactInformation.textContent = "info@music-playlist.com";
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         this.dom_Contact.classList.remove("ContentContact");
         while (this.dom_Contact.firstChild) {

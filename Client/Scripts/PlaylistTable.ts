@@ -1,7 +1,4 @@
 import {AudioPlayer} from "./AudioPlayer.js";
-import {manager} from "./app.js";
-import {response} from "express";
-import {FirstSteps} from "./FirstSteps";
 
 export class PlaylistTable {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
@@ -52,12 +49,13 @@ export class PlaylistTable {
         this.dom_content = dom_content;
         this.playlistData = PlaylistData;
         this.PlaylistID = PlaylistData.ID;
-        console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
+        //console.log("Playlist ID: IST DAS HIER: ", this.PlaylistID);
         this.Playlist.name = PlaylistData.NAME;
         this.fetchPlaylistSongs().then((result) => {
             this.Playlist.songs = result.data;
-            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, 0);
-            console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
+            this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs);
+            this.audioPlayer.loadSong(0);
+            //console.log("das SIND DIE SONGS nach erstem fetch: ", this.Playlist.songs);
             this.addPlaylistSongs();
         }).catch(err => {
             console.log(err);
@@ -89,7 +87,7 @@ export class PlaylistTable {
             this.dom_DropdownMenu.style.display = "block";
             this.fetchPlaylistMates().then((result) => {
                 this.Mates = result.data;
-                console.log("Das sind die Mates: ", this.Mates);
+                //console.log("Das sind die Mates: ", this.Mates);
             }).catch(err => {
                 console.log(err);
             });
@@ -115,17 +113,14 @@ export class PlaylistTable {
         this.dom_DropdownMenuInput.classList.add("ShareDropdownMenuInput");
         this.dom_DropdownMenuInput.setAttribute('type', "text");
         this.dom_DropdownMenuInput.onkeyup = () => {
-            //console.log("EVENT!!!!");
 
             for (let j = 0; j < this.Mates.length; j++) {
 
                 let regexp = new RegExp("(^" + this.dom_DropdownMenuInput.value + "){1}");
 
-                //console.log("DAS IST REGEXP: ", regexp);
                 if (this.Mates[j].NAME.match(regexp)) {
                     for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
                         if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
-                            console.log("hallo hier if remove!");
                             this.dom_DropdownMenuContent.children[i].remove();
                         }
                     }
@@ -134,13 +129,18 @@ export class PlaylistTable {
                     this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
                     this.dom_DropdownMenuData.setAttribute('href', '#');
                     this.dom_DropdownMenuData.addEventListener('click', () => {
+                        this.fetchAddCollabs(j).then((result) => {
+                            console.log("Fetch Collabs result: ", result);
+                            alert("Successfully added " + this.Mates[j].NAME + " as a Collaborator for this Playlist")
+                        }).catch(err => {
+                            console.log(err);
+                            alert("Failed to add Collaborator")
+                        });
                     });
                     this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
                 } else {
-                    console.log("hallo hier else!");
                     for (let i = 0; i < this.dom_DropdownMenuContent.children.length; i++) {
                         if (this.dom_DropdownMenuContent.children[i].textContent === this.Mates[j].NAME) {
-                            console.log("hallo hier else remove!");
                             this.dom_DropdownMenuContent.children[i].remove();
                         }
                     }
@@ -153,42 +153,8 @@ export class PlaylistTable {
                 }
 
             }
-
-            // for (let j = 0; j < this.Mates.length; j++) {
-            //     for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
-            //         console.log("Das ist elemNAME: " + this.Mates[j].NAME[i] + " und das ist value: " + this.dom_DropdownMenuInput.value[i]);
-            //         if (this.Mates[j].NAME[i] === this.dom_DropdownMenuInput.value[i]) {
-            //             console.log("hallo add menu content");
-            //         } else {
-            //             if (this.dom_DropdownMenuContent.childNodes) {
-            //                 this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
-            //             }
-            //         }
-            //     }
-            // }
         };
 
-
-        // this.dom_DropdownMenuInput.addEventListener('oninput', () => {
-        //     console.log("EVENT!!!!");
-        //     if(this.dom_DropdownMenuContent.firstChild) {
-        //         this.dom_DropdownMenuContent.removeChild(this.dom_DropdownMenuContent.firstChild)
-        //     }
-        //     this.Mates.forEach(elem => {
-        //         for (let i = 0; i < this.dom_DropdownMenuInput.value.length; i++) {
-        //             if(elem.NAME[i] === this.dom_DropdownMenuInput.value[i]) {
-        //                 this.dom_DropdownMenuData = document.createElement('a');
-        //                 this.dom_DropdownMenuData.textContent = elem.NAME;
-        //                 this.dom_DropdownMenuData.classList.add('ShareDropdownMenuData');
-        //                 this.dom_DropdownMenuData.setAttribute('href', '#');
-        //                 this.dom_DropdownMenuData.addEventListener('click', () => {
-        //
-        //                 });
-        //                 this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData);
-        //             }
-        //         }
-        //     })
-        // });
 
         this.dom_PlaylistHeaderAddBtn = document.createElement('img');
         this.dom_PlaylistHeaderAddBtn.classList.add('PlaylistTablePlaylistHeaderAddBtn');
@@ -318,20 +284,19 @@ export class PlaylistTable {
 
             this.dom_AddNewSongForm.style.display = "none";
 
-            request.onload = function (e) {
-                console.log("hallo @ onload");
+            request.onload = function () {
                 const obj = request.response;
-                console.log("Das ist das objekt !!!!! ", obj);
+                //console.log("Das ist das objekt: ", obj);
                 const progress = document.getElementById("progress");
                 if (obj.success === true) {
-                    console.log("Das ist das objekt msg  = ", obj.msg);
+                    // console.log("Das ist das obj.msg  = ", obj.msg);
                     alert(obj.msg);
                 } else
                     alert(obj.msg);
                 progress.style.visibility = 'hidden';
             };
 
-            request.onloadstart = function (e) {
+            request.onloadstart = function () {
                 const progress = document.getElementById("progress");
                 progress.style.visibility = 'visible';
             };
@@ -341,7 +306,7 @@ export class PlaylistTable {
 
                 if (e.lengthComputable) {
                     // start value
-                    let width = 0;
+                    let width;
                     // current value
                     width = Math.round(e.loaded / e.total * 100);
                     // show result
@@ -364,42 +329,34 @@ export class PlaylistTable {
                 },
                 method: 'GET',
                 mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
             });
 
-            const data = await response.json();
+            return await response.json();
 
-            return data;
         } catch (err) {
             console.log("Error fetching Mates!: ", err);
         }
     }
 
     async fetchPlaylistSongs() {
-        console.log("fetchPlaylistSongs(), Z.338: this.PlaylistID = ", this.PlaylistID);
-        //try {
-        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-        // console.log(`das ist body pw: ${password.toString()}`);
-        // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-        let response = await fetch(this.API_URL + "/songsuser/ " + this.PlaylistID, {
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/javascript',
-                'crossDomain': 'true',
-                'Authorization': localStorage.getItem("token")
-            },
-            method: 'GET',
-            mode: 'cors',
-            // todo REST POST redirect
-            // redirect: 'follow',
-            // credentials: 'include',
-        });
+        // console.log("this.PlaylistID = ", this.PlaylistID);
+        try {
+            let response = await fetch(this.API_URL + "/songsuser/ " + this.PlaylistID, {
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/javascript',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'GET',
+                mode: 'cors',
+            });
 
-        const data = await response.json();
+            return await response.json();
+        } catch (err) {
+            console.log("Error fetching PlaylistSongs!")
+        }
 
-        return data;
     }
 
     addPlaylistSongs() {
@@ -415,10 +372,10 @@ export class PlaylistTable {
 
                 console.log("clicked: " + clicked);
                 console.log("Playlist id: " + this.Playlist.songs[clicked].ID);
-                this.audioPlayer.close();
-                this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, clicked);
-                this.audioPlayer.loadSong();
-
+                // this.audioPlayer.close();
+                // this.audioPlayer = new AudioPlayer(this.dom_content, this.Playlist.songs, clicked);
+                this.audioPlayer.loadSong(clicked);
+                this.audioPlayer.playorpauseSong();
             });
 
             console.log("PlaylistTable.ts: this.Playlist[i].Title = ", this.Playlist.songs[i].TITLE);
@@ -440,10 +397,31 @@ export class PlaylistTable {
         }
     }
 
+    async fetchAddCollabs(index) {
+        try {
+            let response = await fetch(this.API_URL + "/collabs/" + this.PlaylistID, {
+                body: JSON.stringify({
+                    mate: this.Mates[index].NAME,
+                }),
+                cache: 'no-cache',
+                headers: {
+                    'content-type': 'application/json',
+                    'crossDomain': 'true',
+                    'Authorization': localStorage.getItem("token")
+                },
+                method: 'POST',
+                mode: 'cors',
+            });
+
+            return await response.json();
+
+        } catch (err) {
+            console.log("Error adding " + this.Mates[index].NAME + " as a Collab!: ", err);
+        }
+    }
+
     close() {
-        console.log("close wurde aufgerufen");
         while (this.dom_content.childNodes.length > 2) {
-            console.log("last child ", this.dom_content.lastChild);
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
     }

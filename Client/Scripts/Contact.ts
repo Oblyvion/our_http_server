@@ -1,7 +1,18 @@
+/**
+ * @class Contact
+ * Repräsentiert die Contact Seite.
+ */
 export class Contact {
     private dom_root: HTMLElement;
     private dom_Contact: HTMLElement;
 
+    /**
+     * @constructor Contact
+     * Konstruiert die Contact Seite, indem alle Elemente erzeugt und appended werden.
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom: HTMLElement) {
         this.dom_root = document.getElementById('app');
 
@@ -25,6 +36,12 @@ export class Contact {
 
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         this.dom_Contact.classList.remove("ContentContact");
         while (this.dom_Contact.firstChild) {

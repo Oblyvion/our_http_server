@@ -1,16 +1,17 @@
-
-// let song;
 let dom_player_slider: HTMLInputElement;
 let dom_player_current: HTMLElement;
 let dom_player_duration: HTMLElement;
 let dom_volume_slider: HTMLInputElement;
-let currentSong;
 let curSong = new Audio();
 
+/**
+ * @class AudioPlayer
+ * erstellt den AudioPlayer, mit welchem Musik abgespielt werden kann
+ */
 export class AudioPlayer {
 
-    // public Songs = [
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
+
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_logoDiv: HTMLElement;
@@ -28,25 +29,23 @@ export class AudioPlayer {
     private dom_volume_up;
     private dom_nextSong: HTMLElement;
 
-    // private song: HTMLAudioElement;
-    //     "Bad_Habit_Terrasound.mp3",
-    //     "Dark_Blue_Echoes.mp3",
-    // if (song === undefined) {
-
-    // ];
     private songs;
     private clicked;
 
-    constructor(dom: HTMLElement, Songs, songclicked) {
+
+    /**
+     * @constructor
+     * Erzeugt und appended alle DOM elemente, die zum AudioPlayer gehören
+     * @param {HTMLElement} dom - An dieser Stelle im DOM soll der Audioplayer appended werden
+     * @param Songs - Dieser Array enthält alle Songs der aufgerufenen Playlist, welche den Audioplayer erzeugt hat
+     * @param songclicked - dieser Parameter gibt an auf welchen Song in der Playlist geklickt wurde.
+     */
+    constructor(dom: HTMLElement, Songs) {
 
 
         this.songs = Songs;
 
-        this.clicked = songclicked;
-
         this.dom_root = dom;
-
-        //this.loadSong(0);
 
         this.dom = document.createElement('div');
         this.dom.classList.add('AudioPlayer_Container');
@@ -68,7 +67,7 @@ export class AudioPlayer {
         this.dom_player_songTitle = document.createElement('div');
         this.dom_player_songTitle.classList.add('AudioPlayer_SongTitle');
         this.dom_player.appendChild(this.dom_player_songTitle);
-        this.dom_player_songTitle.textContent = "Song Title goes in here...";
+        this.dom_player_songTitle.textContent = "Song Title goes in here... if you click on a Playlist";
 
         dom_player_slider = document.createElement('input');
         dom_player_slider.classList.add('AudioPlayer_Slider');
@@ -125,12 +124,6 @@ export class AudioPlayer {
         this.dom_play.addEventListener('click', () => {
             this.playorpauseSong();
         });
-        // this.dom_play.addEventListener('mouseover', () => {
-        //     this.dom_play.style.width = "65px";
-        // }
-        // this.dom_play.addEventListener('mouseleave', () => {
-        //     this.dom_play.style.width = "60px";
-        // });
 
 
         this.dom_forward = document.createElement("img");
@@ -186,104 +179,123 @@ export class AudioPlayer {
         this.dom_player_controllers.appendChild(this.dom_nextSong);
         this.dom_nextSong.textContent = "Next Song: Next song will go in here...";
 
-        //this.loadSong(0);
+        curSong.addEventListener("ended", () => {
+            this.clicked = (this.clicked + 1) % this.songs.length;
+            this.loadSong(this.clicked);
+            this.playorpauseSong();
+        })
+
     }
 
-    // } else
-    public loadSong() {
-        console.log("hallllo");
-        console.log("song = ", curSong);
-        console.log("song.id: ", this.songs[this.clicked].ID);
-        console.log("song element: ", this.songs[this.clicked]);
+    /**
+     * @function loadsong()
+     * weist der Source des Audioobjekts die Route des Servers zu, auf welcher der Song gestreamt wird.
+     * @param clicked - Der Index des Songs der aus this.songs gespielt werden soll
+     */
+    public loadSong(clicked) {
+        // console.log("song = ", curSong);
+        // console.log("song.id: ", this.songs[this.clicked].ID);
+        // console.log("song element: ", this.songs[this.clicked]);
+        // console.log("Title: ", this.songs[this.clicked].TITLE);
+        this.clicked = clicked;
         try {
             curSong.src = this.API_URL + '/song/' + this.songs[this.clicked].ID;
-        }
-        catch (err) {
-            alert("Failed to play song");
+        } catch (err) {
+            alert("Failed to load song");
             console.log(err);
         }
-        console.log("Title: ", this.songs[this.clicked].TITLE);
 
-        console.log("das ist dom song title ", this.dom_player_songTitle);
         this.dom_player_songTitle.textContent = this.songs[this.clicked].TITLE;
         this.dom_player_songTitle.style.fontWeight = "bold";
-        this.dom_nextSong.textContent = "Next song: " + this.songs[(this.clicked+1)%this.songs.length].TITLE;
+        this.dom_nextSong.textContent = "Next song: " + this.songs[(this.clicked + 1) % this.songs.length].TITLE;
         this.dom_nextSong.style.fontWeight = "bold";
 
-        console.log("ID = ", this.songs[this.clicked].ID);
-        // song(this.API_URL + '/song/' + this.songs[clicked].ID);
         curSong.addEventListener('loadedmetadata', () => {
             this.showDuration();
         });
 
-        curSong.play();
-        this.dom_play.src = "./Images/pause.png";
-
         setInterval(this.updateSongSlider, 100);
-
-        // this.fetchSong(clicked)
-        //     .then( data => {
-        //         console.log(data);
-        //         //song.src = data.PATH;
-        //     })
-        //     .catch( err => {
-        //         console.log(err);
-        //     })
     }
 
-    private async fetchSong(clicked) {
-        try {
-            let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
-                cache: 'no-cache',
-                headers: {
-                    // 'content-type': 'application/octet-stream',
-                    'content-type': 'audio/mpeg',
-                    // 'content-disposition': 'inline',
-                    'crossDomain': 'true',
-                    'Authorization': localStorage.getItem("token")
-                },
-                method: 'GET',
-                mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
-            });
-            console.log("HDSAFJLDSA RESPONSE = ", response);
-            const data = await response;
-            console.log("HDSAFJLDSA RESPONSE = ", data);
+    // Ich hätte die Songs gerne über fetch geholt jedoch konnte ich in der kurzen Zeit leider nicht richtig verstehen
+    // wie das fetchen mit einem ReadableStream funktioniert, welcher vom Server geliefert wird.
+    //
+    // private async fetchSong(clicked) {
+    //     try {
+    //         let response = await fetch(this.API_URL + "/song/" + this.songs[clicked].ID, {
+    //             cache: 'no-cache',
+    //             headers: {
+    //                 // 'content-type': 'application/octet-stream',
+    //                 'content-type': 'audio/mpeg',
+    //                 // 'content-disposition': 'inline',
+    //                 'crossDomain': 'true',
+    //                 'Authorization': localStorage.getItem("token")
+    //             },
+    //             method: 'GET',
+    //             mode: 'cors',
+    //         });
+    //
+    //         const data = await response;
+    //
+    //         return data;
+    //     } catch (err) {
+    //         console.log("Error fetching Mates!: ", err);
+    //     }
+    // }
 
-            return data;
-        } catch (err) {
-            console.log("Error fetching Mates!: ", err);
-        }
-    }
 
-
+    /**
+     * @function updateSongSlider()
+     * zeigt den Abspielprozess an, also die currentTime des Audioobjekts wird gerundet und
+     * auf dem Slider angezeigt.
+     */
     updateSongSlider() {
-        //console.log("hallo hier curSong!: ", this.curSong);
         let c = Math.round(curSong.currentTime);
         dom_player_slider.value = c.toString();
         dom_player_current.textContent = AudioPlayer.convertTime(c);
     }
 
-    static convertTime(secs) {
-        let min = Math.floor(secs / 60).toString();
-        let sec = (secs % 60).toString();
-        min = (+min < 10) ? "0" + min : min;
-        sec = (+sec < 10) ? "0" + sec : sec;
-        return (min + ":" + sec)
+    /**
+     * @function convertTime()
+     * da die duration, currentTime etc nur in Sekunden abgerufen werden kann, wird mit dieser Methode eine
+     * Stunden, Minuten und Sekunden Ausgabe erzeugt.
+     * @param time - Eingabe der Sekunden zum konvertieren
+     * @return - im Format "1:01" or "4:03:59" or "123:03:59" wird das result zurückgeliefert
+     */
+    static convertTime(time) {
+        const hrs = ~~(time / 3600);
+        const mins = ~~((time % 3600) / 60);
+        const secs = ~~time % 60;
+
+        let ret = "";
+
+        if (hrs > 0) {
+            ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
+        return ret;
     }
 
+    /**
+     * @function showDuration
+     * rundet zu erst die Duration des Audioobjekts und konvertiert sie danach mit Hilfe der convertTime Funktion
+     */
     showDuration() {
+        //console.log("das ist die angegebene song duration: ", curSong.duration);
         let d = Math.floor(curSong.duration);
-        //console.log(d);
+        console.log(d);
         dom_player_slider.setAttribute("max", d.toString());
         dom_player_duration.textContent = AudioPlayer.convertTime(d);
     }
 
+    /**
+     * @function playorpauseSong()
+     * spielt ein pausiertes Audioobjekt ab beziehungsweise pausiert ein momentan gespieltes Audioobjekt
+     */
     playorpauseSong() {
         if (curSong.paused) {
-            console.log("hier wurde play aufgereufen ");
             curSong.play();
             this.dom_play.src = "./Images/pause.png";
         } else {
@@ -292,34 +304,59 @@ export class AudioPlayer {
         }
     }
 
+    /**
+     * @function next()
+     * spielt den nächsten Titel in der Reihenfolge der Playlist ab
+     */
     next() {
-        currentSong = (currentSong + 1) % this.songs.length;
-        this.loadSong();
-        curSong.play();
+        this.clicked = (this.clicked + 1) % this.songs.length;
+        this.loadSong(this.clicked);
+        this.playorpauseSong();
     }
 
+    /**
+     * @function previous()
+     * spielt den vorherigen Titel in der Reihenfolge der Playlist ab
+     */
     previous() {
-        currentSong--;
-        if (currentSong < 0) {
-            currentSong = this.songs.length - 1;
+        this.clicked--;
+        if (this.clicked < 0) {
+            this.clicked = this.songs.length - 1;
         }
-        this.loadSong();
-        curSong.play();
+        this.loadSong(this.clicked);
+        this.playorpauseSong();
     }
 
+    /**
+     * @function forward()
+     * springt im Song zehn Sekunden nach vorne
+     */
     forward() {
         curSong.currentTime = curSong.currentTime + 10;
     }
 
+    /**
+     * @function forward()
+     * springt im Song zehn Sekunden zurück
+     */
     backward() {
         curSong.currentTime = curSong.currentTime - 10;
     }
 
+    /**
+     * @function seekSong()
+     * ermöglicht es mit dem Slider durch den Song zu springen zu einer beliebigen Stelle
+     */
     seekSong() {
         curSong.currentTime = dom_player_slider.valueAsNumber;
         dom_player_current.textContent = AudioPlayer.convertTime(curSong.currentTime);
     }
 
+    /**
+     *@function adjustVolume()
+     * ermöglicht es die Lautstärke des abgespielten Audioobjekts anzupassen.
+     * Ist die Lautstärke lautlos so ändert sich das entsprechende Symbol zur Lautstärkeanzeige
+     */
     adjustVolume() {
         curSong.volume = dom_volume_slider.valueAsNumber;
         if (curSong.volume === 0) {
@@ -327,10 +364,14 @@ export class AudioPlayer {
         } else this.dom_volume_down.src = "./Images/volume_down.png";
     }
 
+    /**
+     * @function close()
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         console.log(this.dom_root);
         while (this.dom_root.childNodes.length > 4) {
-            console.log("las child ", this.dom_root.lastChild);
             this.dom_root.removeChild(this.dom_root.lastChild);
         }
     }

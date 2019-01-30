@@ -2,19 +2,19 @@ import {NewPlaylistMate} from "./NewPlaylistMate.js";
 import {manager} from "./app.js";
 
 export class MyPlaylistMates {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
-    private dom_root:HTMLElement;
-    private dom_content:HTMLElement;
-    private dom_divPlaylistMates:HTMLDivElement;
-    private dom_divMatesHeader:HTMLDivElement;
-    private dom_Table:HTMLTableElement;
-    private dom_TableHeader:HTMLTableRowElement;
-    private dom_TableHeaderName1:HTMLTableCaptionElement;
-    private dom_TableHeaderName2:HTMLTableCaptionElement;
-    private dom_TableHeaderName3:HTMLTableCaptionElement;
-    private dom_divMatesHeaderButtons:HTMLElement;
-    private dom_MatesHeaderAddBtn:HTMLImageElement;
-    private dom_divMatesHeaderName:HTMLDivElement;
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private dom_root: HTMLElement;
+    private dom_content: HTMLElement;
+    private dom_divPlaylistMates: HTMLDivElement;
+    private dom_divMatesHeader: HTMLDivElement;
+    private dom_Table: HTMLTableElement;
+    private dom_TableHeader: HTMLTableRowElement;
+    private dom_TableHeaderName1: HTMLTableCaptionElement;
+    private dom_TableHeaderName2: HTMLTableCaptionElement;
+    private dom_TableHeaderName3: HTMLTableCaptionElement;
+    private dom_divMatesHeaderButtons: HTMLElement;
+    private dom_MatesHeaderAddBtn: HTMLImageElement;
+    private dom_divMatesHeaderName: HTMLDivElement;
 
     private Mates;
     private sharedPlaylists = [];
@@ -96,23 +96,20 @@ export class MyPlaylistMates {
                 },
                 method: 'GET',
                 mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
             });
 
             const data = await response.json();
 
             return data;
         } catch (err) {
-            console.log("Error fetching Mates!: ",err);
+            console.log("Error fetching Mates!: ", err);
         }
     }
 
     async fetchSharedPlaylistsProMate(mate) {
         try {
-            console.log("Das ist mate: ", mate);
-            let response = await fetch(this.API_URL + "/playlistMates/sharedPlaylists/"+mate, {
+            //console.log("Das ist mate: ", mate);
+            let response = await fetch(this.API_URL + "/playlistMates/sharedPlaylists/" + mate, {
                 cache: 'no-cache',
                 headers: {
                     'content-type': 'application/javascript',
@@ -121,67 +118,59 @@ export class MyPlaylistMates {
                 },
                 method: 'GET',
                 mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
             });
 
             const data = await response.json();
 
             return data;
         } catch (err) {
-            console.log("Error fetching Mates!: ",err);
+            console.log("Error fetching Mates!: ", err);
         }
     }
-
 
     addMatesToTable() {
-        for (let i = 0; i<this.Mates.length; i++) {
+        for (let i = 0; i < this.Mates.length; i++) {
             if (this.Mates[i].REQUEST === 1) {
-            const dom_TableData = document.createElement('tr');
-            dom_TableData.classList.add('TableDataRow');
-            this.dom_Table.appendChild(dom_TableData);
+                const dom_TableData = document.createElement('tr');
+                dom_TableData.classList.add('TableDataRow');
+                this.dom_Table.appendChild(dom_TableData);
 
-            const dom_TableDataName = document.createElement('td');
-            dom_TableDataName.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataName);
-            dom_TableDataName.textContent = this.Mates[i].NAME;
+                const dom_TableDataName = document.createElement('td');
+                dom_TableDataName.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataName);
+                dom_TableDataName.textContent = this.Mates[i].NAME;
 
-            const dom_TableDataSharedPlaylists = document.createElement('td');
-            dom_TableDataSharedPlaylists.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataSharedPlaylists);
+                const dom_TableDataSharedPlaylists = document.createElement('td');
+                dom_TableDataSharedPlaylists.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataSharedPlaylists);
 
-            console.log("Das ist i: ", i);
-            this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
-                console.log("Das ist RESUL!: ", result.data);
-                console.log("Das sind die sharedplaylist counts: ", result.data.countSharedPlaylists);
-                this.sharedPlaylists.push(result.data.countSharedPlaylists);
-                console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
-                if (this.sharedPlaylists[i] > 0) {
-                    dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
+                //console.log("Das ist i: ", i);
+                this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
+                    // console.log("Das ist RESULT!: ", result.data);
+                    // console.log("Das sind die sharedplaylist counts: ", result.data.countSharedPlaylists);
+                    this.sharedPlaylists.push(result.data.countSharedPlaylists);
+                    if (this.sharedPlaylists[i] > 0) {
+                        dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
+                    } else {
+                        dom_TableDataSharedPlaylists.textContent = "-";
+                        dom_TableDataSharedPlaylists.style.fontWeight = "bold";
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+
+                const dom_TableDataScore = document.createElement('td');
+                dom_TableDataScore.classList.add('TableData');
+                dom_TableData.appendChild(dom_TableDataScore);
+                if (this.Mates[i].SCORE > 0) {
+                    dom_TableDataScore.textContent = this.Mates[i].SCORE;
+                } else {
+                    dom_TableDataScore.textContent = "-";
+                    dom_TableDataScore.style.fontWeight = "bold";
                 }
-                else {
-                    dom_TableDataSharedPlaylists.textContent = "-";
-                    dom_TableDataSharedPlaylists.style.fontWeight = "bold";
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-
-            const dom_TableDataScore = document.createElement('td');
-            dom_TableDataScore.classList.add('TableData');
-            dom_TableData.appendChild(dom_TableDataScore);
-            if (this.Mates[i].SCORE > 0) {
-                dom_TableDataScore.textContent = this.Mates[i].SCORE;
             }
-            else {
-                dom_TableDataScore.textContent = "-";
-                dom_TableDataScore.style.fontWeight = "bold";
-            }
-        }
         }
     }
-
 
     close() {
         while (this.dom_content.firstChild) {

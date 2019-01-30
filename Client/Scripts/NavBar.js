@@ -2,20 +2,19 @@ import { PlaylistTable } from "./PlaylistTable.js";
 export class NavBar {
     constructor(dom_body, dom_content) {
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
-        this.dom_span_array = [];
         this.fetchPlaylists().then((result) => {
             this.OwnlistofPlaylists = result.data;
             this.addPlaylistNames(this.OwnlistofPlaylists, true);
         })
             .catch(err => {
-            console.log("NavBar.ts, constructor aufruf fetchPlaylists = ", err);
+            console.log("NavBar.ts, constructor Aufruf fetchPlaylists = ", err);
         });
         this.fetchCollaboratedPlaylists().then((result) => {
             this.CollaboratedPlaylists = result.data;
             this.addPlaylistNames(this.CollaboratedPlaylists, false);
         })
             .catch(err => {
-            console.log("NavBar.ts, constructor aufruf fetchCollaboratedPlaylists = ", err);
+            console.log("NavBar.ts, constructor Aufruf fetchCollaboratedPlaylists = ", err);
         });
         this.dom_root = dom_body;
         this.dom_content = dom_content;
@@ -33,20 +32,21 @@ export class NavBar {
         this.dom_addButtonImg.addEventListener('click', () => {
             if (this.dom_newplaylist.style.display === "block") {
                 if (this.dom_newplaylist.value.length > 1) {
-                    this.insertNewPlaylist(this.dom_newplaylist.value);
+                    this.insertNewPlaylist(this.dom_newplaylist.value).then(() => {
+                    })
+                        .catch(err => {
+                        console.log(err);
+                    });
                     this.dom_newplaylist.value = null;
                     this.fetchPlaylists().then((result) => {
-                        //this.dom_UList.removeChild()
                         while (this.dom_UList.firstChild) {
                             this.dom_UList.removeChild(this.dom_UList.firstChild);
                         }
-                        // console.log("das ist die GELÖSCHTE list of playlists: ", this.listofPlaylists);
                         this.OwnlistofPlaylists = result.data;
-                        // console.log("das ist list of playlists nach dem 2. fetch: ", this.listofPlaylists);
                         this.addPlaylistNames(this.OwnlistofPlaylists, true);
                     })
                         .catch(err => {
-                        console.log("NavBar.ts, constructor = ", err);
+                        console.log("NavBar.ts, ", err);
                     });
                 }
                 this.dom_newplaylist.style.display = "none";
@@ -73,26 +73,9 @@ export class NavBar {
         this.dom_UList2 = document.createElement('ul');
         this.dom_UList2.classList.add("NavBarCollabList");
         this.dom_divNavBar.appendChild(this.dom_UList2);
-        // this.dom_divNavBarToggle = document.createElement('div');
-        // this.dom_divNavBarToggle.classList.add("NavBarDivToggle");
-        // this.dom_divNavBar.appendChild(this.dom_divNavBarToggle);
-        // this.dom_divNavBarToggle.addEventListener('click', () => {
-        //     this.toggleNavBar();
-        //     this.moveBurgerButton();
-        //     this.changeColorOfSpan();
-        // });
-        //
-        //     for(let i = 0; i<3; i++) {
-        //         this.dom_span_array[i] = document.createElement('span');
-        //         this.dom_span_array[i].classList.add("NavBarSpan");
-        //         this.dom_divNavBarToggle.appendChild(this.dom_span_array[i]);
-        //     }
     }
     async fetchPlaylists() {
-        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-        // console.log(`das ist body pw: ${password.toString()}`);
         try {
-            // console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
             let response = await fetch(this.API_URL + "/playlists/", {
                 cache: 'no-cache',
                 headers: {
@@ -104,19 +87,14 @@ export class NavBar {
                 mode: 'cors'
             });
             let data = await response.json();
-            console.log("NavBar.ts, fetchPlaylists: data = ", data.data);
             return data;
-            // return await response.json();
         }
         catch (err) {
             console.log("NavBar.ts, fetchPlaylists: ERROR = ", err);
         }
     }
     async fetchCollaboratedPlaylists() {
-        // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-        // console.log(`das ist body pw: ${password.toString()}`);
         try {
-            // console.log("hallo hier local storageeeeee " + localStorage.getItem("token"));
             let response = await fetch(this.API_URL + "/playlists/collabs", {
                 cache: 'no-cache',
                 headers: {
@@ -128,16 +106,14 @@ export class NavBar {
                 mode: 'cors',
             });
             let data = await response.json();
-            console.log("NavBar.ts, fetchCollaboratedPlaylists: data = ", data.data);
             return data;
-            // return await response.json();
         }
         catch (err) {
             console.log("NavBar.ts, fetchCollaboratedPlaylists: ERROR = ", err);
         }
     }
     addPlaylistNames(playlists, ownornot) {
-        console.log("länge: ", playlists.length);
+        //console.log("länge: ", playlists.length);
         if (ownornot) {
             for (let i = 0; i < this.OwnlistofPlaylists.length; i++) {
                 this.dom_ListElement = document.createElement('li');
@@ -168,11 +144,6 @@ export class NavBar {
             this.setNamesofPlaylists(false);
         }
     }
-    // deletePlaylist() {
-    //     console.log("0NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
-    //     this.listofPlaylists = {};
-    //     console.log("1NavBar.ts, deletePlaylist: PLAYLIST = ", this.listofPlaylists);
-    // }
     setNamesofPlaylists(own) {
         if (own) {
             let n = this.dom_UList.childNodes.length;
@@ -217,20 +188,8 @@ export class NavBar {
             console.log(err);
         }
     }
-    toggleNavBar() {
-        this.dom_divNavBar.classList.toggle('active');
-    }
-    moveBurgerButton() {
-        this.dom_divNavBarToggle.classList.toggle("active");
-    }
-    changeColorOfSpan() {
-        this.dom_span_array.forEach((elem) => {
-            elem.classList.toggle('active');
-        });
-    }
     clearContent() {
         while (this.dom_content.childNodes.length > 2) {
-            console.log("last child ", this.dom_content.lastChild);
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
     }

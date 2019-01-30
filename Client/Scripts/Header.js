@@ -2,7 +2,18 @@ import { manager } from "./app.js";
 import { MyPlaylistMates } from "./MyPlaylistMates.js";
 import { NewPlaylistMate } from "./NewPlaylistMate.js";
 import { RequestPage } from "./RequestPage.js";
+/**
+ * @class Header
+ * Generiert den Header für die gesamte Application
+ */
 export class Header {
+    /**
+     * @constructor Header
+     * Konstruiert den Header je nach dem was die Page für einen Header braucht werden Teile entfernt oder hinzugefügt
+     *
+     * @param dom_body - DOM Element, welches den gesamten Body der Website enthält
+     * @param dom_content - Dom Element, welches dem Bereich unter dem Header zugeordnet wird
+     */
     constructor(dom_body, dom_content) {
         this.dom_root = dom_body;
         this.dom_content = dom_content;
@@ -39,9 +50,19 @@ export class Header {
         });
         this.dom_about_contact_imp_container.appendChild(this.dom_imp);
     }
+    /**
+     * @function set()
+     *
+     * setzt den Headertext
+     * @param text - dieser Parameter wird an Music Playlist angehängt und ergibt zusammengefügt den Headertext
+     */
     set(text) {
         this.dom_header.textContent = `Music Playlist ${text}`;
     }
+    /**
+     * @function removeRightButtons()
+     * Entfernt die rechten Buttons, wenn eine Area betreten wird in der es sie nicht gibt zb. Login
+     */
     removeRightButtons() {
         if (this.dom_ButtonContainer != undefined) {
             while (this.dom_ButtonContainer.firstChild) {
@@ -51,6 +72,9 @@ export class Header {
             this.dom_DropdownMenuContent.remove();
         }
     }
+    /**
+     * @function setRightButtons()
+     */
     setRightButtons() {
         this.removeRightButtons();
         //Header Right
@@ -65,6 +89,7 @@ export class Header {
         this.dom_HeaderAccountBttn.style.width = "25px";
         this.dom_HeaderAccountBttn.style.width = "25px";
         this.dom_HeaderAccountBttn.addEventListener('mouseover', () => {
+            this.dom_DropdownMenu.style.display = "block";
             this.dom_DropdownMenuContent.style.display = "block";
         });
         this.dom_DropdownMenu = document.createElement('div');
@@ -72,6 +97,7 @@ export class Header {
         this.dom_DropdownMenu.classList.add('HeaderDropdownMenu');
         this.dom_DropdownMenu.addEventListener('mouseleave', () => {
             this.dom_DropdownMenuContent.style.display = "none";
+            this.dom_DropdownMenu.style.display = "none";
         });
         this.dom_DropdownMenuContent = document.createElement('div');
         this.dom_DropdownMenu.appendChild(this.dom_DropdownMenuContent);

@@ -1,17 +1,16 @@
-
 import {AudioPlayer} from "./AudioPlayer.js";
 import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
 
 export class MyAccount {
-    private API_URL = 'http://192.168.178.44:'+localStorage.getItem("port");
+    private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_ContentMyAccount: HTMLElement;
     private dom_MyAccountContainer: HTMLDivElement;
     private audioPlayer: AudioPlayer;
     private navBar: NavBar;
     private Playlists;
-    private dom_MyAccountInfoContainer:HTMLDivElement;
+    private dom_MyAccountInfoContainer: HTMLDivElement;
     private dom_divMyAccHeader: HTMLDivElement;
     private dom_divMyAccHeaderUserName: HTMLDivElement;
     private dom_MyAccountInfoContainerScoreDiv: HTMLDivElement;
@@ -56,8 +55,8 @@ export class MyAccount {
         this.dom_MyAccountInfoContainerScore.classList.add('MyAccountInfoContainerScore');
         this.dom_MyAccountInfoContainerScoreDiv.appendChild(this.dom_MyAccountInfoContainerScore);
 
-        this.fetchScore().then( data => {
-            console.log("das ist data bei fetch score: ", data);
+        this.fetchScore().then(data => {
+            //console.log("das ist data bei fetch score: ", data);
             this.Score = data;
             this.dom_MyAccountInfoContainerScore.textContent = this.Score;
         });
@@ -65,7 +64,7 @@ export class MyAccount {
 
     }
 
-    parseJwt (token) {
+    parseJwt(token) {
         let base64Url = token.split('.')[1];
         let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         return JSON.parse(window.atob(base64));
@@ -85,9 +84,6 @@ export class MyAccount {
                 },
                 method: 'GET',
                 mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
             });
 
             const result = await playlists.json();
@@ -95,18 +91,9 @@ export class MyAccount {
             console.log("DAS IST RESULT: ", result.data);
 
             return result.data;
-        }
-        catch(err) {
+        } catch (err) {
             console.log("Error fetching Playlists!")
         }
-    }
-
-    close() {
-        this.dom_ContentMyAccount.classList.remove("ContentMyAccount");
-        while (this.dom_ContentMyAccount.firstChild) {
-            this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
-        }
-        this.dom_ContentMyAccount.remove();
     }
 
     private async fetchScore() {
@@ -120,16 +107,21 @@ export class MyAccount {
                 },
                 method: 'GET',
                 mode: 'cors',
-                // todo REST POST redirect
-                // redirect: 'follow',
-                // credentials: 'include',
             });
 
             const data = await response.json();
 
             return data;
         } catch (err) {
-            console.log("Error fetching Userscore!: ",err);
+            console.log("Error fetching Userscore!: ", err);
         }
+    }
+
+    close() {
+        this.dom_ContentMyAccount.classList.remove("ContentMyAccount");
+        while (this.dom_ContentMyAccount.firstChild) {
+            this.dom_ContentMyAccount.removeChild(this.dom_ContentMyAccount.firstChild);
+        }
+        this.dom_ContentMyAccount.remove();
     }
 }

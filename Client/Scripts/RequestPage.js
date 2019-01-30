@@ -5,7 +5,7 @@ export class RequestPage {
         this.dom_content = dom_content;
         this.fetchRequests().then((result) => {
             this.Requests = result.data;
-            console.log("Das sind die Requests: ", this.Requests);
+            //console.log("Das sind die Requests: ", this.Requests);
             this.addRequestContainers();
         }).catch(err => {
             console.log(err);
@@ -37,7 +37,7 @@ export class RequestPage {
                 mode: 'cors',
             });
             const data = await response.json();
-            console.log("das ist die antwort des Servers auf fetch /users : ", data);
+            //console.log("das ist die Antwort des Servers auf fetch /users : ", data);
             return data;
         }
         catch (err) {
@@ -112,9 +112,9 @@ export class RequestPage {
                     const elements = form.elements;
                     // @ts-ignore
                     if (elements[0].checked) {
-                        console.log("radio button accept 1");
+                        //console.log("radio button accept 1");
                         this.sendRequestResponse(i, 1).then((result) => {
-                            console.log("Das ist /playlistmate/request: ", result);
+                            //console.log("Das ist /playlistmate/request: ", result);
                             alert("You have accepted the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
@@ -122,9 +122,9 @@ export class RequestPage {
                         });
                     }
                     else {
-                        console.log("radio button decline 0");
+                        //console.log("radio button decline 0");
                         this.sendRequestResponse(i, 0).then((result) => {
-                            console.log("Das ist /playlistmate/request: ", result);
+                            //console.log("Das ist /playlistmate/request: ", result);
                             alert("You have declined the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
@@ -138,25 +138,10 @@ export class RequestPage {
     processForm(e) {
         if (e.preventDefault())
             e.preventDefault();
-        // const radios = document.getElementsByName('radiobtn');
-        //
-        // for (let i = 0, length = radios.length; i < length; i++)
-        // {
-        //     if (radios[i].checked)
-        //     {
-        //         // do whatever you want with the checked radio
-        //         alert(radios[i].value);
-        //
-        //         // only one radio can be logically checked, don't check the rest
-        //         break;
-        //     }
-        // }
-        /* do what you want with the form */
-        // You must return false to prevent the default form behavior
         return false;
     }
     async sendRequestResponse(index, value) {
-        console.log("Mates Name! ", this.Requests[index].NAME);
+        //console.log("Mates Name! ",this.Requests[index].NAME);
         try {
             let response = await fetch(this.API_URL + "/playlistMates/request", {
                 body: JSON.stringify({
@@ -173,11 +158,11 @@ export class RequestPage {
                 mode: 'cors',
             });
             const data = await response.json();
-            console.log("das ist die antwort des Servers auf fetch /playlistmate/request : ", data);
+            //console.log("das ist die Antwort des Servers auf fetch /playlistmate/request : ", data);
             return data;
         }
         catch (err) {
-            console.log("Error fetching /playlistMates/request!: ", err);
+            console.log("Error fetching /playlistMates/request: ", err);
         }
     }
 }

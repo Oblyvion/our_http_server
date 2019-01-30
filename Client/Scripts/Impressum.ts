@@ -1,7 +1,18 @@
+/**
+ * @class Impressum
+ * Repräsentiert die Impressum Seite.
+ */
 export class Impressum {
     private dom_root: HTMLElement;
     private dom_Impressum: HTMLElement;
 
+    /**
+     * @constructor Impressum
+     * Konstruiert die Impressum Seite, indem alle Elemente erzeugt und appended werden.
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom: HTMLElement) {
         this.dom_root = document.getElementById('app');
 
@@ -25,6 +36,12 @@ export class Impressum {
 
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         this.dom_Impressum.classList.remove("ContentImpressum");
         while (this.dom_Impressum.firstChild) {

@@ -78,7 +78,7 @@ export class MyPlaylistMates {
     }
     async fetchSharedPlaylistsProMate(mate) {
         try {
-            console.log("Das ist mate: ", mate);
+            //console.log("Das ist mate: ", mate);
             let response = await fetch(this.API_URL + "/playlistMates/sharedPlaylists/" + mate, {
                 cache: 'no-cache',
                 headers: {
@@ -109,12 +109,11 @@ export class MyPlaylistMates {
                 const dom_TableDataSharedPlaylists = document.createElement('td');
                 dom_TableDataSharedPlaylists.classList.add('TableData');
                 dom_TableData.appendChild(dom_TableDataSharedPlaylists);
-                console.log("Das ist i: ", i);
+                //console.log("Das ist i: ", i);
                 this.fetchSharedPlaylistsProMate(this.Mates[i].NAME).then((result) => {
-                    console.log("Das ist RESUL!: ", result.data);
-                    console.log("Das sind die sharedplaylist counts: ", result.data.countSharedPlaylists);
+                    // console.log("Das ist RESULT!: ", result.data);
+                    // console.log("Das sind die sharedplaylist counts: ", result.data.countSharedPlaylists);
                     this.sharedPlaylists.push(result.data.countSharedPlaylists);
-                    console.log("Das sind die sharedplaylist counts in der variable: ", this.sharedPlaylists[i]);
                     if (this.sharedPlaylists[i] > 0) {
                         dom_TableDataSharedPlaylists.textContent = this.sharedPlaylists[i];
                     }

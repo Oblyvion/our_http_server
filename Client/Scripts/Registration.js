@@ -31,7 +31,12 @@ export class Registration {
         this.dom_register.appendChild(dom_registerButton);
         dom_registerButton.textContent = "Register";
         dom_registerButton.addEventListener('click', () => {
-            this.registerUser();
+            this.registerUser().then(() => {
+                setTimeout(() => {
+                    this.close();
+                    new manager("login");
+                }, 1700);
+            });
         });
         const dom_registerLink = document.createElement('div');
         dom_registerLink.classList.add('LinkContainer');
@@ -49,23 +54,16 @@ export class Registration {
             new manager("login");
         });
         dom_registerLink.appendChild(newlink);
-        // const dom_toLoginButton = document.createElement('button');
-        // dom_toLoginButton.classList.add('button');
-        // this.dom_register.appendChild(dom_toLoginButton);
-        // dom_toLoginButton.textContent = "Already registered? Login!";
-        // dom_toLoginButton.addEventListener('click', () => {
-        //     this.close();
-        //     new manager("login");
-        // });
     }
     async registerUser() {
-        let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
+        let password = this.dom_registerPW.value;
+        //password = Registration.sha256(password);
         if (this.dom_registerID.value.length > 1) {
             try {
                 if (this.dom_registerPW.value.length > 3) {
-                    console.log("PW too short = ", this.dom_registerPW.value.length);
-                    console.log(`das ist body name: ${this.dom_registerID.value}`);
-                    console.log(`das ist body pw: ${password.toString()}`);
+                    // console.log("PW too short = ", this.dom_registerPW.value.length);
+                    // console.log(`das ist body name: ${this.dom_registerID.value}`);
+                    // console.log(`das ist body pw: ${password.toString()}`);
                     const response = await fetch(this.API_URL + '/user/', {
                         body: JSON.stringify({
                             name: this.dom_registerID.value,
@@ -116,16 +114,16 @@ export class Registration {
             this.dom_register_notification.style.backgroundColor = "Green";
         }
     }
-    // static async sha256(message: string) {
-    //     // encode as UTF-8
-    //     const msgBuffer = new TextEncoder().encode(message);
-    //     // hash the message
-    //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    //     // convert ArrayBuffer to Array
-    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    //     // convert bytes to hex string
-    //     return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-    // }
+    static async sha256(message) {
+        // encode as UTF-8
+        const msgBuffer = new TextEncoder().encode(message);
+        // hash the message
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        // convert ArrayBuffer to Array
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        // convert bytes to hex string
+        return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    }
     close() {
         this.dom.remove();
     }
@@ -145,27 +143,4 @@ export class Registration {
         }
     }
 }
-//
-// clickLogin() {
-//     this.animate();
-//     const RegistrationForm = document.getElementsByClassName("RegistrationForm").item(0);
-//     const LoginForm = document.getElementsByClassName("LoginForm").item(0);
-//     LoginForm.style.display = "block";
-//     RegistrationForm.style.display = "none";
-// }
-//
-// animate() {
-//     const elem = document.getElementById("form");
-//     let pos = -100;
-//     const id = setInterval(frame, 5);
-//     function frame() {
-//         if (pos === 0) {
-//             clearInterval(id);
-//         } else {
-//             pos++;
-//             elem.style.bottom = pos + "px";
-//             elem.style.animation.blink();
-//         }
-//     }
-// }
 //# sourceMappingURL=Registration.js.map

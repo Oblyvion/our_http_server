@@ -1,9 +1,17 @@
 import { manager } from "./app.js";
 console.log("port: ", localStorage.getItem("port"));
+/**
+ * @class Login
+ * Erzeugt den Loginscreen damit es Benutzern ermöglicht wird sich anzumelden
+ */
 export class Login {
-    constructor(dom) {
+    /**
+     *@constructor Login
+     * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
+     */
+    constructor() {
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
-        this.dom_root = document.getElementById("app"); //dom;
+        this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');
         this.dom_root.appendChild(this.dom);
@@ -22,15 +30,18 @@ export class Login {
         this.dom_login.appendChild(this.dom_loginInputID);
         this.dom_loginInputID.placeholder = "username";
         this.dom_loginInputID.type = "text";
+        this.dom_loginInputID.addEventListener("keypress", event => {
+            if (event.keyCode === 13) {
+                this.dom_loginButton.click();
+            }
+        });
         this.dom_loginInputPW = document.createElement('input');
         this.dom_loginInputPW.classList.add('input');
         this.dom_login.appendChild(this.dom_loginInputPW);
         this.dom_loginInputPW.placeholder = "password";
         this.dom_loginInputPW.type = "password";
         this.dom_loginInputPW.addEventListener("keypress", event => {
-            // Number 13 is the "Enter" key on the keyboard
             if (event.keyCode === 13) {
-                // Trigger the button element with a click
                 this.dom_loginButton.click();
             }
         });
@@ -57,21 +68,16 @@ export class Login {
             new manager("register");
         });
         dom_loginLink.appendChild(newlink);
-        // const dom_registerButton = document.createElement('button');
-        // dom_registerButton.classList.add('button');
-        // dom_login.appendChild(dom_registerButton);
-        // dom_registerButton.textContent = "Not registered? Register";
-        // dom_registerButton.addEventListener('click', (event) => {
-        //     this.close();
-        //     new manager("register");
-        // });
     }
+    /**
+     *
+     */
     async loginUser() {
         if (this.dom_loginInputID.value !== "" && this.dom_loginInputPW.value !== "") {
-            let password = this.dom_loginInputPW.value; //= Registration.sha256(this.dom_registerPW.value);
+            let password = this.dom_loginInputPW.value; //Registration.sha256(this.dom_loginInputPW.value);
             try {
                 // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-                // console.log(`das ist body pw: ${password.toString()}`);
+                console.log(`das ist body pw: ${password.toString()}`);
                 const response = await fetch(this.API_URL + '/login', {
                     body: JSON.stringify({
                         name: this.dom_loginInputID.value,
@@ -95,12 +101,11 @@ export class Login {
                 else {
                     this.info(`Login successful!`, '', 'success');
                     // console.log("Login.ts, loginUser: result.data = ", result.data);
-                    // console.log("HALDSAFLAFOIJDSOSJFJSAJSLFLDSAÖJAJFÖ");
                     // console.log("Login.ts, loginUser: 0localStorage = ", localStorage.getItem('token'));
                     localStorage.clear();
                     // console.log("Login.ts, loginUser: 1localStorage = ", localStorage.getItem('token'));
                     localStorage.setItem("token", result.data);
-                    console.log("Login.ts, loginUser: 2localStorage = ", localStorage.getItem('token'));
+                    // console.log("Login.ts, loginUser: 2localStorage = ", localStorage.getItem('token'));
                     this.close();
                     manager("page_first_steps");
                 }
