@@ -491,16 +491,16 @@ button:hover, .form button:active {
 
 .AddNewSongProgress {
   width: 100%;
-  height: 50px;
-  border: 3px solid black;
-  background-color: #ddd; }
+  height: 20px;
+  border: 1px solid black;
+  box-shadow: 2px 2px 10px rgba(7, 40, 195, 0.5); }
 
 .AddNewSongProgressBar {
   width: 0;
   height: 30px;
-  background-color: #4CAF50;
+  background-color: #003ba9;
   text-align: center;
-  line-height: 30px;
+  line-height: 20px;
   color: white; }
 
 .FirstSteps {
@@ -614,9 +614,9 @@ button:hover, .form button:active {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-areas: '. . .' '. content .' '. content .' '. content .' '. . .';
+  grid-template-areas: '. . .' '. content .' '. . .';
   grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
-  grid-template-rows: minmax(20%, 20%) minmax(15%, 15%) minmax(15%, 15%) minmax(15%, 15%) minmax(35%, 35%); }
+  grid-template-rows: minmax(20%, 20%) minmax(45%, 45%) minmax(35%, 35%); }
 
 .AboutUsInformation {
   grid-area: content;
@@ -670,9 +670,9 @@ button:hover, .form button:active {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-areas: '. . .' '. content .' '. content .' '. content .' '. . .';
+  grid-template-areas: '. . .' '. content .' '. . .';
   grid-template-columns: minmax(30%, 30%) minmax(40%, 40%) minmax(30%, 30%);
-  grid-template-rows: minmax(20%, 20%) minmax(15%, 15%) minmax(15%, 15%) minmax(15%, 15%) minmax(35%, 35%); }
+  grid-template-rows: minmax(20%, 20%) minmax(45%, 45%) minmax(35%, 35%); }
 
 .ImpressumInformationContainer {
   grid-area: content;

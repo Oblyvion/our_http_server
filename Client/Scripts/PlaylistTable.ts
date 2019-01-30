@@ -255,6 +255,7 @@ export class PlaylistTable {
         this.dom_AddNewSongInput = document.createElement("input");
         this.dom_AddNewSongInput.classList.add('AddNewSongInput');
         this.dom_AddNewSong.appendChild(this.dom_AddNewSongInput);
+        this.dom_AddNewSongInput.style.display = "none";
 
         this.dom_AddNewSongDialogButton = document.createElement("input");
         this.dom_AddNewSongDialogButton.setAttribute("id", "file");
