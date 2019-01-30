@@ -6,7 +6,8 @@
   "main": "Server/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "opener Client/index.html && nodemon Server/server.js"
+    "start": "opener Client/index.html && nodemon Server/server.js",
+    "build": "apidoc -i ./Server/ -o ./Server/apidoc"
   },
   "apidoc": {
     "name": "our_http_server",

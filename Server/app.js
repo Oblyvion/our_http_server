@@ -435,7 +435,6 @@ app.get('/songsuser/:playlistID', auth, async (req, res) => {
  *
  */
 app.get('/song/:id', async (req, res) => {
-    // TODO TRY KANN RAUS WENN AUTH GEHT
     try {
         await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', +req.params.id)
             .then((path) => {
@@ -1095,9 +1094,6 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
         // console.log("DirNAME: ", __dirname);
         filePath = "./Server/Songs/" + song.audioFile[0].originalname;
 
-        // TODO DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
-        //const filePath = __dirname + "\\Songs\\" + song.audioFile[0].originalname;
-
         // console.log("app.js, app.post/song: FILEPATH = ", filePath);
 
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
@@ -1115,7 +1111,6 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
             // insert song into users playlistID
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', songID.ID, playlistID, user);
 
-            // TODO USERSCORE AUCH BEIM ERFOLGREICHEN ADDEN VON COLLABORATOR HINZUFÜGEN
             const userScore = await db.get_row('SELECT SCORE FROM USERS WHERE ID = ?', userID.ID);
             // console.log("app.js, app.post/song: USERSCORE = ", userScore.SCORE);
 

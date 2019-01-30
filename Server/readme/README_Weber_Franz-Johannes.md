@@ -1,9 +1,7 @@
 ## Abstract Server
 Verantwortlicher: Franz-Johannes Weber
 
-1. Allgemein
-...
-2. Server
+###Server
 Auf dem Server werden alle vorhandenen User, Playlists und Songs in einer SQLITE-Datenbank gespeichert, 
 verwaltet und auch wieder an den Client, den Anforderungen entsprechend zurückgeliefert.
 Beim ersten Start des Servers, wird zunächst die Datenbank aufgebaut und anschließend ein User mit Benutzername "admin"
@@ -503,30 +501,30 @@ Verantwortlicher: Franz-Johannes Weber
 
 #### Implementierung
 
-| Aufgabe | Zeit in Stunden |
+| Aufgabe | Zeit in Stunden VORHER | Zeit in Stunden NACHHER
 |----------|:-------------:|
-| Datenbank aufbauen und verwalten | 10 
-| API aufbauen | 30
-| Filestreaming konfigurieren | 20 
-| User-Suche und Rankingsystem implementieren | 10 
-| Zufälliger User Screen erstellen | 2
-| About us, Contact und Impressum anfertigen und designen | 10 
-| Playlist Teilen-Funktionen (als Email-Text oder mit User) einbinden | 5 
-| SUMME | 50 
+| Datenbank aufbauen und verwalten |     10     |       30
+| API aufbauen |     30     |     100     
+| Filestreaming konfigurieren  |     20     |     25     
+| User-Suche und Rankingsystem implementieren   |    10     |   5      
+| Zufälliger User Screen erstellen |    2       |     2       
+| About us, Contact und Impressum anfertigen und designen   |     10    |     10    
+| Playlist Teilen-Funktionen (mit User) einbinden |     5   |     5    
+| SUMME |      50       |      182       
 
 #### Dokumentation und Tests
 
-| Aufgabe | Zeit in Stunden 
-|----------|:-------------:
-| Projektdokumentation | 15
-| API Tests | 5 
-| SUMME | 20 
+|           Aufgabe         | Zeit in Stunden VORHER | Zeit in Stunden NACHHER
+|---------------------------::-----------------------::-----------------------|
+| Projektdokumentation      ::           15          ::          20           |
+| API Tests                 ::           5           ::          0            |
+| SUMME                     ::           20          ::          20           |
 
 #### Zusammenfassung
 
-| Teil | Zeit in Stunden 
-|----------|:-------------:
-| Projektvorbereitung | 30 
-| Implementierung | 50 
-| Dokumentation und Tests | 20 
-| SUMME  | 100 
+|           Aufgabe         | Zeit in Stunden VORHER | Zeit in Stunden NACHHER
+|---------------------------::-----------------------::-----------------------|
+| Projektvorbereitung       ::          30           ::            40         |
+| Implementierung |         ::          50           ::           182         |
+|Dokumentation und Tests    ::          20           ::            20         |
+| SUMME                     ::          100          ::           242         |
