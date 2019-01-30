@@ -147,41 +147,40 @@ class DB {
         });
     }
 
-
     skeleton() {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
-                console.log('AAAAALLLLLLESSSSSSSSSS CREATE STANDARD DATABASE');
-                // this.db.run('INSERT INTO USERS (NAME) VALUES ("admin")');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("test", "test", 10)');
+                // console.log('CREATE STANDARD DATABASE');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("test", "test", 10)');           // ID 2
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("max", "test", 5)');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("heinz", "test", 5)');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("heinz", "test", 5)');           // ID 4
                 this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("garry", "test", 5)');
-                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("sigmuel", "test", 40)');
-                // this.db.run('INSERT INTO USERS (ID, NAME) VALUES (1, "admin")');
+                this.db.run('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES ("sigmuel", "test", 40)');        // ID 6
+
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY, PATH) VALUES ("Beispiel Title 1", "Beispiel Artist 1", 1, "PATHBliBlaBlubbb")');
                 this.db.run('INSERT INTO SONGS (TITLE,ARTIST,ADDED_BY, PATH) VALUES ("Beispiel Title 2 du geile Eidechse", "Beispiel Artist 2", 1, "BliBlaBlubbbPATH")');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 1", 2)');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 2", 1)');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 3", 1)');
-                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 4", 3)');
+
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 2 Nach AdminInit", 3)');   // ID 2
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 3", 2)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 4", 3)');                  // ID 4
                 this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 5", 4)');
-                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (1, 2)');
-                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (2, 1)');
-                // this.db.run('INSERT INTO PLAYLIST_FROM (PLAYLIST_ID, USER_ID) VALUES (3, 1)');
-                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 2, "test")');
-                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (2, 2, "test")');
-                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 1, "max")');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 2, 1)');  //
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 3, 1)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 1, 1)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (3, 1, 1)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (1, 4, 1)');
-                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (4, 1, 0)');
-                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 3)');
-                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 1, 1)');
-                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (1, 2, 2)');
-                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (3, 1, 4)');
+                this.db.run('INSERT INTO PLAYLISTS (NAME, USER_ID) VALUES ("Playlist 6", 5)');                  // ID 6
+
+                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 3, "test")');
+                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (2, 3, "test")');
+                this.db.run('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (1, 2, "max")');
+
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 3, 1)'); // test, max
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 4, 1)'); // test, heinz
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (3, 2, 1)'); // max, test
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (4, 2, 1)'); // heinz, test
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (2, 5, 1)'); // test, garry
+                this.db.run('INSERT INTO PLAYLIST_MATES (USER_ID, MATE_ID, REQUEST) VALUES (5, 2, 0)'); // garry, test
+
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 3, 4)'); // test, max
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (3, 2, 2)'); // max, test
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (2, 3, 3)'); // test, max
+                this.db.run('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (4, 2, 5)'); // heinz, test
                 resolve();
             });
         }).catch(err => console.log(err));

@@ -17,19 +17,10 @@ Client zur Verfügung gestellt, um mit dem Server eine einwandfreie Kommunikatio
 auch für jeden User eindeutig ist, wurde eine Authentifizierung mittels JWT-Token realisiert.
 Das Datenbankmodell sowie die API werden im Folgenden näher beschrieben.
 
-Datenbankmodell implementiert worden:
-   - Auf dem Server muss eine Datenbank vorhanden sein, die:
-      - (lizensfreie) Musik in einer Tabelle Songs beinhaltet
-      - die Playlists der einzelnen User beinhaltet
-      - die User Daten der User beinhaltet
-   - Die Datenbank ist erweiterbar, damit neue Songs von den Usern hinzugefügt werden können)
-   - Der Server liefert dem Client abspielbare Musik in Form eines Streams
-   - Die User Daten (Benutzername, Passwort) werden vom Server beim Login überprüft
-
 ## Entwicklungsplan
 ### Entwurf
 #### Datenbankmodell
-NEUES KOMMT SOFORT!
+
 ![Bild DatenbankModell](./Database/DatenbankModell.png "DatenbankModell")
 
 #### ORM 
@@ -52,7 +43,7 @@ _Akzeptiert_
 
 _Abgelehnt_
 
-{success: false, msg: 'db ready to use'}
+{success: false, msg: 'db init error'}
 
 ```
  GET /users
@@ -67,7 +58,7 @@ _Akzeptiert_
 
 _Abgelehnt_
 
-{success: false, msg: 'No other users found.', err: err}
+{success: false, msg: 'No other users found. You have to invite more of your friends. ', err: err}
 
 **Headers:**
 
@@ -218,7 +209,7 @@ _Abgelehnt_
  
  {success: false, msg: 'You are not authorized for this action.', err: err} 
 
- {success: false, msg: 'UNCATCHED error', err: err} 
+ {success: false, msg: 'Sorry, this could be better.', err: err} 
 
  **Headers:**
  
@@ -292,7 +283,7 @@ _Abgelehnt_
   ```
     POST /playlist
   ```
-   Überprüft den Benutzernamen und Passwort in der Datenbank.
+   Erstellt eine neue Playlist mit dem aktuell angemeldeten User als Besitzer
    
    **Responses:** 
    
@@ -418,11 +409,11 @@ _Abgelehnt_
    _Abgelehnt_
    
    {success: false, msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already.
-   Invite another Playlist Mate.'}
+   Invite another Playlist Mate to your Playlist.'}
    
-   {success: false, msg: 'There is a problem with you or your collaborator.', err: err}
+   {success: false, msg: 'Your mate called -> ' + req.body.mate + ' <- has not accept your Playlist Mate request.'}
 
-   {success: false, msg: 'Your mate called -> ' + req.body.mate + ' <- has not accept your Playlist Mate request.', err: err}
+   {success: false, msg: 'Sorry for that. This should not happening.', err: err}
 
    {success: false, msg: 'You are not authorized for this action.', err: err}
 
@@ -445,7 +436,7 @@ _Abgelehnt_
    
    _Akzeptiert_
    
-   {success: true, msg: 'Decline Playlist Mate Request: Playlist Mates deleted!'}
+   {success: true, msg: 'Decline Playlist Mate Request: Playlist Mate deleted!'}
    
    {success: true, msg: 'User ' + req.body.mate + ' and you are Playlist Mates now.'}
 

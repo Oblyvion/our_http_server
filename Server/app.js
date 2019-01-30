@@ -1,12 +1,10 @@
-
 const express = require('express');
-// const sqLite = require('sqlite3');
 const DB = require('./db');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-
 const multer = require('multer');
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // DAS IST DER WINDOWS FILEPATH. NICHT VERWERFEN BITTE PLEASE^^
@@ -100,7 +98,28 @@ async function userInit(req) {
 // ----------------------------GET section----------------------------
 
 /**
- * app initialisation
+ * @api {get} /init Datenbank wird initialisiert
+ * @apiName GetInit
+ * @apiGroup MyAPIGroupGet         // TODO KÖNNEN GRUPPEN IN MEINER API GEBILDET WERDEN? Z:B: USER; PLAYLIST;
+ *
+ * @apiSuccess {json} Initialisierung
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+ *   success: true,
+ *   msg: 'db ready to use'
+ *  }
+ * @apiError {json} Initialisierungsfehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *  {
+ *    success: false,
+ *    msg: 'db init error'
+ *  }
+ *
  */
 app.get('/init', (req, res) => {
     Promise.all([
@@ -122,8 +141,48 @@ app.get('/init', (req, res) => {
     )
 });
 
+
 /**
- * get all users which are not the current user and not his playlist mates
+ * @api {get} /users Gibt alle User zurück, welche nicht der aktuelle User und nicht seine Playlist Mates sind
+ * @apiName GetUsers
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiSuccess {json} User wurden gefunden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "data": [
+ *       {
+ *           "NAME": "admin"
+ *       },
+ *       {
+ *           "NAME": "garry"
+ *       },
+ *       {
+ *           "NAME": "heinz"
+ *       },
+ *       {
+ *           "NAME": "max"
+ *       },
+ *       {
+ *          "NAME": "sigmuel"
+ *       }
+ *       ]
+ *    }
+ *
+ * @apiError {json} Keine User gefunden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       success: false,
+ *       msg: 'No other users found. You have to invite more of your friends.',
+ *       err: No other users found.
+ *     }
  */
 app.get('/users', auth, async (req, res) => {
     const user = jwt.decode(req.get('Authorization')).username;
@@ -145,14 +204,48 @@ app.get('/users', auth, async (req, res) => {
             // console.log("app.js, app.get/users: ERROR = ", err);
             res.send({
                 success: false,
-                msg: 'No other users found',
+                msg: 'No other users found. You have to invite more of your friends.',
                 err: err
             });
         });
 });
 
 /**
- * get user score
+ * @api {get} /user Gibt den User SCORE des aktuellen Users zurück
+ * @apiName GetUser
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiSuccess {json} User Score
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *   {
+ *   "success": true,
+ *   "data":
+ *      {
+ *      "SCORE": 10
+ *      }
+ *   }
+ *
+ * @apiError {json} Kein User gefunden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *     success: false,
+ *     msg: 'No user found.',
+ *     err: err
+ *     }
+ *
+ * @apiError {json} Nicht authorisiert
+ *     {
+ *     success: false,
+ *     msg: 'You are not authorized for this action!',
+ *     err: err
+ *     }
+ *
  */
 app.get('/user', async (req, res) => {
     try {
@@ -164,7 +257,7 @@ app.get('/user', async (req, res) => {
                     throw 'User does not exist with ID ' + userID.ID + '.';
                 res.send({
                     success: true,
-                    data: row
+                    data: row.SCORE
                 });
             })
             .catch(err => {
@@ -184,42 +277,51 @@ app.get('/user', async (req, res) => {
 });
 
 /**
- * get user by name
- */
-app.post('/login', async (req, res) => {
-    const result = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
-        .then(user => {
-            if (!user)
-                throw 'User does not exist.';
-
-            if (user.PASSWORD !== req.body.password) {
-                throw 'wrong password'
-            }
-
-            // TODO HIER NOCHMAL WEGEN AUTH DRÜBERSCHAUEN!!!
-            //token generator
-            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "180s"});
-            // console.log("das ist tooooooken!!!: ", token);
-            // const tokenRefresh = jwt.sign({username: req.body.name}, 'newSecretKey', {expiresIn: "30s"});
-
-            res.send({
-                success: true,
-                msg: 'Login was successful.',
-                data: token
-            });
-        })
-        .catch(err => {
-            // console.log("Login, Uncatched Error = ", err);
-            res.send({
-                success: false,
-                msg: 'Access declined!',
-                err: err
-            });
-        });
-});
-
-/**
- * get all songs
+ * @api {get} /songs Gibt alle Songs zurück
+ * @apiName GetSongs
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiSuccess {json} Songs gefunden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "data": [
+ *      {
+ *          "ID": 1,
+ *          "TITLE": "Beispiel Title 1",
+ *          "ARTIST": "Beispiel Artist 1",
+ *          "ADDED_BY": 1,
+ *          "PATH": "PATHBliBlaBlubbb"
+ *      },
+ *      {
+ *          "ID": 2,
+ *          "TITLE": "Beispiel Title 2 du geile Eidechse",
+ *          "ARTIST": "Beispiel Artist 2",
+ *          "ADDED_BY": 1,
+ *          "PATH": "BliBlaBlubbbPATH"
+ *      },
+ *      {
+ *          "ID": 3,
+ *          "TITLE": "Canon in D Major",
+ *          "ARTIST": "Johann Pachelbel",
+ *          "ADDED_BY": 1,
+ *          "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
+ *      }
+ *   ]
+ *}
+ *
+ * @apiError {json} Keine Songs gefunden.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *     success: false,
+ *     msg: 'No songs available.',
+ *     err: err
+ *     }
+ *
  */
 app.get('/songs', async (req, res) => {
     await db.get_rows('SELECT * FROM SONGS')
@@ -240,9 +342,44 @@ app.get('/songs', async (req, res) => {
         });
 });
 
-
 /**
- * get songs of playlist x from user
+ * @api {get} /songsuser/:playlistID Gibt die selbst hinzugefügten Songs des Users aus der Playlist mit der
+ * angegebenen playlistID zurück.
+ *
+ * @apiName GetSongsOfUser
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiParam {Number} playlistID Users unique PLAYLISTS ID.
+ *
+ * @apiSuccess {json} Songs in der Playlist vorhanden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *   "success": true,
+ *   "data": [
+ *      {
+ *          "ID": 1,
+ *          "TITLE": "Canon in D Major",
+ *          "ARTIST": "Johann Pachelbel",
+ *          "SUPPORTED_BY": "max"
+ *      }
+ *  ]
+ *}
+ *
+ * @apiError {json} Keine Songs vorhanden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *     success: false,
+ *     msg: 'No songs available in this playlist.',
+ *     err: err
+ *     }
+ *
+ *
  */
 app.get('/songsuser/:playlistID', auth, async (req, res) => {
     try {
@@ -281,7 +418,39 @@ app.get('/songsuser/:playlistID', auth, async (req, res) => {
 });
 
 /**
- * get song by id
+ * @api {get} /song/:id  Gibt den Song mit der angegebenen ID als ReadStream zurück
+ *
+ * @apiName GetSongStream
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiParam {Number} id Songs unique SONGS ID.
+ *
+ * @apiSuccess  {xmlhttprequest} Starte ReadStream von gefundenem SONG.PATH mit Clienten
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     STREAM
+ *
+ * @apiError {json} Song oder Ordner nicht gefunden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'No such file or directory.',
+ *      err: err
+ *      }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'You are not authorized for this action or playlist ist not available.',
+ *      err: err
+ *      }
+ *
  */
 app.get('/song/:id', async (req, res) => {
     // TODO TRY KANN RAUS WENN AUTH GEHT
@@ -303,9 +472,39 @@ app.get('/song/:id', async (req, res) => {
     }
 });
 
-// TODO Die Playlists sind entweder privat, für Playlist-Mates offen oder für alle User öffentlich.
 /**
- * get USERS own playlists
+ * @api {get} /playlists  Gibt die Playlists vom aktuellen User zurück.
+ *
+ * @apiName GetPlaylistsOfUser
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiSuccess  {json} Playlists gefunden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "data": [
+ *      {
+ *          "ID": 2,
+ *          "NAME": "Playlist 1",
+ *          "USER_ID": 2
+ *      }
+ *  ]
+ *}
+ *
+ * @apiError {json} Kein Playlist gefunden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *       {
+ *       success: false,
+ *       msg: 'Found no playlists.',
+ *       err: err
+ *       }
+ *
  */
 app.get('/playlists', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
@@ -330,7 +529,35 @@ app.get('/playlists', auth, async (req, res) => {
 });
 
 /**
- * get COLLABORATOR playlists
+ * @api {get} /playlists/collabs  Gibt die Playlists von den Collaborators des aktuellen Users zurück.
+ * @apiName GetPlaylistsOfCollaborators
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiSuccess {json} Collaborator Playlists gefunden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "data": [
+ *      {
+ *          "ID": 1,
+ *          "NAME": "Playlist 1"
+ *      },
+ *      {
+ *          "ID": 4,
+ *          "NAME": "Playlist 4"
+ *      }
+ *  ]
+ *}
+ *
+ * @apiError {json} Keine Collaborator Playlists gefunden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {success: false, msg: 'Found no collaborator playlists.', err: err}
  */
 app.get('/playlists/collabs', auth, async (req, res) => {
     const token = jwt.decode(req.get('Authorization'));
@@ -358,6 +585,56 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 
 /**
  * get playlist mates
+ */
+/**
+ * @api {get} /playlistMates  Gibt die Playlist Mates vom aktuellen User zurück
+ * @apiName GetPlaylistMates
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiSuccess {json} Playlist Mates vorhanden und gefunden
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *   "success": true,
+ *   "data": [
+ *               {
+ *              "NAME": "test",
+ *              "SCORE": 10,
+ *              "REQUEST": 1
+ *              }
+ *           ]
+*       }
+ *
+ * @apiError {json} Keine Playlist Mates gefunden.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Nothing in there, yet.',
+ *      err: err
+ *      }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *     success: false,
+ *     msg: 'You are not authorized for this action.',
+ *     err: err
+ *     }
+ *
+ * @apiError {json} Nicht abgefangener Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Sorry, this could be better.',
+ *      err: err
+ *      }
  */
 app.get('/playlistMates', auth, async (req, res) => {
     try {
@@ -403,6 +680,44 @@ app.get('/playlistMates', auth, async (req, res) => {
 /**
  * get count of shared playlists with mate
  */
+/**
+ * @api {get} /playlistMates/sharedPlaylists/:mate  Gibt die Anzahl an geteilten Playlists mit dem Mate zurück.
+ * @apiName GetCountPlaylistsSharedWithMate
+ * @apiGroup MyAPIGroupGet
+ *
+ * @apiParam {String} mate USERS unique USERS NAME.
+ *
+ * @apiSuccess {json} Anzahl an geteilten Playlists mit Collaborator ermittelt
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "data": {
+ *      "countSharedPlaylists": 0
+ *  }
+ *}
+ *
+ * @apiError {json} Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'The counter feels tired right now.',
+ *      err: err
+ *      }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *       {
+ *       success: false,
+ *       msg: 'You are not authorized for this action or no mates are available.',
+ *       err: err
+ *       }
+ */
 app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
     try {
         const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(req.get('Authorization')).username);
@@ -439,7 +754,41 @@ app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
 // ----------------------------POST section----------------------------
 
 /**
- * create new user
+ * @api {post} /user  Legt einen neuen User in der Datenbank an.
+ * @apiName PostUser
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiParam {String} name Users unique USERS NAME.
+ *
+ * @apiSuccess {json} Registrierung erfolgreich
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *     success: true,
+ *     msg: 'User registered successfully.',
+ *     data: user
+ *     }
+ *
+ * @apiError User existiert bereits
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'User exists already.',
+ *      err: err
+ *      }
+ *
+ * @apiError Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Access user failed.',
+ *      err: err
+ *      }
  */
 app.post('/user', async (req, res) => {
     const user = await db.cmd('INSERT INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, ?)', req.body.name, req.body.password, 5)
@@ -450,8 +799,7 @@ app.post('/user', async (req, res) => {
             await userInit(req);
             res.send({
                 success: true,
-                msg: 'User registered successfully.',
-                data: user
+                msg: 'User registered successfully.'
             });
         }).catch((err) => {
             if (err.message.match('SQLITE_CONSTRAINT')) {
@@ -473,7 +821,103 @@ app.post('/user', async (req, res) => {
 });
 
 /**
- * create new playlist
+ * @api {post} /login  Überprüft den Benutzernamen und Passwort in der Datenbank.
+ * @apiName UserLogin
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiParam {String} name Users unique USERS NAME.
+ *
+ * @apiSuccess {json} Anmeldung erfolgreich
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *   {
+ *  "success": true,
+ *  "msg": "Login was successful.",
+ *  "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *  .eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE1NDg4NTY3NTgsImV4cCI6MTU0ODg1NjkzOH0
+ *  .bINlI8O36Ldua6xMjWY8zuZsYhZvzYPqksCj8mJxE9M"
+ *   }
+ *
+ * @apiError {json} Anmeldung verweigert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Access declined!.',
+ *      err: err
+ *      }
+ */
+app.post('/login', async (req, res) => {
+    const result = await db.get_row('SELECT * FROM USERS WHERE NAME = ?', req.body.name)
+        .then(user => {
+            if (!user)
+                throw 'User does not exist.';
+
+            if (user.PASSWORD !== req.body.password) {
+                throw 'wrong password'
+            }
+
+            // TODO HIER NOCHMAL WEGEN AUTH DRÜBERSCHAUEN!!!
+            //token generator
+            const token = jwt.sign({username: req.body.name}, "secret", {expiresIn: "180s"});
+            // console.log("das ist tooooooken!!!: ", token);
+            // const tokenRefresh = jwt.sign({username: req.body.name}, 'newSecretKey', {expiresIn: "30s"});
+
+            res.send({
+                success: true,
+                msg: 'Login was successful.',
+                data: token
+            });
+        })
+        .catch(err => {
+            // console.log("Login, Uncatched Error = ", err);
+            res.send({
+                success: false,
+                msg: 'Access declined!',
+                err: err
+            });
+        });
+});
+
+/**
+ * @api {post} /playlist  Erstellt eine neue Playlist mit dem aktuell angemeldeten User als Besitzer
+ * @apiName PostPlaylist
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiParam {String} name PLAYLISTS NAME.
+ *
+ * @apiSuccess {json} Playlist hinzugefügt
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *     success: true,
+ *     msg: 'Playlist created successfully.',
+ *     data: playlist
+ *     }
+ *
+ * @apiError {json} Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *        {
+ *        success: false,
+ *        msg: 'Cannot insert playlists at this time.',
+ *        err: err
+ *        }
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *      success: false,
+ *      msg: 'You are not authorized for this action.',
+ *      err: err
+ *     }
  */
 app.post('/playlist', auth, async (req, res) => {
     try {
@@ -486,7 +930,6 @@ app.post('/playlist', auth, async (req, res) => {
                 res.send({
                     success: true,
                     msg: 'Playlist created successfully.',
-                    data: playlist
                 });
 
             })
@@ -508,7 +951,52 @@ app.post('/playlist', auth, async (req, res) => {
 });
 
 /**
- * add song to playlist from database
+ * @api {post} /song/:playlistID Fügt einen bereits in der Datenbank vorhandenen Song einer seiner eigenen Playlists
+ * oder einer Collaborator Playlist hinzu.
+ * @apiName PostSongIntoPlaylist
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiParam {Number} playlistID Users unique PLAYLISTS ID.
+ * @apiParam {Number} songID Songs unique SONGS ID.
+ *
+ * @apiSuccess {json} Die Playlist ist vom aktuellen User selbst
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *   {
+ *  "success": true,
+ *  "msg": "Song added to playlist successfully.",
+ *  "path": {
+ *      "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
+ *  }
+ *}
+ *
+ * @apiSuccess {json} Die Playlist ist von einem Collaborator
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "msg": "Recognized that playlist is from collaborator. Song added successfully.",
+ *  "path": {
+ *      "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
+ *  }
+ *}
+ *
+ * @apiError {json} Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *  "success": false,
+ *  "msg": "Playlist of Mate could not be found.",
+ *  "err": {
+ *      "errno": 19,
+ *      "code": "SQLITE_CONSTRAINT"
+ *  }
+ *}
  */
 app.post('/song/:playlistID', auth, async (req, res) => {
     try {
@@ -516,8 +1004,11 @@ app.post('/song/:playlistID', auth, async (req, res) => {
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
 
         // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
-        await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', req.params.playlistID, userID.ID);
-
+        const row = await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', req.params.playlistID, userID.ID);
+        console.log("KANN NET SEIN = ", row);
+        if (!row) {
+            throw 'Not ' + user + '\'s Playlist.';
+        }
         // Finde den vorhanden Song, der hinzugefügt werden soll
         const filePath = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', req.body.songID);
 
@@ -531,8 +1022,14 @@ app.post('/song/:playlistID', auth, async (req, res) => {
     } catch (err) {
         try {
             // Playlist must be from collaborator!!!
-            await db.get_row('SELECT USER_ID FROM COLLABORATORS WHERE MATE_ID = ? AND PLAYLIST_ID = ?', req.body.songID, req.params.playlistID);
+            const user = jwt.decode(req.get('Authorization')).username;
+            const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
+
+            // looking for Mate ID
+            const mate = await db.get_row('SELECT USER_ID FROM COLLABORATORS WHERE MATE_ID = ? AND PLAYLIST_ID = ?',
+                userID.ID, req.params.playlistID);
             const filePath = await db.get_row('SELECT PATH FROM SONGS WHERE ID = ?', req.body.songID);
+            // insert Song into Mates Playlist
             await db.cmd('INSERT INTO PLAYLIST_CONTAINS (SONG_ID, PLAYLIST_ID, SUPPORTED_BY) VALUES (?, ?, ?)', req.body.songID, req.params.playlistID, user);
             res.send({
                 success: true,
@@ -553,6 +1050,62 @@ app.post('/song/:playlistID', auth, async (req, res) => {
 /**
  * upload song into global SONGS and users PLAYLIST_CONTAINS
  */                                                                     // , {name: 'nextInput', maxCount: 2}
+/**
+ * @api {post} /song/global/:playlistID    Fügt einen neuen Song der Datenbank sowie der übergebenen (aktuellen) Playlist hinzu.
+ * @apiName PostSongGlobal
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiHeader {json} AUTH: { "Authorization": token}
+ *
+ * @apiParam {Number} playlistID Playlist unique PLAYLISTS ID.
+ * @apiParam {Files} File Upload.
+ * @apiParam {String} title SONGS TITLE.
+ * @apiParam {String} artist SONGS ARTIST.
+ *
+ * @apiSuccess {json} File Upload erfolgreich
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *  "success": true,
+ *  "msg": "File uploaded successfully ;)",
+ *  "path": {
+ *      "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
+ *  }
+ *}
+ *
+ * @apiSuccess {json} File Upload findet auf der nicht eigenen, sondern auf einer Collaborator Playlist statt
+ *
+ * @apiSuccessExample Success-Response:
+ *    HTTP/1.1 200 OK
+ *         {
+ *  "success": true,
+ *  "msg": "Recognized that playlist is from collaborator. Song uploaded and added successfully.",
+ *  "path": {
+ *      "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
+ *  }
+ *}
+
+ * @apiError {json} Song existiert bereits in der Datenbank Tabelle SONGS
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Song exists already. Search for the following song to get it ;)\n\n' + req.files.audioFile[0].originalname',
+ *      err: err
+ *      }
+
+ * @apiError {json} Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Access failed.',
+ *      err: err
+ *      }
+ */
 app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {name: 'title', maxCount: 1}, {
     name: 'token', maxCount: 1
 }, {name: 'artist'}]), async (req, res) => {
@@ -644,9 +1197,41 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
 });
 
 /**
- * add new playlist mate
+ * @api {post} /playlistMate    Fügt einen neuen Playlist Mate seinem User-Account hinzu
+ * @apiName PostPlaylistMate
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiParam {String} mate Users unique USERS NAME
+ *
+ * @apiSuccess {json} Playlist Mate Anfrage
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *      {
+ *      "success": true,
+ *      "msg": "Playlist Mate request send to sigmuel successfully."
+ *      }
+ *
+ * @apiError {json} Der angefrage User ist bereits ein Playlist Mate vom aktuellen User
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *      "success": false,
+ *      "msg": "The user -> sigmuel <- is your Playlist Mate already. Hire another User."
+ *     }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *        {
+ *        success: false,
+ *        msg: 'You are not authorized to add new Playlist Mate.',
+ *        err: err
+ *        }
  */
-app.post('/playlistMate', auth, async (req, res) => {
+ app.post('/playlistMate', auth, async (req, res) => {
     try {
         const user = jwt.decode(req.get('Authorization')).username;
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
@@ -675,7 +1260,60 @@ app.post('/playlistMate', auth, async (req, res) => {
 });
 
 /**
- * insert collaborator if both users have accepted the Playlist Mates request
+ * @api {post} /collabs/:playlistID    Fügt einen neuen Collaborator zu der Playlist mit der angegebenen ID hinzu.
+ * @apiName PostAddCollaboratorToPlaylist
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiParam {Number} playlistID Playlists unique PLAYLISTS ID
+ * @apiParam {String} mate Users unique USERS NAME
+ *
+ * @apiSuccess {json} Playlist Mate Anfrage
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *      {
+ *       "success": true,
+ *       "msg": "Collaborator heinz has been added to your account successfully."
+ *      }
+ *
+ * @apiError {json} Der angefrage Playlist Mate ist bereits ein Collaborator der aktuellen Playlist
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already.
+ *      Invite another Playlist Mate to your Playlist.'
+ *      }
+ *
+ * @apiError {json} Der angefrage Playlist Mate hat noch nicht die Playlist Mate Anfrage akzeptiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already.
+ *      Invite another Playlist Mate to your Playlist.'
+ *      }
+
+ * @apiError {json} Datenbank Fehler
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      success: false,
+ *      msg: 'Sorry for that. This should not happening.'
+ *      }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *        {
+ *  "success": false,
+ *  "msg": "You are not authorized for this action.",
+ *  "err": {}
+ *}
  */
 app.post('/collabs/:playlistID', auth, async (req, res) => {
     try {
@@ -683,12 +1321,15 @@ app.post('/collabs/:playlistID', auth, async (req, res) => {
         const userID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', user);
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
 
-        const myRequest = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', userID.ID, mateID.ID);
-        const mateResponse = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, userID.ID);
+        const myRequest = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?',
+            userID.ID, mateID.ID);
+        const mateResponse = await db.get_row('SELECT REQUEST FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?',
+            mateID.ID, userID.ID);
 
         if (myRequest.REQUEST && mateResponse.REQUEST) {
             // console.log("Fang an und schaff was.");
-            await db.cmd('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (?, ?, ?)', userID.ID, mateID.ID, req.params.playlistID)
+            await db.cmd('INSERT INTO COLLABORATORS (USER_ID, MATE_ID, PLAYLIST_ID) VALUES (?, ?, ?)',
+                userID.ID, mateID.ID, req.params.playlistID)
                 .then(() => {
                     res.send({
                         success: true,
@@ -699,11 +1340,12 @@ app.post('/collabs/:playlistID', auth, async (req, res) => {
                     if (err.message.match('SQLITE_CONSTRAINT: UNIQUE constraint failed'))
                         return res.send({
                             success: false,
-                            msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already. Invite another Playlist Mate.'
+                            msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already. ' +
+                                'Invite another Playlist Mate to your Playlist'
                         });
                     res.send({
                         success: false,
-                        msg: 'There is a problem with you or with your collaborator.',
+                        msg: 'Sorry for that. This should not happening.',
                         err: err
                     });
                 });
@@ -723,7 +1365,60 @@ app.post('/collabs/:playlistID', auth, async (req, res) => {
 });
 
 /**
- * accept or decline Playlist Mate request
+ * @api {post} /playlistMates/request    Akzeptiert oder verweigert einen Playlist Mate Request
+ * @apiName PostPlaylistMatesRequest
+ * @apiGroup MyAPIGroupPost
+ *
+ * @apiParam {Number} playlistID Playlists unique PLAYLISTS ID
+ * @apiParam {String} mate Users unique USERS NAME
+ *
+ * @apiSuccess {json} Verweigere Playlist Mate Request
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        success: true,
+ *        msg: 'Decline Playlist Mate Request: Playlist Mate deleted!'
+ *        }
+ *
+ * @apiSuccess {json} bestätige Playlist Mate Request
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *      "success": true,
+ *      "msg": "User test and you are Playlist Mates now."
+ *     }
+ *
+ * @apiError {json} verweigern vom Playlist Mate Request fehlgeschlagen
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *      "success": false,
+ *      "msg": "Delete from Playlist Mates failed.",
+ *      "err": {}
+ *      }
+ *
+ * @apiError {json} gewünschter Playlist Mate konnte nicht gefunden werden
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *        {
+ *        success: false,
+ *        msg: 'Cannot find such Playlist Mate. Add user as Playlist Mate first!',
+ *        err: err
+ *        }
+ *
+ * @apiError {json} Nicht authorisiert
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *      {
+ *      "success": false,
+ *      "msg": "You are not authorized for this action!",
+ *      "err": {}
+ *      }
  */
 app.post('/playlistMates/request', auth, async (req, res) => {
     try {
@@ -731,16 +1426,17 @@ app.post('/playlistMates/request', auth, async (req, res) => {
         const mateID = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', req.body.mate);
 
         const answer = req.body.answer;
+        // if request answer is 0, than delete the playlist mates
         if (!answer && answer !== undefined) {
             try {
                 await db.cmd('DELETE FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID);
                 await db.cmd('DELETE FROM PLAYLIST_MATES WHERE USER_ID = ? AND MATE_ID = ?', mateID.ID, user.ID);
                 return res.send({
                     success: true,
-                    msg: 'Decline Playlist Mate Request: Playlist Mates deleted!'
+                    msg: 'Decline Playlist Mate Request: Playlist Mate deleted!'
                 });
             } catch (err) {
-                // console.log("app.js, app.post/playlistMates/request, Z.859: ERROR = ", err);
+                console.log("app.js, app.post/playlistMates/request, Z.859: ERROR = ", err);
                 return res.send({
                     success: false,
                     msg: 'Delete from Playlist Mates failed.',
@@ -751,7 +1447,7 @@ app.post('/playlistMates/request', auth, async (req, res) => {
         await db.cmd('UPDATE PLAYLIST_MATES SET REQUEST = 1 ' +
             'WHERE USER_ID = ? AND MATE_ID = ?', user.ID, mateID.ID)
             .then((row) => {
-                // console.log('app.js, app.post/playlistMates/request Catch: REQUEST = ', row);
+                console.log('app.js, app.post/playlistMates/request Catch: REQUEST = ', row);
                 if (row < 1 || row === undefined) {
                     throw 'Cannot access Playlist Mates.';
                 }
@@ -761,7 +1457,7 @@ app.post('/playlistMates/request', auth, async (req, res) => {
                 });
             })
             .catch((err) => {
-                // console.log('app.js, app.post/playlistMates/request Catch: ERROR = ', err);
+                console.log('app.js, app.post/playlistMates/request Catch: ERROR = ', err);
                 res.send({
                     success: false,
                     msg: 'Cannot find such Playlist Mate. Add user as Playlist Mate first!',
@@ -769,7 +1465,7 @@ app.post('/playlistMates/request', auth, async (req, res) => {
                 });
             })
     } catch (err) {
-        // console.log('app.js, app.post/playlistMates/request Catch: ERR = ', err);
+        console.log('app.js, app.post/playlistMates/request Catch: ERR = ', err);
         res.send({
             success: false,
             msg: 'You are not authorized for this action.',
