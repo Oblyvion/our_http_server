@@ -8,6 +8,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon Server/server.js"
   },
+  "apidoc": {
+    "name": "our_http_server",
+    "version": "0.0.1",
+    "description": "apiDoc from our_http_server",
+    "title": "API Documentation with apiDoc",
+    "url": "http://127.0.0.1:3000/api"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Oblyvion/Our-Http-Server.git"
@@ -23,13 +30,6 @@
     "url": "https://github.com/Oblyvion/Our-Http-Server/issues"
   },
   "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
-  "apiDoc": {
-    "name": "our-http-server",
-    "version": "0.0.1",
-    "description": "apiDoc from our_http-server",
-    "title": "API Documentation with apiDoc",
-    "url": "http://127.0.0.1:3000/api"
-  },
   "dependencies": {
     "@types/multer": "^1.3.7",
     "basic-auth": "^2.0.1",

@@ -1,11 +1,19 @@
 {
   "name": "music-playlist",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
-  "description": "Unser eigener http_server",
+  "description": "WebApp to upload, share and work with free license music songs.\nBuild your own beautiful playlists or you can invite friends for help and inspiration.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Oblyvion/Our-Http-Server.git"
+  },
+  "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
+  "apiDoc": {
+    "name": "music-playlist",
+    "version": "1.0.0",
+    "description": "apidoc from music-playlist",
+    "title": "API Documentation with apiDoc",
+    "url": "http://127.0.0.1:3000/api"
   },
   "keywords": [
     "music",
@@ -16,14 +24,6 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Oblyvion/Our-Http-Server/issues"
-  },
-  "homepage": "https://github.com/Oblyvion/Our-Http-Server#readme",
-  "apiDoc": {
-    "name": "music-playlist",
-    "version": "0.0.1",
-    "description": "apiDoc from music-playlist",
-    "title": "API Documentation with apiDoc",
-    "url": "http://127.0.0.1:3000/api"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -21,11 +21,7 @@ Das Datenbankmodell sowie die API werden im Folgenden näher beschrieben.
 ### Entwurf
 #### Datenbankmodell
 
-![Bild DatenbankModell](./Database/DatenbankModell.png "DatenbankModell")
-
-#### ORM 
-WAS GENAU NOCHMA?
-![Bild ORM](./Database/ORM.png "ORM")
+![Bild DatenbankModell](./UML.jpg "DatenbankModell")
 
 #### Definition der API
 Bei Aufruf von http://www.127.0.0.1:3000
