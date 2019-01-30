@@ -12,7 +12,7 @@ export class NewPlaylistMate {
      * @param dom_content
      */
     constructor(dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.randomIndex = [];
         this.topWerte = [];
         this.leftWerte = [];

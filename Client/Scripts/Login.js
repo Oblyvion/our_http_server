@@ -1,5 +1,4 @@
 import { manager } from "./app.js";
-console.log("port: ", localStorage.getItem("port"));
 /**
  * @class Login
  * Erzeugt den Loginscreen damit es Benutzern ermöglicht wird sich anzumelden
@@ -10,7 +9,7 @@ export class Login {
      * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
      */
     constructor() {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');

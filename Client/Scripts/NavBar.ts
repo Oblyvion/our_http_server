@@ -5,7 +5,7 @@ import {PlaylistTable} from "./PlaylistTable.js";
  * Erzeugt die Playlist Navigationsleiste der Application
  */
 export class NavBar {
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divNavBar: HTMLElement;

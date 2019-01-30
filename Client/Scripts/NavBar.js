@@ -10,7 +10,7 @@ export class NavBar {
      * @param dom_content - dort wird die NavBar angehängt
      */
     constructor(dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.fetchPlaylists().then((result) => {
             this.OwnlistofPlaylists = result.data;
             this.addPlaylistNames(this.OwnlistofPlaylists, true);

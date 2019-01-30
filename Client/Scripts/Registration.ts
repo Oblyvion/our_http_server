@@ -6,7 +6,7 @@ import {manager} from "./app.js";
  */
 export class Registration implements AppContainer {
 
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_register: HTMLElement;

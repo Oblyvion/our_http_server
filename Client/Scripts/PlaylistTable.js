@@ -18,7 +18,7 @@ export class PlaylistTable {
      * @param PlaylistData - Die jenige Playlist die gerade angeklickt wurde, enthält den Namen und die Id der Playlist
      */
     constructor(dom_content, PlaylistData) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.Playlist = {
             name: "",
             songs: [],

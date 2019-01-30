@@ -9,7 +9,7 @@ export class Registration {
      * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
      */
     constructor(dom) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');

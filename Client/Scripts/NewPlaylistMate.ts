@@ -3,7 +3,7 @@
  * Enthält die Seite NewPlaylistMate, welche es dem User ermöglicht neue User zu seinen Playlist-Mates hinzuzufügen.
  */
 export class NewPlaylistMate {
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
 
     private dom_content: HTMLElement;
     private dom_divNewPlaylistMate: HTMLDivElement;

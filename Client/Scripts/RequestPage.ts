@@ -3,9 +3,8 @@
  * Die class RequestPage konstruiert die Page um PlaylistMate Anfragen zu bestätigen.
  */
 export class RequestPage {
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
 
-    private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divRequestPage: HTMLDivElement;
     private dom_divRequestHeader: HTMLDivElement;

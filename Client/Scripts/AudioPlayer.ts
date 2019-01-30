@@ -10,7 +10,7 @@ let curSong = new Audio();
  */
 export class AudioPlayer {
 
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
 
     private dom_root: HTMLElement;
     private dom: HTMLElement;

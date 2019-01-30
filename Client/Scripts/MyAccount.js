@@ -11,7 +11,7 @@ export class MyAccount {
      * @param dom - Das wird das DOM Element, was den Content von MyAccount beinhaltet
      */
     constructor(dom) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.dom_root = document.getElementById('app');
         this.dom_ContentMyAccount = dom;
         this.dom_ContentMyAccount.classList.add('ContentMyAccount');

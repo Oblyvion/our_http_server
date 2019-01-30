@@ -25,7 +25,6 @@ let active_app = null;
  * @param {string} app - "page-key" der die einzelnen cases im switch statement durchläuft je nachdem was angegeben wird
  */
 export const manager = function (app) {
-    localStorage.setItem("port", "3000");
     if (active_app != null) {
         active_app.close();
         active_app = null;

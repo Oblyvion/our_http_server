@@ -12,7 +12,7 @@ export class MyPlaylistMates {
      * @param dom_content - Stelle an der der Content der Seite angehängt wird
      */
     constructor(dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.sharedPlaylists = [];
         this.dom_content = dom_content;
         this.fetchPlaylistMates().then((result) => {

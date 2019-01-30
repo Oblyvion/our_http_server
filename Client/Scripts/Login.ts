@@ -1,14 +1,12 @@
 import {manager} from "./app.js";
 import {Registration} from "./Registration.js";
 
-console.log("port: ", localStorage.getItem("port"));
-
 /**
  * @class Login
  * Erzeugt den Loginscreen damit es Benutzern ermöglicht wird sich anzumelden
  */
 export class Login implements AppContainer {
-    private API_URL = 'http://localhost:' + localStorage.getItem("port");
+    private API_URL = 'http://localhost:3000';
     private dom_root: HTMLElement;
     private dom: HTMLElement;
     private dom_login: HTMLElement;

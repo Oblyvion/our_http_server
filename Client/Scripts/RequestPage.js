@@ -11,7 +11,7 @@ export class RequestPage {
      * @param dom_content
      */
     constructor(dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.dom_content = dom_content;
         this.fetchRequests().then((result) => {
             this.Requests = result.data;

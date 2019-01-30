@@ -16,7 +16,7 @@ export class AudioPlayer {
      * @param songclicked - dieser Parameter gibt an auf welchen Song in der Playlist geklickt wurde.
      */
     constructor(dom, Songs) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.songs = Songs;
         this.dom_root = dom;
         this.dom = document.createElement('div');
