@@ -6,19 +6,25 @@ import { About_us } from "./About_us.js";
 import { Contact } from "./Contact.js";
 import { Impressum } from "./Impressum.js";
 import { MyAccount } from "./MyAccount.js";
-// window.onbeforeunload = function(e) {
-//     return 'Dialog text here.';
-// };
+/**
+ * app.js
+ * Repräsentiert die Steuereinheit der Application.
+ *
+ *
+ */
 const dom_root = document.getElementById('app');
 const dom_content = document.createElement('div');
 dom_content.classList.add('content');
 const header = new Header(dom_root, dom_content);
-//const audioPlayer = new AudioPlayer(dom_content);
 dom_root.appendChild(dom_content);
 localStorage.setItem("PlaylistIndex", "1");
 let active_app = null;
+/**
+ * @function manager
+ * Hauptfunktion, die die einzelnen Pages aufruft, welche große Veränderungen im DOM mit sich bringen
+ * @param {string} app - "page-key" der die einzelnen cases im switch statement durchläuft je nachdem was angegeben wird
+ */
 export const manager = function (app) {
-    localStorage.setItem("port", "3000");
     if (active_app != null) {
         active_app.close();
         active_app = null;
@@ -26,7 +32,7 @@ export const manager = function (app) {
     switch (app) {
         case 'login':
             header.set('Login');
-            active_app = new Login(dom_content);
+            active_app = new Login();
             break;
         case 'register':
             header.set('Registration');

@@ -1,4 +1,17 @@
+/**
+ * @class About_us
+ * Repräsentiert die About us Seite.
+ *
+ *
+ */
 export class About_us {
+    /**
+     * @constructor About_us
+     * Konstruiert die About us Seite, indem alle Elemente erzeugt und appended werden.
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom) {
         this.dom_root = document.getElementById('app');
         this.dom_AboutUs = dom;
@@ -17,6 +30,12 @@ export class About_us {
         dom_AboutUsInformationText.textContent = "This project has been developed and designed by Julian Fess and Franz-Johannes Weber.\r\n" +
             "We are students of the \"University of Applied Sciences\" in Worms and created this WebApp for private use only.";
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     *
+     */
     close() {
         this.dom_AboutUs.classList.remove("ContentAboutUs");
         while (this.dom_AboutUs.firstChild) {

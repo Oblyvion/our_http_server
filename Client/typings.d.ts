@@ -1,9 +1,5 @@
-interface iAppContainer {
+interface AppContainer {
     close(): void;
-}
-
-interface Token {
-    token: string,
 }
 
 interface Playlist {

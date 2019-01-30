@@ -1,11 +1,21 @@
+/**
+ * @class RequestPage
+ * Die class RequestPage konstruiert die Page um PlaylistMate Anfragen zu bestätigen.
+ */
 export class RequestPage {
-    constructor(dom_root, dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
-        this.dom_root = dom_root;
+    /**
+     * @constructor RequestPage
+     * Der constructor der RequestPage erzeugt alle für das Grundgerüst der Seite wichtigen DOM Elemente die für die Seite benötigt werden und
+     * hängt diese dem dom_content an
+     *
+     * @param dom_content
+     */
+    constructor(dom_content) {
+        this.API_URL = 'http://localhost:3000';
         this.dom_content = dom_content;
         this.fetchRequests().then((result) => {
             this.Requests = result.data;
-            console.log("Das sind die Requests: ", this.Requests);
+            //console.log("Das sind die Requests: ", this.Requests);
             this.addRequestContainers();
         }).catch(err => {
             console.log(err);
@@ -24,6 +34,15 @@ export class RequestPage {
         this.dom_RequestContainer.classList.add('RequestContainer');
         this.dom_divRequestPage.appendChild(this.dom_RequestContainer);
     }
+    /**
+     * @async fetchPlaylistMates()
+     * Ruft die Route /playlistMates des Servers auf, welcher darauf die Playlist Mates
+     * des Users liefert, der gerade angemeldet ist.
+     * In diesen Daten der User befindet sich auch der Wert dafür, ob eine RequestAnfrage gestellt wurde oder nicht.
+     * Diese Daten werden bei onfullfilled in den Array Mates geschrieben
+     *
+     * Method: GET
+     */
     async fetchRequests() {
         try {
             let response = await fetch(this.API_URL + "/playlistMates", {
@@ -37,18 +56,29 @@ export class RequestPage {
                 mode: 'cors',
             });
             const data = await response.json();
-            console.log("das ist die antwort des Servers auf fetch /users : ", data);
+            //console.log("das ist die Antwort des Servers auf fetch /users : ", data);
             return data;
         }
         catch (err) {
             console.log("Error fetching Users!: ", err);
         }
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden
+     *
+     */
     close() {
         while (this.dom_content.firstChild) {
             this.dom_content.removeChild(this.dom_content.firstChild);
         }
     }
+    /**
+     * @function addRequestContainers()
+     * Die Funktion addRequestContainers() fügt jeden einzelnen Mate aus Mates hinzu, bei dem REQUEST (abgefragt vom Server) auf
+     * 0 steht, diese User haben eine Anfrage an den angemeldeten Benutzer gesendet.
+     */
     addRequestContainers() {
         for (let i = 0; i < this.Requests.length; i++) {
             if (this.Requests[i].REQUEST === 0) {
@@ -67,7 +97,6 @@ export class RequestPage {
                 this.dom_RequestContainerDataForm.classList.add('RequestContainerDataForm');
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataForm);
                 this.dom_RequestContainerDataForm.setAttribute("id", "Form");
-                this.dom_RequestContainerDataForm.addEventListener("submit", this.processForm);
                 this.dom_RequestContainerDataForm.addEventListener("onSubmit", event => {
                     event.preventDefault();
                     return false;
@@ -112,9 +141,9 @@ export class RequestPage {
                     const elements = form.elements;
                     // @ts-ignore
                     if (elements[0].checked) {
-                        console.log("radio button accept 1");
+                        //console.log("radio button accept 1");
                         this.sendRequestResponse(i, 1).then((result) => {
-                            console.log("Das ist /playlistmate/request: ", result);
+                            //console.log("Das ist /playlistmate/request: ", result);
                             alert("You have accepted the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
@@ -122,9 +151,9 @@ export class RequestPage {
                         });
                     }
                     else {
-                        console.log("radio button decline 0");
+                        //console.log("radio button decline 0");
                         this.sendRequestResponse(i, 0).then((result) => {
-                            console.log("Das ist /playlistmate/request: ", result);
+                            //console.log("Das ist /playlistmate/request: ", result);
                             alert("You have declined the Request!");
                             this.dom_RequestContainerData.remove();
                         }).catch(err => {
@@ -135,28 +164,19 @@ export class RequestPage {
             }
         }
     }
-    processForm(e) {
-        if (e.preventDefault())
-            e.preventDefault();
-        // const radios = document.getElementsByName('radiobtn');
-        //
-        // for (let i = 0, length = radios.length; i < length; i++)
-        // {
-        //     if (radios[i].checked)
-        //     {
-        //         // do whatever you want with the checked radio
-        //         alert(radios[i].value);
-        //
-        //         // only one radio can be logically checked, don't check the rest
-        //         break;
-        //     }
-        // }
-        /* do what you want with the form */
-        // You must return false to prevent the default form behavior
-        return false;
-    }
+    /**
+     * @async fetchAddCollabs()
+     * Ruft die Route /playlistMates/request des Servers auf, welcher darauf dem mitgesendeten "Mate" eine Zusage auf seine
+     * Anfrage gibt.
+     *
+     * @param index - index für den Mates Array um den richtigen Mate Namen mitzusenden
+     * @param value - value den der User beim RadioButton aus Funktion addRequestContainers() ausgewählt hat
+     * entweder angenommen = 1 oder abgelehnt = 0;
+     *
+     * Method: POST
+     */
     async sendRequestResponse(index, value) {
-        console.log("Mates Name! ", this.Requests[index].NAME);
+        //console.log("Mates Name! ",this.Requests[index].NAME);
         try {
             let response = await fetch(this.API_URL + "/playlistMates/request", {
                 body: JSON.stringify({
@@ -173,11 +193,11 @@ export class RequestPage {
                 mode: 'cors',
             });
             const data = await response.json();
-            console.log("das ist die antwort des Servers auf fetch /playlistmate/request : ", data);
+            //console.log("das ist die Antwort des Servers auf fetch /playlistmate/request : ", data);
             return data;
         }
         catch (err) {
-            console.log("Error fetching /playlistMates/request!: ", err);
+            console.log("Error fetching /playlistMates/request: ", err);
         }
     }
 }

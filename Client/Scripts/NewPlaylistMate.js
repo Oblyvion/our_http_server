@@ -1,10 +1,21 @@
+/**
+ * @class NewPlaylistMate
+ * Enthält die Seite NewPlaylistMate, welche es dem User ermöglicht neue User zu seinen Playlist-Mates hinzuzufügen.
+ */
 export class NewPlaylistMate {
-    constructor(dom_root, dom_content) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+    /**
+     * @constructor NewPlaylistMate
+     * Konstruiert die Seite dazu gehört der "Zweitheader" der Seite in dem die Aufgabe an den User formuliert ist,
+     * die Suche nach Usern ermöglicht durch ein Input Field und ein Random Div indem User angezeigt werden die noch nicht zu den PlaylistMates
+     * gehören.
+     *
+     * @param dom_content
+     */
+    constructor(dom_content) {
+        this.API_URL = 'http://localhost:3000';
         this.randomIndex = [];
         this.topWerte = [];
         this.leftWerte = [];
-        this.dom_root = dom_root;
         this.dom_content = dom_content;
         this.fetchUsers().then((result) => {
             this.Users = result.data;
@@ -42,7 +53,6 @@ export class NewPlaylistMate {
                 if (this.Users[j].NAME.match(regexp)) {
                     for (let i = 0; i < this.dom_NewMatesSearchMenuContent.children.length; i++) {
                         if (this.dom_NewMatesSearchMenuContent.children[i].textContent === this.Users[j].NAME) {
-                            console.log("hallo hier if remove!");
                             this.dom_NewMatesSearchMenuContent.children[i].remove();
                         }
                     }
@@ -52,9 +62,9 @@ export class NewPlaylistMate {
                     this.dom_NewMatesSearchMenuData.setAttribute('href', '#');
                     this.dom_NewMatesSearchMenuData.addEventListener('click', () => {
                         this.fetchRequest(j).then(result => {
-                            console.log("result:  ", result);
+                            // console.log("result:  ", result);
                             const antwort = result.data;
-                            console.log("Das ist request result: ", antwort);
+                            // console.log("Das ist request result: ", antwort);
                             alert("User " + this.Users[j].NAME + " has been asked to become your Playlist mate!");
                         }).catch(err => {
                             alert("Playlist mate request failed!");
@@ -64,10 +74,8 @@ export class NewPlaylistMate {
                     this.dom_NewMatesSearchMenuContent.appendChild(this.dom_NewMatesSearchMenuData);
                 }
                 else {
-                    console.log("hallo hier else!");
                     for (let i = 0; i < this.dom_NewMatesSearchMenuContent.children.length; i++) {
                         if (this.dom_NewMatesSearchMenuContent.children[i].textContent === this.Users[j].NAME) {
-                            console.log("hallo hier else remove!");
                             this.dom_NewMatesSearchMenuContent.children[i].remove();
                         }
                     }
@@ -89,83 +97,36 @@ export class NewPlaylistMate {
         this.dom_NewMatesRandomDivContent = document.createElement('div');
         this.dom_NewMatesRandomDiv.appendChild(this.dom_NewMatesRandomDivContent);
         this.dom_NewMatesRandomDivContent.classList.add("NewMatesRandomContent");
-        // this.dom_divMatesHeaderButtons = document.createElement('div');
-        // this.dom_divMatesHeaderButtons.classList.add('PlaylistMatesHeaderButtonDiv');
-        // this.dom_divNewMateHeader.appendChild(this.dom_divMatesHeaderButtons);
-        //
-        // this.dom_MatesHeaderAddBtn = document.createElement('img');
-        // this.dom_MatesHeaderAddBtn.classList.add('PlaylistMatesHeaderAddBtn');
-        // this.dom_divMatesHeaderButtons.appendChild(this.dom_MatesHeaderAddBtn);
-        // this.dom_MatesHeaderAddBtn.src = "./Images/add_button.png";
-        // this.dom_MatesHeaderAddBtn.style.width = "20px";
-        // this.dom_Table = document.createElement('table');
-        // this.dom_Table.classList.add('MatesTable');
-        // this.dom_divNewPlaylistMate.appendChild(this.dom_Table);
-        // this.dom_Table.cellSpacing = "0";
-        // this.dom_Table.cellPadding = "0";
-        //
-        // this.dom_TableHeader = document.createElement('tr');
-        // this.dom_TableHeader.classList.add('TableHeaderRow');
-        // this.dom_Table.appendChild(this.dom_TableHeader);
-        //
-        // this.dom_TableHeaderName1 = document.createElement('th');
-        // this.dom_TableHeaderName1.classList.add('TableHeader');
-        // this.dom_TableHeader.appendChild(this.dom_TableHeaderName1);
-        // this.dom_TableHeaderName1.textContent = "Playlist-Mate Name";
-        //
-        // this.dom_TableHeaderName2 = document.createElement('th');
-        // this.dom_TableHeaderName2.classList.add('TableHeader');
-        // this.dom_TableHeader.appendChild(this.dom_TableHeaderName2);
-        // this.dom_TableHeaderName2.textContent = "Shared Playlists";
-        //
-        // this.dom_TableHeaderName3 = document.createElement('th');
-        // this.dom_TableHeaderName3.classList.add('TableHeader');
-        // this.dom_TableHeader.appendChild(this.dom_TableHeaderName3);
-        // this.dom_TableHeaderName3.textContent = "Score";
     }
+    /**
+     * @function addRandomContent()
+     * Die Funktion generiert random Zahlen zwischen 0 und dem Array Users.length -1 um ein Array namens RandomIndex mit
+     * ungleichen Werten(Indizes) zu füllen, welche dann den neu erzeugten RandomMateAnchors hinzugefügt zu werden um die Random
+     * Content Box zu füllen.
+     */
     addRandomContent() {
         let dom_NewRandomMate;
         let random;
-        console.log("Users length: ", this.Users.length);
+        // console.log("Users length: ", this.Users.length);
         for (let i = 0; i < this.Users.length; i++) {
             random = Math.floor(Math.random() * (this.Users.length));
-            console.log("random: ", random);
-            console.log("das ist i in der for schleife: ", i);
+            // console.log("random: ", random);
+            // console.log("das ist i in der for schleife: ", i);
             if (!this.randomIndex.includes(random)) {
                 this.randomIndex.push(random);
             }
             else {
                 while (this.randomIndex.includes(random)) {
                     random = Math.floor(Math.random() * (this.Users.length));
-                    console.log("new random: ", random);
-                    console.log("das ist i in der while: ", i);
+                    // console.log("new random: ", random);
+                    // console.log("das ist i in der while: ", i);
                     if (!this.randomIndex.includes(random)) {
                         this.randomIndex.push(random);
                         break;
                     }
                 }
             }
-            // if (i === 0) {
-            //     this.randomIndex.push(random);
-            //     console.log("i === 0 added");
-            // }
-            //
-            // if (this.randomIndex.includes(random) && i !== 0) {
-            //     while (this.randomIndex.includes(random)) {
-            //         random = Math.floor(Math.random() * (this.Users.length - 1));
-            //         // console.log("random new: ", newrandom);
-            //         if (!this.randomIndex.includes(random)) {
-            //             console.log("crazy added");
-            //             this.randomIndex.push(random);
-            //             break;
-            //         }
-            //     }
-            // }
-            // if (!this.randomIndex.includes(random) && i !== 0) {
-            //     console.log("normal added");
-            //     this.randomIndex.push(random);
-            // }
-            console.log("randomarray: ", this.randomIndex);
+            //console.log("randomarray: ", this.randomIndex);
             dom_NewRandomMate = document.createElement('a');
             this.dom_NewMatesRandomDivContent.appendChild(dom_NewRandomMate);
             dom_NewRandomMate.classList.add("NewRandomMate");
@@ -174,11 +135,18 @@ export class NewPlaylistMate {
             this.checkIfRandomInArray(this.leftWerte, randomMarginWidth, i);
             let randomMarginHeight = Math.floor(Math.random() * (90));
             this.checkIfRandomInArray(this.topWerte, randomMarginHeight, i);
-            console.log("margintop: und marginleft; ", this.topWerte[i].toString() + "%", this.leftWerte[i].toString() + "%");
+            //console.log("margintop: und marginleft; ", this.topWerte[i].toString() + "%", this.leftWerte[i].toString() + "%");
             dom_NewRandomMate.style.top = this.topWerte[i].toString() + "%";
             dom_NewRandomMate.style.left = this.leftWerte[i].toString() + "%";
         }
     }
+    /**
+     * @function fetchUsers()
+     * Ruft die Route /users des Servers auf welche nur die User zurücklierfert, welche keine Playlist-Mates des
+     * jeweils angemeldeten Users sind
+     *
+     * Method: GET
+     */
     async fetchUsers() {
         try {
             let response = await fetch(this.API_URL + "/users ", {
@@ -192,16 +160,21 @@ export class NewPlaylistMate {
                 mode: 'cors',
             });
             const data = await response.json();
-            console.log("das ist die antwort des Servers auf fetch /users : ", data);
             return data;
         }
         catch (err) {
             console.log("Error fetching Users!: ", err);
         }
     }
+    /**
+     * @function fetchUsers()
+     * Ruft die Route /users des Servers auf welche nur die User zurücklierfert, welche keine Playlist-Mates des
+     * jeweils angemeldeten Users sind.
+     *
+     * Method: POST
+     */
     async fetchRequest(clicked) {
         try {
-            console.log("hallo hoffentlich hier ned bla ", this.Users[clicked].NAME);
             let response = await fetch(this.API_URL + "/playlistMate/", {
                 body: JSON.stringify({
                     mate: this.Users[clicked].NAME,
@@ -222,11 +195,27 @@ export class NewPlaylistMate {
             console.log("Error fetching Request for Mate!: ", err);
         }
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden
+     *
+     */
     close() {
         while (this.dom_content.firstChild) {
             this.dom_content.removeChild(this.dom_content.firstChild);
         }
     }
+    /**
+     * @function checkIfRandomInArray()
+     * Die Funktion checkt ob ein bestimmter random generierter Wert schon im Array vorhanden ist, ist dies
+     * nicht der Fall so wird der random Wert hinzugefügt ansonsten wird solange ein neuer generiert, bis der
+     * Wert in den Array passt, da er nicht vorhanden ist
+     *
+     * @param array - array in dem gesucht wird
+     * @param random - random wert der bereits erzeugt wurde
+     * @param i - index um zu überprüfen ob der Array am Anfang ist und einfach ein random Wert hinzugefügt werden kann.
+     */
     checkIfRandomInArray(array, random, i) {
         if (i === 0) {
             array.push(random);

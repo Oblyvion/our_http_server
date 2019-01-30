@@ -1,7 +1,15 @@
 import { manager } from "./app.js";
+/**
+ * @class Registration
+ * Erzeugt den Registrierungsscreen damit es Benutzern ermöglicht wird sich zu registrieren
+ */
 export class Registration {
+    /**
+     *@constructor Registration
+     * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
+     */
     constructor(dom) {
-        this.API_URL = 'http://localhost:' + localStorage.getItem("port");
+        this.API_URL = 'http://localhost:3000';
         this.dom_root = document.getElementById("app");
         this.dom = document.createElement('div');
         this.dom.classList.add('ContentLoginRegistration');
@@ -49,23 +57,26 @@ export class Registration {
             new manager("login");
         });
         dom_registerLink.appendChild(newlink);
-        // const dom_toLoginButton = document.createElement('button');
-        // dom_toLoginButton.classList.add('button');
-        // this.dom_register.appendChild(dom_toLoginButton);
-        // dom_toLoginButton.textContent = "Already registered? Login!";
-        // dom_toLoginButton.addEventListener('click', () => {
-        //     this.close();
-        //     new manager("login");
-        // });
     }
+    /**
+     * @async registerUser()
+     * Überprüft die Eingabe des Users ob der eingegebene Benutzername größer als ein Zeichen ist und ob das
+     * Passwort mindestens 4 Zeichen lang ist. Danach wird die Route /register des Servers aufgerufen. Dabei werden die Registrierungsdaten im Body mit
+     * übergeben um sie beim Server angelangt in die  Datenbank zu schreiben
+     * Gibt der Server success !== true zurück so wird eine Fehlermeldung an die info Funktion gesendet.
+     * Bei success === true wird der User registriert und die Info Meldung wird grün.
+     *
+     * Method: POST
+     */
     async registerUser() {
-        let password = this.dom_registerPW.value; // Registration.sha256(this.dom_registerPW.toString());
+        let password = this.dom_registerPW.value;
+        //password = Registration.sha256(password);
         if (this.dom_registerID.value.length > 1) {
             try {
                 if (this.dom_registerPW.value.length > 3) {
-                    console.log("PW too short = ", this.dom_registerPW.value.length);
-                    console.log(`das ist body name: ${this.dom_registerID.value}`);
-                    console.log(`das ist body pw: ${password.toString()}`);
+                    // console.log("PW too short = ", this.dom_registerPW.value.length);
+                    // console.log(`das ist body name: ${this.dom_registerID.value}`);
+                    // console.log(`das ist body pw: ${password.toString()}`);
                     const response = await fetch(this.API_URL + '/user/', {
                         body: JSON.stringify({
                             name: this.dom_registerID.value,
@@ -84,7 +95,6 @@ export class Registration {
                         console.error(result);
                         throw result.msg;
                     }
-                    //new User(this.dom_register, result.data);
                     this.info(`Registration successful!`, `created Account: ${this.dom_registerID.value}`, 'success');
                 }
                 else
@@ -100,6 +110,13 @@ export class Registration {
             this.info("Registration Error! Please try again.", err.message, 'warning');
         }
     }
+    /**
+     * @function info
+     * Die info Funktion wird aufgerufen um dem User eine Fehlermeldung zu zeigen wenn beim Login Vorgang etwas schief gegangen ist
+     * @param message - enthält die Fehlermeldung
+     * @param headline - enthält die Daten falls ein Fehler entsteht oder den Benutzernamen des erfolgreich erzeugten Users
+     * @param classname - enthält die Information ob es eine Warnung ist oder nicht
+     */
     info(message, headline = '', classname = 'info') {
         if (this.dom_register_notification) {
             this.dom_register_notification.remove();
@@ -126,9 +143,20 @@ export class Registration {
     //     // convert bytes to hex string
     //     return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     // }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content
+     *
+     */
     close() {
         this.dom.remove();
     }
+    /**
+     * @function animate()
+     *
+     * Animiert den LoginContainer
+     */
     animate() {
         const elem = this.dom_register;
         let pos = 150;
@@ -145,27 +173,4 @@ export class Registration {
         }
     }
 }
-//
-// clickLogin() {
-//     this.animate();
-//     const RegistrationForm = document.getElementsByClassName("RegistrationForm").item(0);
-//     const LoginForm = document.getElementsByClassName("LoginForm").item(0);
-//     LoginForm.style.display = "block";
-//     RegistrationForm.style.display = "none";
-// }
-//
-// animate() {
-//     const elem = document.getElementById("form");
-//     let pos = -100;
-//     const id = setInterval(frame, 5);
-//     function frame() {
-//         if (pos === 0) {
-//             clearInterval(id);
-//         } else {
-//             pos++;
-//             elem.style.bottom = pos + "px";
-//             elem.style.animation.blink();
-//         }
-//     }
-// }
 //# sourceMappingURL=Registration.js.map

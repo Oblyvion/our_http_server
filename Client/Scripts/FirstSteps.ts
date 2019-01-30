@@ -1,30 +1,44 @@
 import {AudioPlayer} from "./AudioPlayer.js"
-import {manager} from "./app.js";
 import {NavBar} from "./NavBar.js";
-import {PlaylistTable} from "./PlaylistTable.js";
-import {Login} from "./Login";
 
+/**
+ * @class FirstSteps
+ * Baut den ersten Grundrahmen der Application auf, hier gibt es erstmals eine Playlist Navigation Bar und auch einen Musikplayer
+ * der jedoch erst nach einem Klick auf Playlists dazu in der Lage ist Musik abzuspielen, da noch nicht klar ist welche Playlist gehört werden soll.
+ */
 export class FirstSteps {
-    private API_URL = 'http://localhost:'+localStorage.getItem("port");
     private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private audioPlayer: AudioPlayer;
     private navBar: NavBar;
 
+    /**
+     * @constructor FirstSteps
+     * Konstruiert den FirstSteps Application Grundrahmen, durch erzeugen des AudioPlayers und der NavBar
+     * @param {HTMLElement} dom - Ort des Inhalts der Page
+     *
+     *
+     */
     constructor(dom: HTMLElement) {
 
         this.dom_root = document.getElementById('app');
 
         this.dom_content = dom;
         this.dom_content.classList.add('FirstSteps');
-        this.audioPlayer = new AudioPlayer(this.dom_content, null, null);
-        // console.log("FirstSteps.ts, constructor: HALLO PLEASE");
-        this.navBar = new NavBar(this.dom_root, this.dom_content);
+        this.audioPlayer = new AudioPlayer(this.dom_content, null);
+        this.navBar = new NavBar(this.dom_content);
         this.dom_root.appendChild(this.dom_content);
 
 
     }
 
+
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw die einzelnen Dom Elemente werden removed
+     * audioPlayer und navBar werden removed
+     */
     close() {
         this.dom_content.classList.remove("FirstSteps");
         while (this.dom_content.firstChild) {
@@ -32,6 +46,5 @@ export class FirstSteps {
         }
         this.audioPlayer.close();
         this.navBar.close();
-
     }
 }
