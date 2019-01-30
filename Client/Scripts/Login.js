@@ -70,14 +70,21 @@ export class Login {
         dom_loginLink.appendChild(newlink);
     }
     /**
+     * @async loginUser()
+     * Überprüft die Eingabe des Users ob überhaupt etwas eingegeben wurde und danach
+     * wird die Route /login des Servers gefetched. Dabei werden die Logindaten im Body mit
+     * übergeben um sie angelangt beim Server mit den Daten in der Datenbank zu überprüfen
+     * Gibt der Server success !== true zurück so wird eine Fehlermeldung an die info Funktion gesendet.
+     * Bei success === true wird der User eingeloggt
      *
+     * Method: POST
      */
     async loginUser() {
         if (this.dom_loginInputID.value !== "" && this.dom_loginInputPW.value !== "") {
             let password = this.dom_loginInputPW.value; //Registration.sha256(this.dom_loginInputPW.value);
             try {
                 // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-                console.log(`das ist body pw: ${password.toString()}`);
+                // console.log(`das ist body pw: ${password.toString()}`);
                 const response = await fetch(this.API_URL + '/login', {
                     body: JSON.stringify({
                         name: this.dom_loginInputID.value,
@@ -99,7 +106,7 @@ export class Login {
                     throw "wrong data";
                 }
                 else {
-                    this.info(`Login successful!`, '', 'success');
+                    this.info(`Login successful!`, 'success');
                     // console.log("Login.ts, loginUser: result.data = ", result.data);
                     // console.log("Login.ts, loginUser: 0localStorage = ", localStorage.getItem('token'));
                     localStorage.clear();
@@ -112,14 +119,20 @@ export class Login {
             }
             catch (err) {
                 console.log(err);
-                this.info("Login Error! Wrong username or password.", err, 'warning');
+                this.info("Login Error! Wrong username or password.", 'warning');
             }
         }
         else {
-            this.info("Please type in username and password.", "", 'warning');
+            this.info("Please type in username and password.", 'warning');
         }
     }
-    info(message, headline = '', classname = 'info') {
+    /**
+     * @function info
+     * Die info Funktion wird aufgerufen um dem User eine Fehlermeldung zu zeigen wenn beim Login Vorgang etwas schief gegangen ist
+     * @param message - enthält die Fehlermeldung
+     * @param classname - enthält die Information ob es eine Warnung ist oder nicht
+     */
+    info(message, classname = 'info') {
         if (this.dom_login_notification) {
             this.dom_login_notification.remove();
         }
@@ -135,9 +148,20 @@ export class Login {
             this.dom_login_notification.style.backgroundColor = "Green";
         }
     }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content
+     *
+     */
     close() {
         this.dom.remove();
     }
+    /**
+     * @function animate()
+     *
+     * Animiert den LoginContainer
+     */
     animate() {
         const elem = this.dom_login;
         let pos = 150;

@@ -1,5 +1,12 @@
 import {AudioPlayer} from "./AudioPlayer.js";
 
+/**
+ * @class PlaylistTable
+ * Die class PlaylistTable ist mit unter die wichtigste Klasse in unserer Application.
+ * Sie kümmert sich um das Hauptelement der Application undzwar die Playlists und das abspielen dieser.
+ * Dazu konstruiert sie den gesammten PlaylistTable also die Tabelle in der die Playlists stehen.
+ *
+ */
 export class PlaylistTable {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
@@ -44,8 +51,17 @@ export class PlaylistTable {
 
     };
 
-    constructor(dom_root, dom_content, PlaylistData) {
-        this.dom_root = dom_root;
+    /**
+     * @constructor PlaylistTable
+     *
+     * Der constructor von PlaylistTable erzeugt alle DOM Elemente die zur PlaylistTable gehören
+     * er baut den Table auf und ruft die Funktionen auf die die Daten vom Server holen.
+     *
+     *
+     * @param dom_content - an dieser Stelle wird der PlaylistTable angehängt
+     * @param PlaylistData - Die jenige Playlist die gerade angeklickt wurde, enthält den Namen und die Id der Playlist
+     */
+    constructor(dom_content, PlaylistData) {
         this.dom_content = dom_content;
         this.playlistData = PlaylistData;
         this.PlaylistID = PlaylistData.ID;
@@ -318,6 +334,14 @@ export class PlaylistTable {
         });
     }
 
+    /**
+     * @async fetchPlaylistMates()
+     * Ruft die Route /playlistMates des Servers auf, welcher darauf die Playlist Mates
+     * des Users liefert, der gerade angemeldet ist.
+     * Diese Daten werden bei onfullfilled in den Array Songs des Playlist Objekt geschrieben
+     *
+     * Method: GET
+     */
     async fetchPlaylistMates() {
         try {
             let response = await fetch(this.API_URL + "/playlistMates ", {
@@ -338,6 +362,14 @@ export class PlaylistTable {
         }
     }
 
+    /**
+     * @async fetchPlaylistSongs()
+     * Ruft die Route /playlistMates/ + this.PlaylistID des Servers auf, welcher darauf die Songs der Playlist liefert
+     * zu der die PlaylistID passt.
+     * Diese Daten werden bei onfullfilled in den Array Mates geschrieben
+     *
+     * Method: GET
+     */
     async fetchPlaylistSongs() {
         // console.log("this.PlaylistID = ", this.PlaylistID);
         try {
@@ -359,6 +391,12 @@ export class PlaylistTable {
 
     }
 
+    /**
+     * @function addPlaylistSongs()
+     * Die Funktion addPlaylistSongs fügt die vom Server abgerufenen Songs der Playlist hinzu, indem
+     * sie neue TableDatas erzeugt und diese der Tabelle hinzufügt
+     * Desweiteren macht sie die Songs durch einen EventListener anklickbar, was sie abspielbar macht.
+     */
     addPlaylistSongs() {
         while (this.dom_Table.childNodes.length > 1) {
             this.dom_Table.removeChild(this.dom_Table.lastChild);
@@ -397,6 +435,16 @@ export class PlaylistTable {
         }
     }
 
+    /**
+     * @async fetchAddCollabs()
+     * Ruft die Route /collabs/this.PlaylistID des Servers auf, welcher darauf versucht den Mate der mit übergeben wurde
+     * zu einem Collaborator für diese Playlist zu machen.
+     * Diese Daten werden bei onfullfilled in den Array Songs des Playlist Objekt geschrieben
+     *
+     * @param index - index für den Mates Array um den richtigen Mate Namen mitzusenden
+     *
+     * Method: POST
+     */
     async fetchAddCollabs(index) {
         try {
             let response = await fetch(this.API_URL + "/collabs/" + this.PlaylistID, {
@@ -420,6 +468,12 @@ export class PlaylistTable {
         }
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden außer der AudioPlayer und die NavBar
+     *
+     */
     close() {
         while (this.dom_content.childNodes.length > 2) {
             this.dom_content.removeChild(this.dom_content.lastChild);

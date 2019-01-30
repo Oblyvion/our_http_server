@@ -1,5 +1,9 @@
 import {PlaylistTable} from "./PlaylistTable.js";
 
+/**
+ * @class NavBar
+ * Erzeugt die Playlist Navigationsleiste der Application
+ */
 export class NavBar {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
@@ -19,7 +23,12 @@ export class NavBar {
     private CollaboratedPlaylists;
 
 
-    constructor(dom_body: HTMLElement, dom_content: HTMLElement) {
+    /**
+     * @constructor NavBar
+     * Konstruiert die NavBar mit all Ihren Elementen und hängt sie dem Content an
+     * @param dom_content - dort wird die NavBar angehängt
+     */
+    constructor(dom_content: HTMLElement) {
 
         this.fetchPlaylists().then((result) => {
             this.OwnlistofPlaylists = result.data;
@@ -39,8 +48,6 @@ export class NavBar {
                 }
             );
 
-
-        this.dom_root = dom_body;
         this.dom_content = dom_content;
 
         this.dom_divNavBar = document.createElement('div');
@@ -108,6 +115,12 @@ export class NavBar {
 
     }
 
+    /**
+     * @async fetchPlaylists()
+     * Hier wird die Route /playlists des Servers angesprochen, welche die eigenen Playlists des Users fetcht.
+     *
+     * Method: GET
+     */
     async fetchPlaylists() {
         try {
             let response = await fetch(this.API_URL + "/playlists/", {
@@ -127,6 +140,13 @@ export class NavBar {
         }
     }
 
+    /**
+     * @async fetchCollaboratedPlaylists()
+     * Hier wird die Route /playlists/collabs des Servers angesprochen, welche die Playlists des Users zurückgibt bei denen er ein
+     * Playlist Collaborator ist.
+     *
+     * Method: GET
+     */
     async fetchCollaboratedPlaylists() {
         try {
             let response = await fetch(this.API_URL + "/playlists/collabs", {
@@ -146,6 +166,15 @@ export class NavBar {
         }
     }
 
+    /**
+     * @function addPlaylistNames()
+     * Die Funktion addPlaylistNames fügt die Namen der jeweiligen Playlists des jeweiligen Users in die NavBar ein.
+     * Dabei muss unterschieden werden ob es eine eigene Playlist ist oder eine Playlist an der mitgearbeitet wird.
+     * @param playlists - Array der die Playlists enthält
+     * @param ownornot - boolean der aussagt ob es eigene Playlists sind oder CollabPlaylists
+     * true = own
+     * false = collaborated
+     */
     addPlaylistNames(playlists, ownornot) {
 
         //console.log("länge: ", playlists.length);
@@ -154,46 +183,40 @@ export class NavBar {
                 this.dom_ListElement = document.createElement('li');
                 this.dom_ListElement.classList.add("NavBarListElement");
                 this.dom_UList.appendChild(this.dom_ListElement);
+                this.dom_UList.childNodes.item(i).textContent = this.OwnlistofPlaylists[i].NAME;
                 this.dom_ListElement.addEventListener('click', () => {
                     console.log(this.dom_content);
                     this.clearContent();
                     const header = document.getElementById("header");
                     header.textContent = "Music Playlist";
-                    this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.OwnlistofPlaylists[i]);
+                    this.playlistTable = new PlaylistTable(this.dom_content, this.OwnlistofPlaylists[i]);
                 });
             }
-            this.setNamesofPlaylists(true);
         } else {
             for (let i = 0; i < this.CollaboratedPlaylists.length; i++) {
                 this.dom_ListElement = document.createElement('li');
                 this.dom_ListElement.classList.add("NavBarListElement");
                 this.dom_UList2.appendChild(this.dom_ListElement);
+                this.dom_UList2.childNodes.item(i).textContent = this.CollaboratedPlaylists[i].NAME;
                 this.dom_ListElement.addEventListener('click', () => {
                     this.clearContent();
                     const header = document.getElementById("header");
                     header.textContent = "Music Playlist";
-                    this.playlistTable = new PlaylistTable(this.dom_root, this.dom_content, this.CollaboratedPlaylists[i]);
+                    this.playlistTable = new PlaylistTable(this.dom_content, this.CollaboratedPlaylists[i]);
                 });
             }
-            this.setNamesofPlaylists(false);
         }
 
     }
 
-    setNamesofPlaylists(own) {
-        if (own) {
-            let n = this.dom_UList.childNodes.length;
-            for (let i = 0; i < n; i++) {
-                this.dom_UList.childNodes.item(i).textContent = this.OwnlistofPlaylists[i].NAME;
-            }
-        } else {
-            let n = this.dom_UList2.childNodes.length;
-            for (let i = 0; i < n; i++) {
-                this.dom_UList2.childNodes.item(i).textContent = this.CollaboratedPlaylists[i].NAME;
-            }
-        }
-    }
-
+    /**
+     * @async insertNewPlaylist()
+     * Ruft die Route /playlist/ auf die eine neue Playlist hinzufügt
+     *
+     * @param playlist_name - Name der neuen Playlist
+     *
+     * Method: POST
+     */
     async insertNewPlaylist(playlist_name: String) {
         try {
             const response = await fetch(this.API_URL + '/playlist/', {
@@ -228,12 +251,20 @@ export class NavBar {
         }
     }
 
+    /**
+     * @function clearContent()
+     * löscht jeglichen content bis auf die NavBar und den Music Player
+     */
     clearContent() {
         while (this.dom_content.childNodes.length > 2) {
             this.dom_content.removeChild(this.dom_content.lastChild);
         }
     }
 
+    /**
+     * @function close()
+     * entfernt die Navbar
+     */
     close() {
         this.dom_content.remove();
         if (this.playlistTable) {

@@ -2,6 +2,10 @@ import {AudioPlayer} from "./AudioPlayer.js";
 import {NavBar} from "./NavBar.js";
 import {jwt} from "../../Server/app.js"
 
+/**
+ * @class MyAccount
+ * Erzeugt die MyAccount Page auf der User ihren Score abrufen können
+ */
 export class MyAccount {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
     private dom_root: HTMLElement;
@@ -9,7 +13,6 @@ export class MyAccount {
     private dom_MyAccountContainer: HTMLDivElement;
     private audioPlayer: AudioPlayer;
     private navBar: NavBar;
-    private Playlists;
     private dom_MyAccountInfoContainer: HTMLDivElement;
     private dom_divMyAccHeader: HTMLDivElement;
     private dom_divMyAccHeaderUserName: HTMLDivElement;
@@ -17,16 +20,20 @@ export class MyAccount {
     private dom_MyAccountInfoContainerScore: HTMLDivElement;
     private Score: any;
 
+    /**
+     * @constructor MyAccount
+     * Konstruiert die MyAccount Seite
+     * @param dom - Das wird das DOM Element, was den Content von MyAccount beinhaltet
+     */
     constructor(dom: HTMLElement) {
-        this.Playlists = this.getPlaylists();
         this.dom_root = document.getElementById('app');
 
         this.dom_ContentMyAccount = dom;
         this.dom_ContentMyAccount.classList.add('ContentMyAccount');
         this.dom_root.appendChild(this.dom_ContentMyAccount);
 
-        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null, null);
-        this.navBar = new NavBar(this.dom_root, this.dom_ContentMyAccount);
+        this.audioPlayer = new AudioPlayer(this.dom_ContentMyAccount, null);
+        this.navBar = new NavBar(this.dom_ContentMyAccount);
 
         this.dom_MyAccountContainer = document.createElement('div');
         this.dom_MyAccountContainer.classList.add('MyAccountContainer');
@@ -57,45 +64,29 @@ export class MyAccount {
 
         this.fetchScore().then(data => {
             //console.log("das ist data bei fetch score: ", data);
-            this.Score = data;
+            this.Score = data.data;
             this.dom_MyAccountInfoContainerScore.textContent = this.Score;
         });
-
-
     }
 
+    /**
+     * @function parseJwt()
+     * Parst einen Json Web Token
+     * @param token - das ist der token des angemeldeten Users
+     */
     parseJwt(token) {
         let base64Url = token.split('.')[1];
         let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         return JSON.parse(window.atob(base64));
     };
 
-    async getPlaylists() {
-        try {
-            // console.log(`das ist body name: ${this.dom_loginInputID.value}`);
-            // console.log(`das ist body pw: ${password.toString()}`);
-            // console.log("hallo hier local storageeeeee "+localStorage.getItem("token"));
-            const playlists = await fetch(this.API_URL + "/playlists/", {
-                cache: 'no-cache',
-                headers: {
-                    'content-type': 'application/javascript',
-                    'crossDomain': 'true',
-                    'Authorization': localStorage.getItem("token")
-                },
-                method: 'GET',
-                mode: 'cors',
-            });
-
-            const result = await playlists.json();
-
-            console.log("DAS IST RESULT: ", result.data);
-
-            return result.data;
-        } catch (err) {
-            console.log("Error fetching Playlists!")
-        }
-    }
-
+    /**
+     * @async fetchScore()
+     * fetched die Route /user welche den Score eines Users zurückliefert
+     * wenn alles erfolgreich war wird der Wert bei onfullfilled dem Score zugewiesen und angezeigt.
+     *
+     * Method: GET
+     */
     private async fetchScore() {
         try {
             let response = await fetch(this.API_URL + "/user", {
@@ -117,6 +108,12 @@ export class MyAccount {
         }
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content bzw. removed die einzelnen DOM Elemente
+     *
+     */
     close() {
         this.dom_ContentMyAccount.classList.remove("ContentMyAccount");
         while (this.dom_ContentMyAccount.firstChild) {

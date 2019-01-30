@@ -1,9 +1,12 @@
 import {NewPlaylistMate} from "./NewPlaylistMate.js";
 import {manager} from "./app.js";
 
+/**
+ * @class MyPlaylistMates
+ * Erzeugt die MyPlaylistMates Seite, welche die Playlist-Mates eines Benutzers anzeigt.
+ */
 export class MyPlaylistMates {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
-    private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divPlaylistMates: HTMLDivElement;
     private dom_divMatesHeader: HTMLDivElement;
@@ -19,8 +22,13 @@ export class MyPlaylistMates {
     private Mates;
     private sharedPlaylists = [];
 
-    constructor(dom_root, dom_content) {
-        this.dom_root = dom_root;
+    /**
+     * @constructor MyPlaylistMates
+     * Konstruiert den Table der die Mates anzeigt
+     *
+     * @param dom_content - Stelle an der der Content der Seite angehängt wird
+     */
+    constructor(dom_content) {
         this.dom_content = dom_content;
         this.fetchPlaylistMates().then((result) => {
             this.Mates = result.data;
@@ -55,7 +63,7 @@ export class MyPlaylistMates {
         this.dom_MatesHeaderAddBtn.addEventListener('click', () => {
             new manager("page_first_steps");
             document.getElementById("header").textContent = "Music Playlist New Playlist Mate";
-            new NewPlaylistMate(this.dom_root, this.dom_content);
+            new NewPlaylistMate(this.dom_content);
         });
 
 
@@ -85,6 +93,14 @@ export class MyPlaylistMates {
         this.dom_TableHeaderName3.textContent = "Score";
     }
 
+    /**
+     * @async fetchPlaylistMates()
+     * Ruft die Route /playlistMates des Servers auf, welcher darauf die Playlist Mates
+     * des Users liefert, der gerade angemeldet ist.
+     * Diese Daten werden bei onfullfilled in den Array Mates geschrieben
+     *
+     * Method: GET
+     */
     async fetchPlaylistMates() {
         try {
             let response = await fetch(this.API_URL + "/playlistMates ", {
@@ -106,6 +122,14 @@ export class MyPlaylistMates {
         }
     }
 
+    /**
+     * @async fetchSharedPlaylistsProMate()
+     * Ruft die Route /playlistMates/sharedPlaylists/ des Servers auf, welcher darauf für
+     * jeden einzelnen Playlist-Mate die Anzahl an Shared Playlists zwischen Ihm und dem angemeldeten User zurückliefert
+     * Diese Daten werden bei onfullfilled in den Array sharedPlaylists geschrieben
+     *
+     * Method: GET
+     */
     async fetchSharedPlaylistsProMate(mate) {
         try {
             //console.log("Das ist mate: ", mate);
@@ -128,6 +152,12 @@ export class MyPlaylistMates {
         }
     }
 
+    /**
+     * @function addMatesToTable()
+     * In der Funktion addMatesToTable werden alle bisher gefetchten Daten in die Tabelle übertragen
+     * dabei werden die Arrays durchlaufen und neue TableDataRows erzeugt. Die einzelnen TableDatas werden erzeugt mit den
+     * Werten die sie beinhalten sollen besetzt und in die dafür vorgesehenen Spalten eingesetzt
+     */
     addMatesToTable() {
         for (let i = 0; i < this.Mates.length; i++) {
             if (this.Mates[i].REQUEST === 1) {
@@ -172,6 +202,12 @@ export class MyPlaylistMates {
         }
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden
+     *
+     */
     close() {
         while (this.dom_content.firstChild) {
             this.dom_content.removeChild(this.dom_content.firstChild);

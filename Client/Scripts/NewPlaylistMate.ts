@@ -1,7 +1,10 @@
+/**
+ * @class NewPlaylistMate
+ * Enthält die Seite NewPlaylistMate, welche es dem User ermöglicht neue User zu seinen Playlist-Mates hinzuzufügen.
+ */
 export class NewPlaylistMate {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
 
-    private dom_root: HTMLElement;
     private dom_content: HTMLElement;
     private dom_divNewPlaylistMate: HTMLDivElement;
     private dom_divNewMateHeader: HTMLDivElement;
@@ -19,8 +22,15 @@ export class NewPlaylistMate {
     private dom_NewMatesRandomDivHeader: HTMLDivElement;
     private dom_NewMatesRandomDivContent: HTMLDivElement;
 
-    constructor(dom_root, dom_content) {
-        this.dom_root = dom_root;
+    /**
+     * @constructor NewPlaylistMate
+     * Konstruiert die Seite dazu gehört der "Zweitheader" der Seite in dem die Aufgabe an den User formuliert ist,
+     * die Suche nach Usern ermöglicht durch ein Input Field und ein Random Div indem User angezeigt werden die noch nicht zu den PlaylistMates
+     * gehören.
+     *
+     * @param dom_content
+     */
+    constructor(dom_content) {
         this.dom_content = dom_content;
         this.fetchUsers().then((result) => {
             this.Users = result.data;
@@ -118,6 +128,12 @@ export class NewPlaylistMate {
 
     }
 
+    /**
+     * @function addRandomContent()
+     * Die Funktion generiert random Zahlen zwischen 0 und dem Array Users.length -1 um ein Array namens RandomIndex mit
+     * ungleichen Werten(Indizes) zu füllen, welche dann den neu erzeugten RandomMateAnchors hinzugefügt zu werden um die Random
+     * Content Box zu füllen.
+     */
     addRandomContent() {
 
         let dom_NewRandomMate;
@@ -165,6 +181,13 @@ export class NewPlaylistMate {
         }
     }
 
+    /**
+     * @function fetchUsers()
+     * Ruft die Route /users des Servers auf welche nur die User zurücklierfert, welche keine Playlist-Mates des
+     * jeweils angemeldeten Users sind
+     *
+     * Method: GET
+     */
     async fetchUsers() {
         try {
             let response = await fetch(this.API_URL + "/users ", {
@@ -186,6 +209,13 @@ export class NewPlaylistMate {
         }
     }
 
+    /**
+     * @function fetchUsers()
+     * Ruft die Route /users des Servers auf welche nur die User zurücklierfert, welche keine Playlist-Mates des
+     * jeweils angemeldeten Users sind.
+     *
+     * Method: POST
+     */
     async fetchRequest(clicked) {
         try {
             let response = await fetch(this.API_URL + "/playlistMate/", {
@@ -210,12 +240,28 @@ export class NewPlaylistMate {
         }
     }
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden
+     *
+     */
     close() {
         while (this.dom_content.firstChild) {
             this.dom_content.removeChild(this.dom_content.firstChild);
         }
     }
 
+    /**
+     * @function checkIfRandomInArray()
+     * Die Funktion checkt ob ein bestimmter random generierter Wert schon im Array vorhanden ist, ist dies
+     * nicht der Fall so wird der random Wert hinzugefügt ansonsten wird solange ein neuer generiert, bis der
+     * Wert in den Array passt, da er nicht vorhanden ist
+     *
+     * @param array - array in dem gesucht wird
+     * @param random - random wert der bereits erzeugt wurde
+     * @param i - index um zu überprüfen ob der Array am Anfang ist und einfach ein random Wert hinzugefügt werden kann.
+     */
     private checkIfRandomInArray(array, random, i) {
         if (i === 0) {
             array.push(random);

@@ -146,7 +146,7 @@ export class Header {
             }
             new manager("page_first_steps");
             this.set("My Playlist Mates");
-            this.MyPlaylistMates = new MyPlaylistMates(this.dom_root, this.dom_content)
+            this.MyPlaylistMates = new MyPlaylistMates(this.dom_content)
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData0);
 
@@ -160,7 +160,7 @@ export class Header {
             }
             new manager("page_first_steps");
             this.set("New Playlist Mate");
-            new NewPlaylistMate(this.dom_root, this.dom_content);
+            new NewPlaylistMate(this.dom_content);
         });
         this.dom_DropdownMenuContent.appendChild(this.dom_DropdownMenuData1);
 
@@ -196,7 +196,7 @@ export class Header {
             }
             new manager("page_first_steps");
             this.set("Requests");
-            this.Requests = new RequestPage(this.dom_root, this.dom_content)
+            this.Requests = new RequestPage(this.dom_content)
         });
     }
 

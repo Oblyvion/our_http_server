@@ -1,5 +1,13 @@
 import { manager } from "./app.js";
+/**
+ * @class Registration
+ * Erzeugt den Registrierungsscreen damit es Benutzern ermöglicht wird sich zu registrieren
+ */
 export class Registration {
+    /**
+     *@constructor Registration
+     * Erzeugt den LoginAndRegisterContainer und alle darin befindlichen Elemente
+     */
     constructor(dom) {
         this.API_URL = 'http://localhost:' + localStorage.getItem("port");
         this.dom_root = document.getElementById("app");
@@ -31,12 +39,7 @@ export class Registration {
         this.dom_register.appendChild(dom_registerButton);
         dom_registerButton.textContent = "Register";
         dom_registerButton.addEventListener('click', () => {
-            this.registerUser().then(() => {
-                setTimeout(() => {
-                    this.close();
-                    new manager("login");
-                }, 1700);
-            });
+            this.registerUser();
         });
         const dom_registerLink = document.createElement('div');
         dom_registerLink.classList.add('LinkContainer');
@@ -55,6 +58,16 @@ export class Registration {
         });
         dom_registerLink.appendChild(newlink);
     }
+    /**
+     * @async registerUser()
+     * Überprüft die Eingabe des Users ob der eingegebene Benutzername größer als ein Zeichen ist und ob das
+     * Passwort mindestens 4 Zeichen lang ist. Danach wird die Route /register des Servers aufgerufen. Dabei werden die Registrierungsdaten im Body mit
+     * übergeben um sie beim Server angelangt in die  Datenbank zu schreiben
+     * Gibt der Server success !== true zurück so wird eine Fehlermeldung an die info Funktion gesendet.
+     * Bei success === true wird der User registriert und die Info Meldung wird grün.
+     *
+     * Method: POST
+     */
     async registerUser() {
         let password = this.dom_registerPW.value;
         //password = Registration.sha256(password);
@@ -82,7 +95,6 @@ export class Registration {
                         console.error(result);
                         throw result.msg;
                     }
-                    //new User(this.dom_register, result.data);
                     this.info(`Registration successful!`, `created Account: ${this.dom_registerID.value}`, 'success');
                 }
                 else
@@ -98,6 +110,13 @@ export class Registration {
             this.info("Registration Error! Please try again.", err.message, 'warning');
         }
     }
+    /**
+     * @function info
+     * Die info Funktion wird aufgerufen um dem User eine Fehlermeldung zu zeigen wenn beim Login Vorgang etwas schief gegangen ist
+     * @param message - enthält die Fehlermeldung
+     * @param headline - enthält die Daten falls ein Fehler entsteht oder den Benutzernamen des erfolgreich erzeugten Users
+     * @param classname - enthält die Information ob es eine Warnung ist oder nicht
+     */
     info(message, headline = '', classname = 'info') {
         if (this.dom_register_notification) {
             this.dom_register_notification.remove();
@@ -114,19 +133,30 @@ export class Registration {
             this.dom_register_notification.style.backgroundColor = "Green";
         }
     }
-    static async sha256(message) {
-        // encode as UTF-8
-        const msgBuffer = new TextEncoder().encode(message);
-        // hash the message
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        // convert ArrayBuffer to Array
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        // convert bytes to hex string
-        return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-    }
+    // static async sha256(message: string) {
+    //     // encode as UTF-8
+    //     const msgBuffer = new TextEncoder().encode(message);
+    //     // hash the message
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    //     // convert ArrayBuffer to Array
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     // convert bytes to hex string
+    //     return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    // }
+    /**
+     * @function close()
+     *
+     * Entfernt den Content
+     *
+     */
     close() {
         this.dom.remove();
     }
+    /**
+     * @function animate()
+     *
+     * Animiert den LoginContainer
+     */
     animate() {
         const elem = this.dom_register;
         let pos = 150;

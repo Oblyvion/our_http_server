@@ -1,3 +1,7 @@
+/**
+ * @class RequestPage
+ * Die class RequestPage konstruiert die Page um PlaylistMate Anfragen zu bestätigen.
+ */
 export class RequestPage {
     private API_URL = 'http://localhost:' + localStorage.getItem("port");
 
@@ -22,8 +26,14 @@ export class RequestPage {
     private dom_RequestContainerDataForm: HTMLFormElement;
 
 
-    constructor(dom_root, dom_content) {
-        this.dom_root = dom_root;
+    /**
+     * @constructor RequestPage
+     * Der constructor der RequestPage erzeugt alle für das Grundgerüst der Seite wichtigen DOM Elemente die für die Seite benötigt werden und
+     * hängt diese dem dom_content an
+     *
+     * @param dom_content
+     */
+    constructor(dom_content) {
         this.dom_content = dom_content;
         this.fetchRequests().then((result) => {
             this.Requests = result.data;
@@ -53,6 +63,15 @@ export class RequestPage {
 
     }
 
+    /**
+     * @async fetchPlaylistMates()
+     * Ruft die Route /playlistMates des Servers auf, welcher darauf die Playlist Mates
+     * des Users liefert, der gerade angemeldet ist.
+     * In diesen Daten der User befindet sich auch der Wert dafür, ob eine RequestAnfrage gestellt wurde oder nicht.
+     * Diese Daten werden bei onfullfilled in den Array Mates geschrieben
+     *
+     * Method: GET
+     */
     async fetchRequests() {
         try {
             let response = await fetch(this.API_URL + "/playlistMates", {
@@ -77,12 +96,23 @@ export class RequestPage {
     }
 
 
+    /**
+     * @function close()
+     *
+     * Entfernt den Content indem alle childNodes entfernt werden
+     *
+     */
     close() {
         while (this.dom_content.firstChild) {
             this.dom_content.removeChild(this.dom_content.firstChild);
         }
     }
 
+    /**
+     * @function addRequestContainers()
+     * Die Funktion addRequestContainers() fügt jeden einzelnen Mate aus Mates hinzu, bei dem REQUEST (abgefragt vom Server) auf
+     * 0 steht, diese User haben eine Anfrage an den angemeldeten Benutzer gesendet.
+     */
     private addRequestContainers() {
         for(let i = 0; i < this.Requests.length; i++) {
             if(this.Requests[i].REQUEST === 0) {
@@ -104,7 +134,6 @@ export class RequestPage {
                 this.dom_RequestContainerDataForm.classList.add('RequestContainerDataForm');
                 this.dom_RequestContainerData.appendChild(this.dom_RequestContainerDataForm);
                 this.dom_RequestContainerDataForm.setAttribute("id", "Form");
-                this.dom_RequestContainerDataForm.addEventListener("submit", this.processForm);
                 this.dom_RequestContainerDataForm.addEventListener("onSubmit", event => {
                     event.preventDefault();
                     return false;
@@ -180,12 +209,19 @@ export class RequestPage {
         }
     }
 
-    processForm(e) {
-        if (e.preventDefault()) e.preventDefault();
-        return false;
-    }
 
-    private async sendRequestResponse(index, value) {
+    /**
+     * @async fetchAddCollabs()
+     * Ruft die Route /playlistMates/request des Servers auf, welcher darauf dem mitgesendeten "Mate" eine Zusage auf seine
+     * Anfrage gibt.
+     *
+     * @param index - index für den Mates Array um den richtigen Mate Namen mitzusenden
+     * @param value - value den der User beim RadioButton aus Funktion addRequestContainers() ausgewählt hat
+     * entweder angenommen = 1 oder abgelehnt = 0;
+     *
+     * Method: POST
+     */
+    async sendRequestResponse(index, value) {
         //console.log("Mates Name! ",this.Requests[index].NAME);
         try {
             let response = await fetch(this.API_URL + "/playlistMates/request", {

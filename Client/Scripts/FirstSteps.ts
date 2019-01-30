@@ -25,8 +25,8 @@ export class FirstSteps {
 
         this.dom_content = dom;
         this.dom_content.classList.add('FirstSteps');
-        this.audioPlayer = new AudioPlayer(this.dom_content, null, null);
-        this.navBar = new NavBar(this.dom_root, this.dom_content);
+        this.audioPlayer = new AudioPlayer(this.dom_content, null);
+        this.navBar = new NavBar(this.dom_content);
         this.dom_root.appendChild(this.dom_content);
 
 
