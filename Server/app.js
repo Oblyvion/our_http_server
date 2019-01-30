@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
         cb(null, "./\Server/\Songs")
     },
     filename: function (req, file, cb) {
-        console.log("MULTER FILENAME = ", file);
+        // console.log("MULTER FILENAME = ", file);
         cb(null, file.originalname)
     }
 });
@@ -30,54 +30,36 @@ db.create()
     });
 
 const auth = async (req, res, next) => {
-        try {
-            let token = req.get('Authorization');
+    try {
+        let token = req.get('Authorization');
 
-            console.log("app.js, auth: TOKEN = " + token);
-            console.log("app.js, auth: TOKEN decoded = " + jwt.decode(token));
-            console.log("app.js, auth: TOKEN decoded and stringified = " + JSON.stringify(jwt.decode(token)));
-            console.log("app.js, auth: TOKEN USERNAME = " + jwt.decode(token).username);
-
-            console.log("app.js, auth: TOKEN decoded and stringified = " + JSON.stringify(jwt.decode(token)));
-            // const user = await db.get_row('SELECT ID FROM USERS WHERE NAME = ?', jwt.decode(token).username);
-            // console.log("app.js, auth: USER = " + user.ID);
-            if (token) {
-                console.log("BOOAAAAAAA alder");
-                jwt.verify(token, 'secret', (err, decode) => {
-                    try {
-                        console.log("JAAA FUCK THAD ERROR = ", err);
-                        if (err) {
-                            // return res.send({
-                            //     success: false,
-                            //     msg: 'Unauthorized access!'
-                            // });
-                            throw 'There is a problem right here, Z. 66.'
-                        }
-                    } catch (err) {
-                        console.log("app.js, auth: KOMICHER ERR = " + err);
+        if (token) {
+            jwt.verify(token, 'secret', (err, decode) => {
+                try {
+                    if (err) {
+                        throw 'Cannot be verified. There is some work left.'
                     }
-                    console.log("app.js, auth: DECODE = " + JSON.stringify(decode));
-                    req.decode = decode;
-                    next();
-                })
-            } else {
-                console.log("Kein Token gefunden!!!");
-                res.send({
-                    success: false,
-                    msg: 'No token available.'
-                })
-            }
-
-        } catch (err) {
-            console.log("app.js, Auth, Z.58: ERROR = : ", err.toString());
+                } catch (err) {
+                    // console.log("app.js, auth: Warum läuft verify nicht?");
+                }
+                // console.log("app.js, auth: DECODE = " + JSON.stringify(decode));
+                req.decode = decode;
+                next();
+            })
+        } else {
             res.send({
                 success: false,
-                msg: "You are not authorized for this action!",
-                err: err
+                msg: 'No token available.'
             })
         }
+    } catch (err) {
+        res.send({
+            success: false,
+            msg: "You are not authorized for this action!",
+            err: err
+        })
     }
-;
+};
 
 async function userInit(req) {
     try {
@@ -100,7 +82,7 @@ async function userInit(req) {
 /**
  * @api {get} /init Datenbank wird initialisiert
  * @apiName GetInit
- * @apiGroup MyAPIGroupGet         // TODO KÖNNEN GRUPPEN IN MEINER API GEBILDET WERDEN? Z:B: USER; PLAYLIST;
+ * @apiGroup INIT DB
  *
  * @apiSuccess {json} Initialisierung
  *
@@ -145,7 +127,7 @@ app.get('/init', (req, res) => {
 /**
  * @api {get} /users Gibt alle User zurück, welche nicht der aktuelle User und nicht seine Playlist Mates sind
  * @apiName GetUsers
- * @apiGroup MyAPIGroupGet
+ * @apiGroup USER
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -213,7 +195,7 @@ app.get('/users', auth, async (req, res) => {
 /**
  * @api {get} /user Gibt den User SCORE des aktuellen Users zurück
  * @apiName GetUser
- * @apiGroup MyAPIGroupGet
+ * @apiGroup USER
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -279,7 +261,7 @@ app.get('/user', async (req, res) => {
 /**
  * @api {get} /songs Gibt alle Songs zurück
  * @apiName GetSongs
- * @apiGroup MyAPIGroupGet
+ * @apiGroup SONG
  *
  * @apiSuccess {json} Songs gefunden
  *
@@ -347,7 +329,7 @@ app.get('/songs', async (req, res) => {
  * angegebenen playlistID zurück.
  *
  * @apiName GetSongsOfUser
- * @apiGroup MyAPIGroupGet
+ * @apiGroup SONG
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -421,7 +403,7 @@ app.get('/songsuser/:playlistID', auth, async (req, res) => {
  * @api {get} /song/:id  Gibt den Song mit der angegebenen ID als ReadStream zurück
  *
  * @apiName GetSongStream
- * @apiGroup MyAPIGroupGet
+ * @apiGroup USER
  *
  * @apiParam {Number} id Songs unique SONGS ID.
  *
@@ -476,7 +458,7 @@ app.get('/song/:id', async (req, res) => {
  * @api {get} /playlists  Gibt die Playlists vom aktuellen User zurück.
  *
  * @apiName GetPlaylistsOfUser
- * @apiGroup MyAPIGroupGet
+ * @apiGroup PLAYLIST
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -531,7 +513,7 @@ app.get('/playlists', auth, async (req, res) => {
 /**
  * @api {get} /playlists/collabs  Gibt die Playlists von den Collaborators des aktuellen Users zurück.
  * @apiName GetPlaylistsOfCollaborators
- * @apiGroup MyAPIGroupGet
+ * @apiGroup PLAYLIST
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -566,7 +548,6 @@ app.get('/playlists/collabs', auth, async (req, res) => {
         'JOIN COLLABORATORS ON PLAYLISTS.ID = COLLABORATORS.PLAYLIST_ID ' +
         'AND MATE_ID = ?', USER.ID)
         .then(rows => {
-            console.log("Das collabs: ", rows);
             if (!rows)
                 throw 'Access collaborator playlists failed';
             res.send({
@@ -584,12 +565,9 @@ app.get('/playlists/collabs', auth, async (req, res) => {
 });
 
 /**
- * get playlist mates
- */
-/**
  * @api {get} /playlistMates  Gibt die Playlist Mates vom aktuellen User zurück
  * @apiName GetPlaylistMates
- * @apiGroup MyAPIGroupGet
+ * @apiGroup PLAYLIST MATE
  *
  * @apiSuccess {json} Playlist Mates vorhanden und gefunden
  *
@@ -604,7 +582,7 @@ app.get('/playlists/collabs', auth, async (req, res) => {
  *              "REQUEST": 1
  *              }
  *           ]
-*       }
+ *       }
  *
  * @apiError {json} Keine Playlist Mates gefunden.
  *
@@ -678,12 +656,9 @@ app.get('/playlistMates', auth, async (req, res) => {
 });
 
 /**
- * get count of shared playlists with mate
- */
-/**
  * @api {get} /playlistMates/sharedPlaylists/:mate  Gibt die Anzahl an geteilten Playlists mit dem Mate zurück.
  * @apiName GetCountPlaylistsSharedWithMate
- * @apiGroup MyAPIGroupGet
+ * @apiGroup PLAYLIST MATE
  *
  * @apiParam {String} mate USERS unique USERS NAME.
  *
@@ -756,7 +731,7 @@ app.get('/playlistMates/sharedPlaylists/:mate', auth, async (req, res) => {
 /**
  * @api {post} /user  Legt einen neuen User in der Datenbank an.
  * @apiName PostUser
- * @apiGroup MyAPIGroupPost
+ * @apiGroup USER
  *
  * @apiParam {String} name Users unique USERS NAME.
  *
@@ -823,7 +798,7 @@ app.post('/user', async (req, res) => {
 /**
  * @api {post} /login  Überprüft den Benutzernamen und Passwort in der Datenbank.
  * @apiName UserLogin
- * @apiGroup MyAPIGroupPost
+ * @apiGroup USER
  *
  * @apiParam {String} name Users unique USERS NAME.
  *
@@ -884,7 +859,7 @@ app.post('/login', async (req, res) => {
 /**
  * @api {post} /playlist  Erstellt eine neue Playlist mit dem aktuell angemeldeten User als Besitzer
  * @apiName PostPlaylist
- * @apiGroup MyAPIGroupPost
+ * @apiGroup PLAYLIST
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -954,7 +929,7 @@ app.post('/playlist', auth, async (req, res) => {
  * @api {post} /song/:playlistID Fügt einen bereits in der Datenbank vorhandenen Song einer seiner eigenen Playlists
  * oder einer Collaborator Playlist hinzu.
  * @apiName PostSongIntoPlaylist
- * @apiGroup MyAPIGroupPost
+ * @apiGroup SONG
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -1005,7 +980,6 @@ app.post('/song/:playlistID', auth, async (req, res) => {
 
         // Sobald die angemeldete UserID in Verbindung mit dem PlaylistNamen in der db PLAYLISTS gefunden = EIGENE PLAYLIST
         const row = await db.get_row('SELECT NAME FROM PLAYLISTS WHERE ID = ? AND USER_ID = ?', req.params.playlistID, userID.ID);
-        console.log("KANN NET SEIN = ", row);
         if (!row) {
             throw 'Not ' + user + '\'s Playlist.';
         }
@@ -1048,12 +1022,9 @@ app.post('/song/:playlistID', auth, async (req, res) => {
 });
 
 /**
- * upload song into global SONGS and users PLAYLIST_CONTAINS
- */                                                                     // , {name: 'nextInput', maxCount: 2}
-/**
  * @api {post} /song/global/:playlistID    Fügt einen neuen Song der Datenbank sowie der übergebenen (aktuellen) Playlist hinzu.
  * @apiName PostSongGlobal
- * @apiGroup MyAPIGroupPost
+ * @apiGroup SONG
  *
  * @apiHeader {json} AUTH: { "Authorization": token}
  *
@@ -1085,7 +1056,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
  *      "PATH": "./Server/Songs/Johann Pachelbel - Canon in D Major.mp3"
  *  }
  *}
-
+ *
  * @apiError {json} Song existiert bereits in der Datenbank Tabelle SONGS
  *
  * @apiErrorExample Error-Response:
@@ -1095,7 +1066,7 @@ app.post('/song/:playlistID', auth, async (req, res) => {
  *      msg: 'Song exists already. Search for the following song to get it ;)\n\n' + req.files.audioFile[0].originalname',
  *      err: err
  *      }
-
+ *
  * @apiError {json} Datenbank Fehler
  *
  * @apiErrorExample Error-Response:
@@ -1199,7 +1170,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
 /**
  * @api {post} /playlistMate    Fügt einen neuen Playlist Mate seinem User-Account hinzu
  * @apiName PostPlaylistMate
- * @apiGroup MyAPIGroupPost
+ * @apiGroup PLAYLIST MATE
  *
  * @apiParam {String} mate Users unique USERS NAME
  *
@@ -1262,7 +1233,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
 /**
  * @api {post} /collabs/:playlistID    Fügt einen neuen Collaborator zu der Playlist mit der angegebenen ID hinzu.
  * @apiName PostAddCollaboratorToPlaylist
- * @apiGroup MyAPIGroupPost
+ * @apiGroup COLLABORATOR
  *
  * @apiParam {Number} playlistID Playlists unique PLAYLISTS ID
  * @apiParam {String} mate Users unique USERS NAME
@@ -1295,7 +1266,7 @@ app.post('/song/global/:playlistID', auth, upload.fields([{name: 'audioFile'}, {
  *      msg: 'The Playlist Mate -> ' + req.body.mate + ' <- is one of your Collaborators already.
  *      Invite another Playlist Mate to your Playlist.'
  *      }
-
+ *
  * @apiError {json} Datenbank Fehler
  *
  * @apiErrorExample Error-Response:
@@ -1367,7 +1338,7 @@ app.post('/collabs/:playlistID', auth, async (req, res) => {
 /**
  * @api {post} /playlistMates/request    Akzeptiert oder verweigert einen Playlist Mate Request
  * @apiName PostPlaylistMatesRequest
- * @apiGroup MyAPIGroupPost
+ * @apiGroup PLAYLIST MATE
  *
  * @apiParam {Number} playlistID Playlists unique PLAYLISTS ID
  * @apiParam {String} mate Users unique USERS NAME

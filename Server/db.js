@@ -11,18 +11,17 @@ class DB {
         try {
             const adminName = "admin";
             const path = "./Server/Songs";
-            console.log("__dirname = ", __dirname );
-            console.log("path = ", path);
+            // console.log("path = ", path);
+
             // CREATE STANDARD USERS -> ADMINS
             this.db.run('INSERT OR IGNORE INTO USERS (NAME, PASSWORD, SCORE) VALUES (?, ?, 5)', adminName, adminName);
-            console.log("jldsafjlsadjö");
             // CREATE STANDARD SONGS
             this.db.run('INSERT OR IGNORE INTO SONGS (TITLE, ARTIST, ADDED_BY, PATH) ' +
                 'VALUES ("Canon in D Major", "Johann Pachelbel", 1, ?)', path + '/Johann Pachelbel - Canon in D Major.mp3');
             this.db.run('INSERT OR IGNORE INTO PLAYLISTS (ID, NAME, USER_ID) ' +
                 'VALUES (?, ?, ?)', 1, "Playlist Admin", 1);
         } catch (err) {
-            console.log("db.js, Z.87: CATCHED ERROR = ", err);
+            console.log("adminInit() fails surprisingly!");
         }
     }
 
@@ -96,12 +95,6 @@ class DB {
         )
     }
 
-    /**
-     * run sql command
-     * @param sql
-     * @param params
-     * @returns {Promise<any>}
-     */
     cmd(sql = '', ...params) {
         return new Promise((resolve, reject) => {
             this.db.run(sql, params, function (err) {
@@ -111,12 +104,6 @@ class DB {
         });
     }
 
-    /**
-     * gets an object by SQL statement
-     * @param sql
-     * @param params
-     * @returns {Promise<any>}
-     */
     get_row(sql = '', ...params) {
         return new Promise((resolve, reject) => {
             this.db.get(sql, params, (err, row) => {
@@ -129,12 +116,6 @@ class DB {
         });
     }
 
-    /**
-     * gets an array of objects by SQL statement
-     * @param sql
-     * @param params
-     * @returns {Promise<any>}
-     */
     get_rows(sql = '', ...params) {
         return new Promise((resolve, reject) => {
             this.db.all(sql, params, (err, rows) => {
